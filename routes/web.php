@@ -11,7 +11,6 @@
 |
 */
 
-use App\User;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,10 +19,16 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/base', function () {
-    $users = User::all();
-    foreach ($users as $user){
-        echo $user->keys();
-    }
-    return view('admin/base');
+
+Route::prefix('admin')->group(function () {
+
+    Route::prefix('api-key')->group(function () {
+
+        Route::get('create', 'CreateApiKeyController@create');
+
+        Route::post('postCreate', 'CreateApiKeyController@storeCreate');
+
+    });
+
 });
+
