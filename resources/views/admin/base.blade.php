@@ -51,6 +51,7 @@
 <!-- Main area End-->
 <div class="container">
     <div id="example"></div>
+    <button class="btn btn-primary" type="button" id="signinButton">Add</button>
 </div>
 <!--  Main area End-->
 <!-- Start Footer area-->
@@ -95,6 +96,26 @@
                 console.log(err);
             }
         })
+</script>
+<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+<script>
+
+    function start() {
+         gapi.load('auth2', function() {
+            auth2 = gapi.auth2.init({
+                client_id: '263498759299-to3jnbgjkcee9hfhain7t9av53l4vg0n.apps.googleusercontent.com',
+                scope: 'https://www.googleapis.com/auth/youtube'
+            });
+        });
+    }
+    $('#signinButton').click(function() {
+        // signInCallback defined in step 6.
+        auth2.grantOfflineAccess().then(signInCallback);
+    });
+    function signInCallback(authResult) {
+        console.log(authResult);
+        console.log(auth2);
+    }
 </script>
 </body>
 </html>
