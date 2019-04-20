@@ -1,27 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import "./example.module.css";
+import SiteWrapper from "./SiteWrapper.react";
 
 export default class Example extends Component {
     render() {
         return (
-            <div className="container">
-                <div className="row justify-content-center">
-                    <div className="col-md-8">
-                        <div className="card">
-                            <div className="test" >Example Component TEST</div>
+            <SiteWrapper>
 
-                            <div className="card-body">
-                                I'm an example component!
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </SiteWrapper>
         );
     }
 }
 
-if (document.getElementById('example')) {
-    ReactDOM.render(<Example />, document.getElementById('example'));
+if (document.getElementById('root')) {
+    ReactDOM.render(<Example />, document.getElementById('root'));
 }
