@@ -23,4 +23,18 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::post('/api-key/postCreate', 'CreateApiKeyController@create')->middleware(['auth', 'cors']);;
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => [
+        'auth',
+    ],
+], function() {
+    /**
+     * begin api key
+     */
+    Route::get('/api-key', 'ViewApiKeyController@view_list');
+    Route::post('/api-key/postCreate', 'CreateApiKeyController@create')->middleware(['cors']);
+    /**
+     * end api key
+     */
+});

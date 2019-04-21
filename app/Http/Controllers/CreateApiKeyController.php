@@ -20,7 +20,7 @@ class CreateApiKeyController extends Controller
     }
 
     /**
-     * Post create api-key
+     * Post create api_key
      */
     public function create(Request $req)
     {
