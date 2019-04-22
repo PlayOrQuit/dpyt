@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\DataKey;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
 
-class ViewApiKeyController extends Controller
+class DeleteApiKeyController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,10 +15,9 @@ class ViewApiKeyController extends Controller
     }
 
     /**
-     * Get api-key
+     * Delete api-key
      */
-    public function view_list()
-    {
-        return view('admin.api_key.api-key');
+    public function delete(Request $req){
+
     }
 }

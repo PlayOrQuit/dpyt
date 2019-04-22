@@ -18,7 +18,7 @@
         "babel-loader": "^8.0.5",
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
-        "bootstrap": "^4.0.0",
+        "bootstrap": "^4.3.1",
         "cross-env": "^5.1",
         "css-loader": "^2.1.1",
         "jquery": "^3.2",
@@ -34,6 +34,8 @@
         "tabler-react": "^1.29.0"
     },
     "dependencies": {
-        "lang.js": "^1.1.14"
+        "lang.js": "^1.1.14",
+        "prop-types": "latest",
+        "react-bootstrap": "^1.0.0-beta.8"
     }
 }

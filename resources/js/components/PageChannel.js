@@ -14,17 +14,19 @@ import {
 
 import trans from '../lang/index';
 
- class PageApiKey extends Component{
-
+class PageChannel extends Component{
     render() {
         return(
             <Container>
                 <div className="page-header">
                     <div className="page-title">
-                        { trans.get('template.menu_api_key') }
+                        { trans.get('template.menu_sub_channels') }
                     </div>
                     <div className="page-subtitle">
                         1 - 12 of 1713 photos
+                    </div>
+                    <div className="page-options d-flex">
+                        <Button variant="secondary">{ trans.get('keyword.add') }</Button>
                     </div>
                 </div>
                 <Row className="row-cards">
@@ -32,20 +34,20 @@ import trans from '../lang/index';
                         <Card>
                             <Card.Body>
                                 <Form.Group>
-                                    <Form.Label>{ trans.get('keyword.key') }</Form.Label>
-                                    <Form.Control type="text" placeholder={ trans.get('keyword.enter') + ' ' +  trans.get('keyword.key')} />
+                                    <Form.Label>{ trans.get('keyword.name_channel') }</Form.Label>
+                                    <Form.Control type="text" placeholder={ trans.get('keyword.enter') + ' ' +  trans.get('keyword.name_channel')} />
                                 </Form.Group>
                                 <Form.Group>
-                                    <Form.Label>{ trans.get('keyword.id_client') }</Form.Label>
-                                    <Form.Control type="text" placeholder={ trans.get('keyword.enter') + ' ' +  trans.get('keyword.id_client')} />
-                                </Form.Group>
-                                <Form.Group>
-                                    <Form.Label>{ trans.get('keyword.client_secret') }</Form.Label>
-                                    <Form.Control type="text" placeholder={ trans.get('keyword.enter') + ' ' +  trans.get('keyword.client_secret')} />
+                                    <Form.Label>{ trans.get('keyword.status') }</Form.Label>
+                                    <Form.Control as="select">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </Form.Control>
                                 </Form.Group>
                             </Card.Body>
                             <Card.Footer>
-                                <Button variant="primary">{ trans.get('keyword.add') }</Button>
+                                <Button variant="primary">{ trans.get('keyword.search') }</Button>
                             </Card.Footer>
                         </Card>
                     </Col>
@@ -55,26 +57,20 @@ import trans from '../lang/index';
                                 <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>{ trans.get('keyword.key') }</th>
-                                        <th>{ trans.get('keyword.id_client') }</th>
-                                        <th>{ trans.get('keyword.client_secret') }</th>
+                                        <th>{ trans.get('keyword.name_channel') }</th>
+                                        <th>{ trans.get('keyword.view') }</th>
+                                        <th>{ trans.get('keyword.follow') }</th>
+                                        <th>{ trans.get('keyword.status') }</th>
                                         <th className="w-1"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
+                                        <td>1</td>
+                                        <td>Kênh 1</td>
+                                        <td>20</td>
+                                        <td>50</td>
+                                        <td>Bình thường </td>
                                         <td className="text-center">
                                             <div className="item-action dropdown">
                                                 <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
@@ -90,18 +86,11 @@ import trans from '../lang/index';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            2
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
+                                        <td>1</td>
+                                        <td>Kênh 1</td>
+                                        <td>20</td>
+                                        <td>50</td>
+                                        <td>Bình thường </td>
                                         <td className="text-center">
                                             <div className="item-action dropdown">
                                                 <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
@@ -117,18 +106,11 @@ import trans from '../lang/index';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
+                                        <td>1</td>
+                                        <td>Kênh 1</td>
+                                        <td>20</td>
+                                        <td>50</td>
+                                        <td>Bình thường </td>
                                         <td className="text-center">
                                             <div className="item-action dropdown">
                                                 <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
@@ -144,18 +126,11 @@ import trans from '../lang/index';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            4
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
+                                        <td>1</td>
+                                        <td>Kênh 1</td>
+                                        <td>20</td>
+                                        <td>50</td>
+                                        <td>Bình thường </td>
                                         <td className="text-center">
                                             <div className="item-action dropdown">
                                                 <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
@@ -171,18 +146,11 @@ import trans from '../lang/index';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            5
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
+                                        <td>1</td>
+                                        <td>Kênh 1</td>
+                                        <td>20</td>
+                                        <td>50</td>
+                                        <td>Bình thường </td>
                                         <td className="text-center">
                                             <div className="item-action dropdown">
                                                 <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
@@ -198,18 +166,11 @@ import trans from '../lang/index';
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            6
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
-                                        <td>
-                                            AIzaSyDz7l9VXfxfQSNzyTA-iwTiQ5sgT6wUKLL
-                                        </td>
+                                        <td>1</td>
+                                        <td>Kênh 1</td>
+                                        <td>20</td>
+                                        <td>50</td>
+                                        <td>Bình thường </td>
                                         <td className="text-center">
                                             <div className="item-action dropdown">
                                                 <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
@@ -254,6 +215,6 @@ import trans from '../lang/index';
     }
 }
 
-if (document.getElementById('section-api-key')) {
-    ReactDOM.render(<PageApiKey />, document.getElementById('section-api-key'));
+if (document.getElementById('section-channel')) {
+    ReactDOM.render(<PageChannel />, document.getElementById('section-channel'));
 }
