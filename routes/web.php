@@ -35,7 +35,7 @@ Route::group([
     Route::group([ 'prefix' => 'api-key'], function() {
         Route::get('/', 'APIKeyController@view_list');
         Route::post('/create', 'APIKeyController@create')->middleware(['cors']);
-        Route::delete('/edit', 'APIKeyController@edit')->middleware(['cors']);
+        Route::put('/edit', 'APIKeyController@edit')->middleware(['cors']);
     });
 
     Route::group([ 'prefix' => 'channel'], function() {
