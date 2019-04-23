@@ -50,39 +50,28 @@ class Handler extends ExceptionHandler
     {
         if ($req->isJson()) {
             if ($e instanceof ValidationException || $e instanceof InvalidArgumentException) {
-                return response()->json(Utils::builder_error(WebKeys::HTTP_BAD_REQUEST,
-                    $e->getMessage(),
-                    $req->path()), WebKeys::HTTP_OK);
+
+                return response()->json(Utils::builder_error(WebKeys::STATUS_FIELD_ERROR, $e->getMessage(), $req->path(), $e->errors()));
             }
             else if ($e instanceof HttpException) {
 
-                return response()->json(Utils::builder_error($e->getStatusCode(),
-                    $e->getMessage(),
-                    $req->path()), WebKeys::HTTP_OK);
+                return response()->json(Utils::builder_error($e->getStatusCode(), $e->getMessage(), $req->path(), null));
 
             } else if ($e instanceof AuthenticationException) {
 
-                return response()->json(Utils::builder_error(WebKeys::HTTP_UNAUTHORIZED,
-                    $e->getMessage(),
-                    $req->path()), WebKeys::HTTP_OK);
+                return response()->json(Utils::builder_error(WebKeys::HTTP_UNAUTHORIZED, $e->getMessage(), $req->path(), null));
 
             } else if ($e instanceof TokenMismatchException) {
 
-                return response()->json(Utils::builder_error(WebKeys::HTTP_FORBIDDEN,
-                    $e->getMessage() ? $e->getMessage() : 'CSRF Token Not Found',
-                    $req->path()), WebKeys::HTTP_OK);
+                return response()->json(Utils::builder_error(WebKeys::HTTP_FORBIDDEN,$e->getMessage() ? $e->getMessage() : 'CSRF Token Not Found', $req->path(), null));
 
             } else if ($e instanceof AuthorizationException) {
 
-                return response()->json(Utils::builder_error(WebKeys::HTTP_FORBIDDEN,
-                    $e->getMessage() ? $e->getMessage() : 'Permission denied',
-                    $req->path()), WebKeys::HTTP_OK);
+                return response()->json(Utils::builder_error(WebKeys::HTTP_FORBIDDEN, $e->getMessage() ? $e->getMessage() : 'Permission denied', $req->path(), null));
 
             } else {
 
-                return response()->json(Utils::builder_error(WebKeys::HTTP_ERROR_SYSTEM,
-                    $e->getMessage() ? $e->getMessage() : 'Internal Error Server',
-                    $req->path()), WebKeys::HTTP_OK);
+                return response()->json(Utils::builder_error(WebKeys::HTTP_ERROR_SYSTEM, $e->getMessage() ? $e->getMessage() : 'Internal Error Server', $req->path(), null));
             }
         }
         return parent::render($req, $e);
@@ -92,9 +81,7 @@ class Handler extends ExceptionHandler
     {
         if ($req->isJson()) {
 
-            return response()->json(Utils::builder_error(WebKeys::HTTP_UNAUTHORIZED,
-                $e->getMessage() ? $e->getMessage() : 'Authorization Required',
-                $req->path()), WebKeys::HTTP_OK);
+            return response()->json(Utils::builder_error(WebKeys::HTTP_UNAUTHORIZED,$e->getMessage() ? $e->getMessage() : 'Authorization Required', $req->path(), null));
         }
         return redirect()->guest($e->redirectTo() ?? route('login'));
     }

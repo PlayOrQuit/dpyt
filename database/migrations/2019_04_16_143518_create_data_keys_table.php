@@ -14,12 +14,12 @@ class CreateDataKeysTable extends Migration
     public function up()
     {
         Schema::create('data_keys', function (Blueprint $table) {
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
             $table->string('api_key', 75);
             $table->string('id_client', 75);
             $table->string('client_secret', 75);
             $table->timestamps();
-            $table->primary(['user_id','api_key']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

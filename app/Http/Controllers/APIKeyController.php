@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use function Psy\debug;
 
 class APIKeyController extends Controller
 {
@@ -39,7 +38,7 @@ class APIKeyController extends Controller
         $validator = $this->validatorCreate($data, $user_id);
         if ($validator->fails())
         {
-            return $this->_resJsonError(WebKeys::HTTP_BAD_REQUEST, 'Bad request', $validator->errors(), $req->path());
+            return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try
         {
@@ -49,12 +48,12 @@ class APIKeyController extends Controller
             $_api_key->client_secret = $data["client_secret"];
             $_api_key->user_id = $user_id;
             $_api_key->save();
-            return $this->_resJsonSuccess(WebKeys::HTTP_OK, $_api_key, trans('message.create_success'), $req->path());
+            return $this->_resJsonSuccess(trans('message.create_success'), $req->path(), $_api_key->jsonSerialize());
         }
         catch (Exception $e)
         {
-            dd($e);
-            return $this->_resJsonError(WebKeys::HTTP_BAD_REQUEST, trans('message.create_failed'),null, $req->path());
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->_resJsonError($e->getMessage(), $req->path());
         }
 
     }

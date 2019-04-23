@@ -4,25 +4,30 @@
 namespace App\Util;
 
 
+use App\Http\Constant\WebKeys;
+
 class Utils
 {
-    public static function builder_error($status_code = 500, $msg = null, $path = null, $field_errors = null, $timestamp = null){
-        $data['result']['statusCode'] = $status_code;
-        $data['result']['message'] = $msg != null ? $msg : '';
-        $data['result']['path'] = $path != null ? $path : '';
-        $data['result']['timestamp'] = $timestamp != null ? $timestamp : now();
+
+    public static function builder_error($statusCode, $msg, $path, $field_errors)
+    {
+        $res['body']['statusCode'] = $statusCode;
+        $res['body']['message'] = $msg != null ? $msg : '';
+        $res['body']['path'] = $path != null ? $path : '';
+        $res['body']['timestamp'] = now();
         if($field_errors != null)
-            $data['result']['field_errors'] = $field_errors;
-        return $data;
+            $res['body']['field_errors'] = $field_errors;
+        return $res;
     }
-    public static function builder_success($status_code = 200, $data = null, $msg = null, $path = null, $timestamp = null){
-        $data['result']['statusCode'] = $status_code;
-        $data['result']['message'] = $msg != null ? $msg : '';
-        $data['result']['path'] = $path != null ? $path : '';
-        $data['result']['timestamp'] = $timestamp != null ? $timestamp : now();
-        if($data != null)
-            $data['result']['data'] = $data;
-        return $data;
+
+    public static function builder_success($msg, $path, $data){
+        $res['body']['statusCode'] = WebKeys::STATUS_OK;
+        $res['body']['message'] = $msg != null ? $msg : '';
+        $res['body']['path'] = $path != null ? $path : '';
+        $res['body']['timestamp'] = now();
+        if(is_array($res))
+            $res['body']['data'] = $data;
+        return $res;
     }
 
 }
