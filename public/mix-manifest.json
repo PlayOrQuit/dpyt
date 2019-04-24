@@ -1,5 +1,5 @@
 {
-    "/js/PageApiKey.js": "/js/PageApiKey.js",
-    "/js/PageChannel.js": "/js/PageChannel.js",
+    "/js/PageApiKey.react.js": "/js/PageApiKey.react.js",
+    "/js/PageChannel.react.js": "/js/PageChannel.react.js",
     "/js/app.js": "/js/app.js"
 }

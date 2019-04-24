@@ -14,7 +14,7 @@ import {
 
 import trans from '../lang/index';
 
-class PageChannel extends Component{
+class PageChannelReact extends Component{
     render() {
         return(
             <Container>
@@ -216,5 +216,5 @@ class PageChannel extends Component{
 }
 
 if (document.getElementById('section-channel')) {
-    ReactDOM.render(<PageChannel />, document.getElementById('section-channel'));
+    ReactDOM.render(<PageChannelReact />, document.getElementById('section-channel'));
 }

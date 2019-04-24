@@ -33,7 +33,8 @@ Route::group([
      * begin api key
      */
     Route::group([ 'prefix' => 'api-key'], function() {
-        Route::get('/', 'APIKeyController@view_list');
+        Route::get('/', 'APIKeyController@render');
+        Route::get('/get', 'APIKeyController@get')->middleware(['cors']);
         Route::post('/create', 'APIKeyController@create')->middleware(['cors']);
         Route::put('/edit', 'APIKeyController@edit')->middleware(['cors']);
     });

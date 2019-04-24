@@ -4,5 +4,5 @@
 @endsection
 @section('page-content')
     <div id="section-channel"></div>
-    <script src="{{ asset('js/PageChannel.js') }}"></script>
+    <script src="{{ asset('PageChannel.react.jsact.jsct.js') }}"></script>
 @endsection

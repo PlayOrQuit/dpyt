@@ -15,7 +15,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ action('APIKeyController@view_list') }}" class="nav-link"><i class="fe fe-lock"></i> {{ trans('template.menu_api_key') }}</a>
+                        <a href="{{ action('APIKeyController@render') }}" class="nav-link"><i class="fe fe-lock"></i> {{ trans('template.menu_api_key') }}</a>
                     </li>
                 </ul>
             </div>

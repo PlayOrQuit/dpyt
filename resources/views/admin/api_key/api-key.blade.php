@@ -4,5 +4,5 @@
 @endsection
 @section('page-content')
     <div id="section-api-key"></div>
-    <script src="{{ asset('js/PageApiKey.js') }}"></script>
+    <script src="{{ asset('js/PageApiKey.react.js') }}"></script>
 @endsection

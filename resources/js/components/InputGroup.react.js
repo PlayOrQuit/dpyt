@@ -2,7 +2,7 @@ import React from 'react';
 import {Form} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-class InputGroup extends React.Component{
+class InputGroupReact extends React.Component{
     constructor(props){
         super(props);
     }
@@ -35,7 +35,7 @@ class InputGroup extends React.Component{
     }
 }
 
-InputGroup.propTypes = {
+InputGroupReact.propTypes = {
     value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
@@ -50,4 +50,4 @@ InputGroup.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-export default InputGroup;
+export default InputGroupReact;

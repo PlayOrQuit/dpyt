@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Card, } from 'react-bootstrap';
 
-class CardLoader extends React.Component{
+class CardLoaderReact extends React.Component{
     constructor(props){
         super(props);
     }
@@ -30,7 +30,7 @@ class CardLoader extends React.Component{
         );
     }
 }
-CardLoader.propTypes = {
+CardLoaderReact.propTypes = {
     isLoading: PropTypes.bool,
     isFullscreen: PropTypes.bool,
     title: PropTypes.string,
@@ -38,4 +38,4 @@ CardLoader.propTypes = {
     color: PropTypes.oneOf(['blue', 'green', 'orange', 'red', 'yellow', 'teal', 'purple']),
     children: PropTypes.element
 }
-export default CardLoader;
+export default CardLoaderReact;
