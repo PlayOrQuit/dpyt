@@ -1,8 +1,8 @@
 <div class="header py-4">
     <div class="container">
         <div class="d-flex">
-            <a class="header-brand" href="./index.html">
-                <img src="./demo/brand/tabler.svg" class="header-brand-img" alt="tabler logo">
+            <a class="header-brand" href="{{ url('/') }}">
+                <img src="{{ asset('images/youtube.png') }}" class="header-brand-img" alt="logo">
             </a>
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="dropdown d-none d-md-flex">
@@ -38,10 +38,9 @@
                 </div>
                 <div class="dropdown">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                        <span class="avatar" style="background-image: url(./demo/faces/female/25.jpg)"></span>
+                        <span class="avatar" style="background-image: url({{ asset('images/user.png') }})"></span>
                         <span class="ml-2 d-none d-lg-block">
-                      <span class="text-default">Jane Pearson</span>
-                      <small class="text-muted d-block mt-1">Administrator</small>
+                      <span class="text-default">{{ Auth::user()->name }}</span>
                     </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
@@ -62,8 +61,9 @@
                         <a class="dropdown-item" href="#">
                             <i class="dropdown-icon fe fe-help-circle"></i> Need help?
                         </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="dropdown-icon fe fe-log-out"></i> Sign out
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="dropdown-icon fe fe-log-out"></i>{{ trans('keyword.logout') }}
                         </a>
                     </div>
                 </div>
@@ -74,4 +74,6 @@
         </div>
     </div>
 </div>
-
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>

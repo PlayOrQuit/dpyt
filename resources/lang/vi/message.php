@@ -7,4 +7,5 @@ return [
     'edit_failed' => 'Sửa thất bại!',
     'delete_success'   => 'Xóa thành công!',
     'delete_failed' => 'Xóa thất bại!',
+    'no_result' => 'Không tìm thấy dữ liệu nào'
 ];

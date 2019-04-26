@@ -6,7 +6,9 @@ import Col from 'react-bootstrap/Col';
 import ReactTable from 'react-table';
 import CardLoaderReact from './CardLoader.react';
 import InputGroupReact from './InputGroup.react';
-import {URL_API_KEY_CREATE, URL_API_KEY_GET} from '../util/uri';
+import Pagination from './Pagination.react';
+import AlertMessage from './AlertMessage.react';
+import {URL_API_KEY_CREATE, URL_API_KEY_GET, STATUS_CODE_OK, STATUS_CODE_FIELD_ERROR} from '../util/constant';
 import {fetch} from '../util/util';
 import {
     Card,
@@ -15,20 +17,8 @@ import {
 
 import trans from '../lang/index';
 import 'react-table/react-table.css'
-const columns = [
-    {
-        Header: trans.get('keyword.key'),
-        accessor: 'api_key',
-    },
-    {
-        Header: trans.get('keyword.id_client'),
-        accessor: 'id_client',
-    },
-    {
-        Header: trans.get('keyword.client_secret'),
-        accessor: 'client_secret',
-    }
-];
+
+
 
 class PageApiKeyReact extends Component {
     constructor(props) {
@@ -43,17 +33,20 @@ class PageApiKeyReact extends Component {
             isLoading: false,
             loadMore: false,
             keys: [],
+            showAlert: false,
+            messages: [],
+            messageType: 'info'
         }
+        this.editPrimary = this.editPrimary.bind(this);
     }
     componentDidMount() {
         this.updateState('loadMore', true);
         fetch(URL_API_KEY_GET, 'get', this.state)
             .then(result => {
                 setTimeout(() => {
+                    console.log(result);
                     this.updateState('loadMore', false);
-                    if(result.data.body.statusCode == 1){
-                        this.updateState('keys', result.data.body.data)
-                    }
+                    this.updateState('keys', result.data.body.data);
                 }, 2000);
             })
             .catch(error => {
@@ -63,7 +56,11 @@ class PageApiKeyReact extends Component {
                 }, 2000);
             });
     }
-
+    showAlert(messages, type){
+        this.updateState('messages', messages);
+        this.updateState('messageType', type);
+        this.updateState('showAlert', true);
+    }
     updateState(k, v){
         const newState = this.state;
         newState[k] = v;
@@ -119,7 +116,6 @@ class PageApiKeyReact extends Component {
         }
     }
     submitData = () => {
-
         if(this.state.api_key === ''){
             this.setError('api_key', false);
         }else if(this.state.id_client === ''){
@@ -132,6 +128,11 @@ class PageApiKeyReact extends Component {
                 .then(result => {
                     setTimeout(() => {
                         this.updateState('isLoading', false);
+                        if(result.data.body.statusCode == STATUS_CODE_OK){
+                            let keyNews = this.state.keys;
+                            keyNews.push(result.data.body.data);
+                            this.updateState('keys', keyNews);
+                        }
                     }, 2000);
                 })
                 .catch(error => {
@@ -141,15 +142,40 @@ class PageApiKeyReact extends Component {
                 });
         }
     }
+    editPrimary = (value) => {
+        console.log(value);
+    }
+    onCloseAlert = () => {
+        this.updateState('showAlert', false);
+    }
     render() {
+        const columns = [
+            {
+                Header: trans.get('keyword.key'),
+                accessor: 'api_key',
+            },
+            {
+                Header: trans.get('keyword.id_client'),
+                accessor: 'id_client',
+            },
+            {
+                Header: trans.get('keyword.client_secret'),
+                accessor: 'client_secret',
+            },
+            {
+                Header: '',
+                Cell: row => (
+                    <Button variant="secondary" size="sm"  onClick={() => this.editPrimary(row)}>
+                        { trans.get('keyword.default')}
+                    </Button>
+                )
+            }
+        ];
         return (
             <Container>
                 <div className="page-header">
                     <div className="page-title">
                         {trans.get('template.menu_api_key')}
-                    </div>
-                    <div className="page-subtitle">
-                        1 - 12 of 1713 photos
                     </div>
                 </div>
                 <Row className="row-cards">
@@ -191,6 +217,8 @@ class PageApiKeyReact extends Component {
                     <Col lg="8">
                         <CardLoaderReact isLoading={this.state.loadMore}>
                             <ReactTable
+                                PaginationComponent={Pagination}
+                                noDataText={trans.get('message.no_result')}
                                 columns={columns}
                                 data={this.state.keys}
                                 defaultPageSize={10}
