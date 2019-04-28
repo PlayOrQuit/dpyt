@@ -173,8 +173,14 @@ class PageApiKeyReact extends Component {
         }
     }
 
-    handlerChangePrimary = (row, index) => {
+    handlerChangePrimary = (row, e) => {
 
+        const newDeletes = this.state.deletes;
+
+        console.log(_.filter(newDeletes, ['primary', 1]));
+
+        console.log(row);
+        console.log(e);
     }
 
     submitDelete = () => {
@@ -227,9 +233,9 @@ class PageApiKeyReact extends Component {
                         <input type="checkbox"
                                className="custom-control-input"
                                name="delete"
-                               checked={row.original.primary}
-                               defaultChecked={row.original.primary}
-                               onChange={(e) => this.handlerChangeCheckChoose(row, e)}/>
+                               checked={this.state.deletes.indexOf(row.index) > -1}
+                               defaultChecked={this.state.deletes.indexOf(row.index) > -1}
+                               onChange={(e) => this.handlerChangeDelete(row, e)}/>
                         <span className="custom-control-label"></span>
                     </label>
                 )
@@ -255,9 +261,9 @@ class PageApiKeyReact extends Component {
                         <input type="radio"
                                className="custom-control-input"
                                name="primary"
-                               checked={row.orgin}
-                               defaultChecked={this.state.deletes.indexOf(row.index) > -1}
-                               onChange={(e) => this.handlerChangeDelete(row, e)}/>
+                               checked={row.original.primary === 1}
+                               defaultChecked={row.original.primary === 1}
+                               onChange={(e) => this.handlerChangePrimary(row, e)}/>
                         <span className="custom-control-label"></span>
                     </label>
                 )
