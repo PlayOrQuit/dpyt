@@ -20,6 +20,7 @@
     <div class="flex-fill">
         @include('admin.header')
         @include('admin.nav')
+        <button type="button" id="signinButton">sign</button>
         <div class="my-3 my-md-5">
             @yield('page-content')
         </div>
@@ -53,26 +54,27 @@
 {{--            }--}}
 {{--        })--}}
 {{--</script>--}}
-{{--<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>--}}
-{{--<script>--}}
 
-{{--    function start() {--}}
-{{--         gapi.load('auth2', function() {--}}
-{{--            auth2 = gapi.auth2.init({--}}
-{{--                client_id: '263498759299-to3jnbgjkcee9hfhain7t9av53l4vg0n.apps.googleusercontent.com',--}}
-{{--                scope: 'https://www.googleapis.com/auth/youtube'--}}
-{{--            });--}}
-{{--        });--}}
-{{--    }--}}
-{{--    $('#signinButton').click(function() {--}}
-{{--        // signInCallback defined in step 6.--}}
-{{--        auth2.grantOfflineAccess().then(signInCallback);--}}
-{{--    });--}}
-{{--    function signInCallback(authResult) {--}}
-{{--        console.log(authResult);--}}
-{{--        console.log(auth2);--}}
-{{--    }--}}
-{{--</script>--}}
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+<script>
+
+    function start() {
+        gapi.load('auth2', function() {
+            auth2 = gapi.auth2.init({
+                client_id: '263498759299-to3jnbgjkcee9hfhain7t9av53l4vg0n.apps.googleusercontent.com',
+                scope: 'https://www.googleapis.com/auth/youtube'
+            });
+        });
+    }
+    $('#signinButton').click(function() {
+        // signInCallback defined in step 6.
+        auth2.grantOfflineAccess().then(signInCallback);
+    });
+    function signInCallback(authResult) {
+        console.log(authResult);
+        console.log(auth2);
+    }
+</script>
 </body>
 </html>

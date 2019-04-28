@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
-import {Col, Row, Form} from 'react-bootstrap';
+import {Col, Row} from 'react-bootstrap';
 import ReactTable from 'react-table';
-import _ from 'lodash';
 import CardLoaderReact from './CardLoader.react';
 import InputGroupReact from './InputGroup.react';
 import Pagination from './Pagination.react';
@@ -23,10 +22,8 @@ import {
     Alert,
     Button
 } from 'react-bootstrap';
-
 import trans from '../lang/index';
 import 'react-table/react-table.css'
-
 
 class PageApiKeyReact extends Component {
     constructor(props) {
@@ -46,7 +43,6 @@ class PageApiKeyReact extends Component {
             deletes: []
         }
     }
-
     componentDidMount() {
         this.updateState('loadMore', true);
         fetch(URL_API_KEY_GET, 'get', {})
@@ -63,7 +59,6 @@ class PageApiKeyReact extends Component {
                 }, 2000);
             });
     }
-
     showAlert = (message, type) => {
         this.updateState('message', message);
         this.updateState('messageType', type);
@@ -175,12 +170,10 @@ class PageApiKeyReact extends Component {
     }
 
     handlerChangePrimary = (row, e) => {
-        console.log(e.target.value);
         const api_key = this.state.keys[row.index].api_key;
         this.updateState('loadMore', true);
         fetch(URL_API_KEY_EDIT_PRIMARY, 'put', {api_key : api_key})
             .then(result => {
-                console.log(result);
                 setTimeout(() => {
                     this.updateState('loadMore', false);
                     if(result.data.body.statusCode == STATUS_CODE_OK){
@@ -204,8 +197,6 @@ class PageApiKeyReact extends Component {
                     console.log(error);
                 }, 2000);
             });
-        console.log(row);
-        console.log(e);
     }
 
     submitDelete = () => {
@@ -298,7 +289,6 @@ class PageApiKeyReact extends Component {
                 )
             },
         ];
-        console.log(this.state.keys);
         return (
             <Container>
                 <div className="page-header">
