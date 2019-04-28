@@ -2,7 +2,9 @@
     "private": true,
     "license": "MIT",
     "scripts": {
+        "start": "php artisan serve",
         "lang": "php artisan lang:js --json resources/js/lang/language.json",
+        "seeder-user": "php artisan db:seed --class=UsersTableSeeder",
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "npm run development -- --watch",
