@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d5ee259-7985-4b03-b73f-f5cfd5f89991" name="Default Changelist" comment="" />
+    <list default="true" id="8d5ee259-7985-4b03-b73f-f5cfd5f89991" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/APIKeyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/APIKeyController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2019_04_16_143518_create_data_keys_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2019_04_16_143518_create_data_keys_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/PageApiKey.react.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/PageApiKey.react.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/PageApiKey.react.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/PageApiKey.react.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +40,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/js/components/PageApiKey.react.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-230">
+            <state relative-caret-position="-842">
               <caret line="106" selection-start-line="106" selection-end-line="106" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
@@ -122,7 +128,6 @@
         <option value="$PROJECT_DIR$/resources/js/util/util.js" />
         <option value="$PROJECT_DIR$/app/DataKey.php" />
         <option value="$PROJECT_DIR$/app/User.php" />
-        <option value="$PROJECT_DIR$/database/migrations/2019_04_16_143518_create_data_keys_table.php" />
         <option value="$PROJECT_DIR$/app/Exceptions/Handler.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/ResponseJsonClient.php" />
         <option value="$PROJECT_DIR$/app/Util/Utils.php" />
@@ -134,7 +139,6 @@
         <option value="$PROJECT_DIR$/resources/js/components/Icon.react.js" />
         <option value="$PROJECT_DIR$/resources/views/admin/api_key/api-key.blade.php" />
         <option value="$PROJECT_DIR$/resources/js/components/DataTable.react.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/resources/views/admin/nav.blade.php" />
         <option value="$PROJECT_DIR$/resources/js/util/uri.js" />
         <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
@@ -155,8 +159,10 @@
         <option value="$PROJECT_DIR$/resources/lang/en/message.php" />
         <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/resources/js/util/constant.js" />
-        <option value="$PROJECT_DIR$/resources/js/components/PageApiKey.react.js" />
+        <option value="$PROJECT_DIR$/database/migrations/2019_04_16_143518_create_data_keys_table.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/APIKeyController.php" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/resources/js/components/PageApiKey.react.js" />
       </list>
     </option>
   </component>
@@ -465,6 +471,7 @@
       <workItem from="1556264144044" duration="8835000" />
       <workItem from="1556318257313" duration="9589000" />
       <workItem from="1556345378125" duration="8833000" />
+      <workItem from="1556437519948" duration="3122000" />
     </task>
     <servers />
   </component>
@@ -501,7 +508,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="161152000" />
+    <option name="totallyTimeSpent" value="164274000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -572,20 +579,6 @@
     <SUITE FILE_PATH="coverage/dpyt$ExampleTest_testBasicTest.xml" NAME="ExampleTest.testBasicTest Coverage Results" MODIFIED="1555844483454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="PhpCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/database/migrations/2019_04_16_143518_create_data_keys_table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="20" column="48" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/admin/api_key/api-key.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/admin/nav.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -654,13 +647,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="46" selection-start-line="7" selection-start-column="44" selection-end-line="7" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" column="21" selection-start-line="36" selection-start-column="21" selection-end-line="36" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -837,13 +823,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/lang/vi/keyword.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="22" column="12" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/lang/en/keyword.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
@@ -879,10 +858,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/web.php">
+    <entry file="file://$PROJECT_DIR$/database/migrations/2019_04_16_143518_create_data_keys_table.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="39" column="71" selection-start-line="39" selection-start-column="61" selection-end-line="39" selection-end-column="71" />
+        <state relative-caret-position="221">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/APIKeyController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2675">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/lang/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="21" lean-forward="true" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/util/util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="17" lean-forward="true" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -893,27 +900,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/util/util.js">
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="39" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="39" />
+        <state relative-caret-position="167">
+          <caret line="39" column="71" selection-start-line="39" selection-start-column="61" selection-end-line="39" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/lang/vi/keyword.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="22" column="12" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/components/PageApiKey.react.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-230">
+        <state relative-caret-position="-842">
           <caret line="106" selection-start-line="106" selection-end-line="106" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/APIKeyController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2675">
-          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
         </state>
       </provider>
     </entry>
