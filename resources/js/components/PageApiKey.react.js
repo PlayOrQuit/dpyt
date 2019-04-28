@@ -12,6 +12,7 @@ import {
     URL_API_KEY_CREATE,
     URL_API_KEY_GET,
     URL_API_KEY_DELETE,
+    URL_API_KEY_EDIT_PRIMARY,
     STATUS_CODE_OK,
     STATUS_CODE_FIELD_ERROR,
     STATUS_CODE_DB_ERROR,
@@ -158,7 +159,7 @@ class PageApiKeyReact extends Component {
         }
     }
     handlerChangeDelete = (row, e) => {
-        const newDeletes = this.state.deletes;
+        let newDeletes = this.state.deletes;
         if (e.target.checked) {
             if (newDeletes.indexOf(row.index) === -1) {
                 newDeletes.push(row.index);
@@ -174,11 +175,35 @@ class PageApiKeyReact extends Component {
     }
 
     handlerChangePrimary = (row, e) => {
-
-        const newDeletes = this.state.deletes;
-
-        console.log(_.filter(newDeletes, ['primary', 1]));
-
+        console.log(e.target.value);
+        const api_key = this.state.keys[row.index].api_key;
+        this.updateState('loadMore', true);
+        fetch(URL_API_KEY_EDIT_PRIMARY, 'put', {api_key : api_key})
+            .then(result => {
+                console.log(result);
+                setTimeout(() => {
+                    this.updateState('loadMore', false);
+                    if(result.data.body.statusCode == STATUS_CODE_OK){
+                        let newKeys = this.state.keys;
+                         newKeys.map((v, index) => {
+                           if(v.id === row.original.id){
+                               v.primary = 1;
+                           }else{
+                               v.primary = 0;
+                           }
+                        });
+                        this.updateState('keys', newKeys);
+                    }else{
+                        alert(result.data.body.message);
+                    }
+                }, 2000);
+            })
+            .catch(error => {
+                setTimeout(() => {
+                    this.updateState('loadMore', false);
+                    console.log(error);
+                }, 2000);
+            });
         console.log(row);
         console.log(e);
     }
@@ -191,9 +216,8 @@ class PageApiKeyReact extends Component {
                        arr.push(this.state.keys[v].api_key);
                    });
                    this.updateState('loadMore', true);
-                   fetch(URL_API_KEY_DELETE, 'delete', {items: this.state.deletes})
+                   fetch(URL_API_KEY_DELETE, 'delete', {items: arr})
                        .then(result => {
-                           console.log(result);
                            setTimeout(() => {
                                this.updateState('loadMore', false);
                                if(result.data.body.statusCode == STATUS_CODE_OK){
@@ -228,8 +252,10 @@ class PageApiKeyReact extends Component {
                 ),
                 sortable: false,
                 filterable: false,
+                maxWidth: 55,
+                className: 'd-flex justify-content-center',
                 Cell: row => (
-                    <label className="custom-control custom-checkbox custom-control-inline">
+                    <label className="custom-control custom-checkbox custom-control-inline m-0">
                         <input type="checkbox"
                                className="custom-control-input"
                                name="delete"
@@ -256,19 +282,23 @@ class PageApiKeyReact extends Component {
                 Header: trans.get('keyword.default'),
                 sortable: false,
                 filterable: false,
+                maxWidth: 100,
+                className: 'd-flex justify-content-center',
                 Cell: row => (
-                    <label className="custom-control custom-radio custom-control-inline">
+                    <label className="custom-control custom-radio custom-control-inline m-0">
                         <input type="radio"
                                className="custom-control-input"
                                name="primary"
                                checked={row.original.primary === 1}
                                defaultChecked={row.original.primary === 1}
+                               value={row.original.id}
                                onChange={(e) => this.handlerChangePrimary(row, e)}/>
                         <span className="custom-control-label"></span>
                     </label>
                 )
             },
         ];
+        console.log(this.state.keys);
         return (
             <Container>
                 <div className="page-header">
