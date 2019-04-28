@@ -19,6 +19,7 @@ class CreateDataKeysTable extends Migration
             $table->string('api_key', 75);
             $table->string('id_client', 75);
             $table->string('client_secret', 75);
+            $table->boolean('primary')->default(false);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

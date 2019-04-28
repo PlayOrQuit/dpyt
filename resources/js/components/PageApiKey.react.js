@@ -86,7 +86,7 @@ class PageApiKeyReact extends Component {
     }
     handlerChangeApiKey = (v) => {
         if (v === '') {
-            this.setError('api_key', trans.get('validation.required').replace(':attribute', trans.get('keyword.key')));
+            this.setError('api_key', trans.get('validation.required', {attribute: trans.get('keyword.key')}));
         } else {
             this.updateState('api_key', v);
             this.setError('api_key', null);
@@ -95,7 +95,7 @@ class PageApiKeyReact extends Component {
     }
     handlerChangeIdClient = (v) => {
         if (v === '') {
-            this.setError('id_client', trans.get('validation.required').replace(':attribute', trans.get('keyword.id_client')));
+            this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
         } else {
             this.updateState('id_client', v);
             this.setError('id_client', null);
@@ -103,7 +103,7 @@ class PageApiKeyReact extends Component {
     }
     handlerChangeClientSecret = (v) => {
         if (v === '') {
-            this.setError('client_secret', trans.get('validation.required').replace(':attribute', trans.get('keyword.client_secret')));
+            this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
         } else {
             this.updateState('client_secret', v);
             this.setError('client_secret', null);
@@ -131,11 +131,11 @@ class PageApiKeyReact extends Component {
     }
     submitData = () => {
         if (this.state.api_key === '') {
-            this.setError('api_key', trans.get('validation.required').replace(':attribute', trans.get('keyword.key')));
+            this.setError('api_key', trans.get('validation.required', {attribute: trans.get('keyword.key')}));
         } else if (this.state.id_client === '') {
-            this.setError('id_client', trans.get('validation.required').replace(':attribute', trans.get('keyword.id_client')));
+            this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
         } else if (this.state.client_secret === '') {
-            this.setError('client_secret', trans.get('validation.required').replace(':attribute', trans.get('keyword.client_secret')));
+            this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
         } else {
             this.updateState('isLoading', true);
             fetch(URL_API_KEY_CREATE, 'post', {
@@ -157,7 +157,7 @@ class PageApiKeyReact extends Component {
                 });
         }
     }
-    handlerChangeCheckChoose = (row, e) => {
+    handlerChangeDelete = (row, e) => {
         const newDeletes = this.state.deletes;
         if (e.target.checked) {
             if (newDeletes.indexOf(row.index) === -1) {
@@ -172,6 +172,11 @@ class PageApiKeyReact extends Component {
             }
         }
     }
+
+    handlerChangePrimary = (row, index) => {
+
+    }
+
     submitDelete = () => {
         if(this.state.deletes.length > 0){
                if(confirm(trans.get('message.confirm_delete'))){
@@ -221,9 +226,9 @@ class PageApiKeyReact extends Component {
                     <label className="custom-control custom-checkbox custom-control-inline">
                         <input type="checkbox"
                                className="custom-control-input"
-                               name="inline-checkbox"
-                               checked={this.state.deletes.indexOf(row.index) > -1}
-                               defaultChecked={this.state.deletes.indexOf(row.index) > -1}
+                               name="delete"
+                               checked={row.original.primary}
+                               defaultChecked={row.original.primary}
                                onChange={(e) => this.handlerChangeCheckChoose(row, e)}/>
                         <span className="custom-control-label"></span>
                     </label>
@@ -240,7 +245,23 @@ class PageApiKeyReact extends Component {
             {
                 Header: trans.get('keyword.client_secret'),
                 accessor: 'client_secret',
-            }
+            },
+            {
+                Header: trans.get('keyword.default'),
+                sortable: false,
+                filterable: false,
+                Cell: row => (
+                    <label className="custom-control custom-radio custom-control-inline">
+                        <input type="radio"
+                               className="custom-control-input"
+                               name="primary"
+                               checked={row.orgin}
+                               defaultChecked={this.state.deletes.indexOf(row.index) > -1}
+                               onChange={(e) => this.handlerChangeDelete(row, e)}/>
+                        <span className="custom-control-label"></span>
+                    </label>
+                )
+            },
         ];
         return (
             <Container>

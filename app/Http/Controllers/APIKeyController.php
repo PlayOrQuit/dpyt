@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\DataKey;
-use App\Http\Constant\WebKeys;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -33,7 +32,7 @@ class APIKeyController extends Controller
         $user_id = \Auth::user()->id;
         try
         {
-            $keys = DataKey::select('id', 'api_key', 'id_client', 'client_secret')->where(['user_id' => $user_id])->get();
+            $keys = DataKey::select('id', 'api_key', 'id_client', 'client_secret', 'primary')->where(['user_id' => $user_id])->get();
             return $this->_resJsonSuccess('Success', $req->path(), $keys);
         }
         catch (QueryException $e){
