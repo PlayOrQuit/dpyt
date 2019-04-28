@@ -18,5 +18,12 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => bcrypt('123456'),
         ]);
+
+        DB::table('users')->insert([
+            'name' => 'dangnh',
+            'email' => 'nguyenhaidang931210@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('123456'),
+        ]);
     }
 }
