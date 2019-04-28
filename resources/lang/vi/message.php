@@ -7,5 +7,7 @@ return [
     'edit_failed' => 'Sửa thất bại!',
     'delete_success'   => 'Xóa thành công!',
     'delete_failed' => 'Xóa thất bại!',
-    'no_result' => 'Không tìm thấy dữ liệu nào'
+    'no_result' => 'Không tìm thấy dữ liệu nào',
+    'no_choose' => 'Bạn chưa chọn giá trị nào!',
+    'confirm_delete' => 'Bạn có chắc muốn xóa?'
 ];

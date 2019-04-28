@@ -113,7 +113,7 @@ class APIKeyController extends Controller
 
         if ($validator->fails())
         {
-            $this->_resJsonError(WebKeys::HTTP_BAD_REQUEST, 'Bad request', $validator->errors(), $req->path());
+            return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
             $primary = $req->primary;
@@ -121,9 +121,9 @@ class APIKeyController extends Controller
                 DataKey::where(['user_id' => $user_id, 'primary' => true])->update(['primary' => false]);
             }
             $data_key = DataKey::where([ 'api_key' => $req->api_key, 'user_id' => $user_id])->update(['primary' => $primary])->fresh();
-            $this->_resJsonSuccess(WebKeys::HTTP_OK, $data_key, trans('message.edit_success'), $req->path());
+            return $this->_resJsonSuccess(trans('message.edit_success'), $req->path(), $data_key);
         }catch (Exception $e){
-            $this->_resJsonError(WebKeys::HTTP_BAD_REQUEST, trans('message.edit_failed'), null, $req->path());
+            return $this->_resJsonErrDB( trans('message.edit_failed'), $req->path());
         }
     }
 
@@ -144,4 +144,32 @@ class APIKeyController extends Controller
         );
         return Validator::make($data, $rules);
     }
+
+    public function delete(Request $req){
+        $user_id = \Auth::user()->id;
+        $validator = $this->validatorDelete($req->all());
+        if ($validator->fails())
+        {
+            return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
+        }
+        try{
+            DataKey::where(['user_id' => $user_id])->whereIn('api_key', $req->items)->delete();
+            return $this->_resJsonSuccess(trans('message.delete_success'), $req->path(), $req->items);
+        }catch (QueryException $e){
+            return $this->_resJsonErrDB( trans('message.delete_failed'), $req->path());
+        }
+
+    }
+
+    private function validatorDelete($data){
+        $rules = array(
+            'items' => [
+                'required',
+                'array',
+                'min:1'
+            ]
+        );
+        return Validator::make($data, $rules);
+    }
+
 }

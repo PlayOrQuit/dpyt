@@ -1,6 +1,7 @@
 const BASE_URL = document.getElementById("baseUrl").href;
 export const URL_API_KEY_CREATE = BASE_URL  + '/admin/api-key/create';
 export const URL_API_KEY_GET = BASE_URL  + '/admin/api-key/get';
+export const URL_API_KEY_DELETE = BASE_URL + '/admin/api-key/delete';
 
 export const STATUS_CODE_OK = '01';
 export const STATUS_CODE_FIELD_ERROR = '02';

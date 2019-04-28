@@ -20,5 +20,6 @@ return[
     'remember_me' => 'Remember me',
     'forgot_password' => 'Forgot your password',
     'send_reset_password' => 'Send password reset link',
-    'default' => 'Default'
+    'default' => 'Default',
+    'choose' => 'Choose',
 ];

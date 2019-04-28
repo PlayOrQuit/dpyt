@@ -20,5 +20,6 @@ return[
     'remember_me' => 'Ghi nhớ tôi',
     'forgot_password' => 'Quên mật khẩu',
     'send_reset_password' => 'Gửi liên kết đặt lại mật khẩu',
-    'default' => 'Mặc định'
+    'default' => 'Mặc định',
+    'choose' => 'Chọn',
 ];

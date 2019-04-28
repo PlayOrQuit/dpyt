@@ -1,23 +1,30 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import {Col, Row, Form} from 'react-bootstrap';
 import ReactTable from 'react-table';
+import _ from 'lodash';
 import CardLoaderReact from './CardLoader.react';
 import InputGroupReact from './InputGroup.react';
 import Pagination from './Pagination.react';
-import AlertMessage from './AlertMessage.react';
-import {URL_API_KEY_CREATE, URL_API_KEY_GET, STATUS_CODE_OK, STATUS_CODE_FIELD_ERROR} from '../util/constant';
+import Icon from './Icon.react';
+import {
+    URL_API_KEY_CREATE,
+    URL_API_KEY_GET,
+    URL_API_KEY_DELETE,
+    STATUS_CODE_OK,
+    STATUS_CODE_FIELD_ERROR,
+    STATUS_CODE_DB_ERROR,
+    STATUS_CODE_SERVER_ERROR
+} from '../util/constant';
 import {fetch} from '../util/util';
 import {
-    Card,
-    Button,
+    Alert,
+    Button
 } from 'react-bootstrap';
 
 import trans from '../lang/index';
 import 'react-table/react-table.css'
-
 
 
 class PageApiKeyReact extends Component {
@@ -33,18 +40,17 @@ class PageApiKeyReact extends Component {
             isLoading: false,
             loadMore: false,
             keys: [],
-            showAlert: false,
-            messages: [],
-            messageType: 'info'
+            message: null,
+            messageType: 'info',
+            deletes: []
         }
-        this.editPrimary = this.editPrimary.bind(this);
     }
+
     componentDidMount() {
         this.updateState('loadMore', true);
-        fetch(URL_API_KEY_GET, 'get', this.state)
+        fetch(URL_API_KEY_GET, 'get', {})
             .then(result => {
                 setTimeout(() => {
-                    console.log(result);
                     this.updateState('loadMore', false);
                     this.updateState('keys', result.data.body.data);
                 }, 2000);
@@ -56,100 +62,173 @@ class PageApiKeyReact extends Component {
                 }, 2000);
             });
     }
-    showAlert(messages, type){
-        this.updateState('messages', messages);
+
+    showAlert = (message, type) => {
+        this.updateState('message', message);
         this.updateState('messageType', type);
-        this.updateState('showAlert', true);
     }
-    updateState(k, v){
+    hideAlert = () => {
+        this.showAlert(null, 'info');
+    }
+    updateState = (k, v) => {
         const newState = this.state;
         newState[k] = v;
         this.setState(newState);
     }
-    setError(k, clear){
-      if(k === 'api_key'){
-          if(clear){
-              this.updateState('err_api_key', null);
-          }else{
-              this.updateState('err_api_key', trans.get('validation.required').replace(':attribute', trans.get('keyword.key')));
-          }
-      }else if(k === 'id_client'){
-          if(clear){
-              this.updateState('err_id_client', null);
-          }else{
-              this.updateState('err_id_client', trans.get('validation.required').replace(':attribute', trans.get('keyword.id_client')));
-          }
-      }else if(k === 'client_secret'){
-          if(clear){
-              this.updateState('err_client_secret', null);
-          }else{
-              this.updateState('err_client_secret', trans.get('validation.required').replace(':attribute', trans.get('keyword.client_secret')));
-          }
-      }
+    setError = (k, msg) => {
+        if (k === 'api_key') {
+            this.updateState('err_api_key', msg);
+        } else if (k === 'id_client') {
+            this.updateState('err_id_client', msg);
+        } else if (k === 'client_secret') {
+            this.updateState('err_client_secret', msg);
+        }
     }
     handlerChangeApiKey = (v) => {
-        if(v === ''){
-            this.setError('api_key', false);
-        }
-        else{
+        if (v === '') {
+            this.setError('api_key', trans.get('validation.required').replace(':attribute', trans.get('keyword.key')));
+        } else {
             this.updateState('api_key', v);
-            this.setError('api_key', true);
+            this.setError('api_key', null);
         }
 
     }
     handlerChangeIdClient = (v) => {
-        if(v === ''){
-            this.setError('id_client', false);
-        }
-        else{
+        if (v === '') {
+            this.setError('id_client', trans.get('validation.required').replace(':attribute', trans.get('keyword.id_client')));
+        } else {
             this.updateState('id_client', v);
-            this.setError('id_client', true);
+            this.setError('id_client', null);
         }
     }
     handlerChangeClientSecret = (v) => {
-        if(v === ''){
-            this.setError('client_secret', false);
-        }
-        else{
+        if (v === '') {
+            this.setError('client_secret', trans.get('validation.required').replace(':attribute', trans.get('keyword.client_secret')));
+        } else {
             this.updateState('client_secret', v);
-            this.setError('client_secret', true);
+            this.setError('client_secret', null);
+        }
+    }
+    submitResult = (data) => {
+        if (data.statusCode == STATUS_CODE_OK) {
+            let keyNews = this.state.keys;
+            keyNews.push(data.data);
+            this.updateState('keys', keyNews);
+            this.showAlert(data.message, 'success');
+        } else if (data.statusCode == STATUS_CODE_FIELD_ERROR) {
+            if (data.field_errors.api_key) {
+                this.setError('api_key', data.field_errors.api_key[0]);
+            } else if (data.field_errors.id_client) {
+                this.setError('id_client', data.field_errors.id_client[0]);
+            } else if (data.field_errors.client_secret) {
+                this.setError('client_secret', data.field_errors.client_secret[0]);
+            }
+        } else if (data.statusCode == STATUS_CODE_DB_ERROR) {
+            this.showAlert(data.message, 'danger');
+        } else {
+            this.showAlert(data.message, 'danger');
         }
     }
     submitData = () => {
-        if(this.state.api_key === ''){
-            this.setError('api_key', false);
-        }else if(this.state.id_client === ''){
-            this.setError('id_client', false);
-        }else if(this.state.client_secret === ''){
-            this.setError('client_secret', false);
-        }else{
+        if (this.state.api_key === '') {
+            this.setError('api_key', trans.get('validation.required').replace(':attribute', trans.get('keyword.key')));
+        } else if (this.state.id_client === '') {
+            this.setError('id_client', trans.get('validation.required').replace(':attribute', trans.get('keyword.id_client')));
+        } else if (this.state.client_secret === '') {
+            this.setError('client_secret', trans.get('validation.required').replace(':attribute', trans.get('keyword.client_secret')));
+        } else {
             this.updateState('isLoading', true);
-            fetch(URL_API_KEY_CREATE, 'post', this.state)
+            fetch(URL_API_KEY_CREATE, 'post', {
+                api_key: this.state.api_key,
+                id_client: this.state.id_client,
+                client_secret: this.state.client_secret
+            })
                 .then(result => {
                     setTimeout(() => {
                         this.updateState('isLoading', false);
-                        if(result.data.body.statusCode == STATUS_CODE_OK){
-                            let keyNews = this.state.keys;
-                            keyNews.push(result.data.body.data);
-                            this.updateState('keys', keyNews);
-                        }
+                        this.submitResult(result.data.body);
                     }, 2000);
                 })
                 .catch(error => {
                     setTimeout(() => {
                         this.updateState('isLoading', false);
+                        console.log(error);
                     }, 2000);
                 });
         }
     }
-    editPrimary = (value) => {
-        console.log(value);
+    handlerChangeCheckChoose = (row, e) => {
+        const newDeletes = this.state.deletes;
+        if (e.target.checked) {
+            if (newDeletes.indexOf(row.index) === -1) {
+                newDeletes.push(row.index);
+                this.updateState('deletes', newDeletes);
+            }
+        } else {
+            let index = newDeletes.indexOf(row.index);
+            if (index > -1) {
+                newDeletes.splice(index, 1);
+                this.updateState('deletes', newDeletes);
+            }
+        }
     }
-    onCloseAlert = () => {
-        this.updateState('showAlert', false);
+    submitDelete = () => {
+        if(this.state.deletes.length > 0){
+               if(confirm(trans.get('message.confirm_delete'))){
+                   let arr = [];
+                   this.state.deletes.map((v, index) => {
+                       arr.push(this.state.keys[v].api_key);
+                   });
+                   this.updateState('loadMore', true);
+                   fetch(URL_API_KEY_DELETE, 'delete', {items: this.state.deletes})
+                       .then(result => {
+                           console.log(result);
+                           setTimeout(() => {
+                               this.updateState('loadMore', false);
+                               if(result.data.body.statusCode == STATUS_CODE_OK){
+                                   const newKeys = this.state.keys;
+                                   this.state.deletes.map((v, index) => {
+                                       newKeys.splice(v, 1);
+                                   });
+                                   this.updateState('keys', newKeys);
+                                   this.updateState('deletes', []);
+                               }else{
+                                   alert(result.data.body.message);
+                               }
+                           }, 2000);
+                       })
+                       .catch(error => {
+                           setTimeout(() => {
+                               this.updateState('loadMore', false);
+                               console.log(error);
+                           }, 2000);
+                       });
+               }
+        }else{
+            alert(trans.get('message.no_choose'));
+        }
     }
+
     render() {
         const columns = [
+            {
+                Header: state => (
+                    <Button variant="outline-primary" onClick={this.submitDelete} size="sm"><Icon name="fe fe-trash-2"/></Button>
+                ),
+                sortable: false,
+                filterable: false,
+                Cell: row => (
+                    <label className="custom-control custom-checkbox custom-control-inline">
+                        <input type="checkbox"
+                               className="custom-control-input"
+                               name="inline-checkbox"
+                               checked={this.state.deletes.indexOf(row.index) > -1}
+                               defaultChecked={this.state.deletes.indexOf(row.index) > -1}
+                               onChange={(e) => this.handlerChangeCheckChoose(row, e)}/>
+                        <span className="custom-control-label"></span>
+                    </label>
+                )
+            },
             {
                 Header: trans.get('keyword.key'),
                 accessor: 'api_key',
@@ -161,14 +240,6 @@ class PageApiKeyReact extends Component {
             {
                 Header: trans.get('keyword.client_secret'),
                 accessor: 'client_secret',
-            },
-            {
-                Header: '',
-                Cell: row => (
-                    <Button variant="secondary" size="sm"  onClick={() => this.editPrimary(row)}>
-                        { trans.get('keyword.default')}
-                    </Button>
-                )
             }
         ];
         return (
@@ -181,6 +252,9 @@ class PageApiKeyReact extends Component {
                 <Row className="row-cards">
                     <Col lg="4">
                         <CardLoaderReact isLoading={this.state.isLoading}>
+                            {this.state.message ?
+                                <Alert onClose={this.hideAlert} dismissible variant={this.state.messageType}>
+                                    <p>{this.state.message}</p></Alert> : ''}
                             <InputGroupReact
                                 name="key"
                                 type="text"
