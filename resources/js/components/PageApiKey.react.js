@@ -14,8 +14,7 @@ import {
     URL_API_KEY_EDIT_PRIMARY,
     STATUS_CODE_OK,
     STATUS_CODE_FIELD_ERROR,
-    STATUS_CODE_DB_ERROR,
-    STATUS_CODE_SERVER_ERROR
+    STATUS_CODE_DB_ERROR
 } from '../util/constant';
 import {fetch} from '../util/util';
 import {

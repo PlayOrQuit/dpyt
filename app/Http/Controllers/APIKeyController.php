@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\DataKey;
-use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +39,19 @@ class APIKeyController extends Controller
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
 
+    }
+
+    public function getKeyByPrimary(Request $req){
+        $user_id = \Auth::user()->id;
+        try
+        {
+            $keys = DataKey::select('api_key', 'id_client', 'client_secret')->where(['user_id' => $user_id, 'primary' => true])->get();
+            return $this->_resJsonSuccess('Success', $req->path(), $keys);
+        }
+        catch (QueryException $e){
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
+        }
     }
 
     /**

@@ -6,7 +6,7 @@
                     <li class="nav-item">
                         <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-play-circle"></i>{{ trans('template.menu_seo_playlist') }}</a>
                         <div class="dropdown-menu dropdown-menu-arrow">
-                            <a href="{{ action('ViewChannelController@view_list') }}" class="dropdown-item ">{{ trans('template.menu_sub_channels') }}</a>
+                            <a href="{{ action('ChannelController@render') }}" class="dropdown-item ">{{ trans('template.menu_sub_channels') }}</a>
                             <a href="./pricing-cards.html" class="dropdown-item ">{{ trans('template.menu_sub_add_playlist') }}</a>
                             <a href="./charts.html" class="dropdown-item ">{{ trans('template.menu_sub_add_multiple_playlist') }}</a>
                             <a href="./pricing-cards.html" class="dropdown-item ">{{ trans('template.menu_sub_playlist') }}</a>
