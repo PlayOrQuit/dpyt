@@ -1,23 +1,31 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import {
-    Card,
-    Form,
+    Container,
+    Col,
+    Row,
     Button,
-    Table,
-    Pagination,
+    Form
 } from 'react-bootstrap';
+import _ from 'lodash';
+import ReactTable from 'react-table';
+import matchSorter from 'match-sorter'
+import CardLoaderReact from './CardLoader.react';
+import Pagination from './Pagination.react';
 import trans from '../lang/index';
 import {fetch, fetchOther} from '../util/util';
 import {
     URL_CHANNEL_CALLBACK,
     URL_API_KEY_GET_PRIMARY,
+    URL_CHANNEL_GET,
+    URL_CHANNEL_CREATE,
+    URL_CHANNEL_DELETE,
     URL_YOUTUBE_CHANNEL_LIST,
-    STATUS_CODE_OK
+    STATUS_CODE_OK,
+    TIME_OUT_REQUEST
 } from '../util/constant';
+import Icon from "./Icon.react";
+import 'react-table/react-table.css'
 
 class PageChannelReact extends Component {
     constructor(props) {
@@ -28,14 +36,25 @@ class PageChannelReact extends Component {
             auth: null,
             channels: [],
             isLoading: false,
+            deletes: [],
         }
     }
+
     updateState = (k, v) => {
         const newState = this.state;
         newState[k] = v;
         this.setState(newState);
     }
+
     componentWillMount() {
+        this.init();
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    init = () => {
         fetch(URL_API_KEY_GET_PRIMARY, 'get', {})
             .then(result => {
                 if (result.data.body.statusCode === STATUS_CODE_OK) {
@@ -51,21 +70,87 @@ class PageChannelReact extends Component {
             });
         window.addEventListener("message", this.receiveMessage, false);
     }
+    getData = () => {
+        this.updateState('isLoading', true);
+        fetch(URL_CHANNEL_GET, 'get', {})
+            .then(result => {
+                setTimeout(() => {
+                    this.updateState('isLoading', false);
+                    if (result.data.body.statusCode === STATUS_CODE_OK) {
+                        this.updateState('channels', result.data.body.data);
+                    }
+                }, TIME_OUT_REQUEST);
+            })
+            .catch(error => {
+                setTimeout(() => {
+                    this.updateState('isLoading', false);
+                    console.log(error);
+                }, TIME_OUT_REQUEST);
+            });
+    }
+    getChannels = (accessToken) => {
+        fetchOther(URL_YOUTUBE_CHANNEL_LIST + '?part=snippet,statistics&mine=true', 'get', {}, {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json',
+        }).then(result => {
+            this.addChannel(result.data);
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+    resultAddChannel = (result) => {
+        if (result.statusCode === STATUS_CODE_OK) {
+            let newChannels = this.state.channels;
+            let exits = false;
+            newChannels.map((v, index) => {
+               if(result.data.id === v.id){
+                   v.title = result.data.title;
+                   v.status = result.data.status;
+                   v.view = result.data.view;
+                   v.subscriber = result.data.subscriber;
+                   exits = true;
+               }
+            });
+            if(exits === false){
+                newChannels.push(result.data);
+            }
+            this.updateState('channels', newChannels);
+        }
+    }
+    addChannel = (data) => {
+        if(data.items[0]){
+            const auth = this.state.auth;
+            const dataSend = {
+                uid: data.items[0].id,
+                title: data.items[0].snippet.title,
+                thumbnail: data.items[0].snippet.thumbnails.default.url,
+                view: data.items[0].statistics.viewCount,
+                subscriber: data.items[0].statistics.subscriberCount,
+                access_token: auth.access_token,
+                refresh_token: auth.refresh_token,
+                token_type: auth.token_type,
+                expires_in: auth.expires_in,
+                iat: auth.iat
+            }
+            fetch(URL_CHANNEL_CREATE, 'post', dataSend)
+                .then(result => {
+                    this.resultAddChannel(result.data.body);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    }
     receiveMessage = event => {
         try {
             const auth = JSON.parse(event.data);
-            if(auth.access_token && auth.refresh_token){
+            if (auth.access_token && auth.refresh_token) {
+                const currentDate = new Date();
+                auth.iat = currentDate.getTime() + (auth.expires_in * 1000);
                 this.updateState('auth', auth);
-                fetchOther(URL_YOUTUBE_CHANNEL_LIST + '?part=snippet,statistics&mine=true', 'get', {}, {
-                    'Authorization': 'Bearer ' + auth.access_token,
-                    'Content-Type': 'application/json',
-                }).then(result => {
-                    console.log(result);
-                }).catch(error => {
-                    console.log(error);
-                });
+                this.getChannels(auth.access_token);
             }
-        }catch (e) {
+        } catch (e) {
 
         }
     }
@@ -76,7 +161,127 @@ class PageChannelReact extends Component {
             alert(trans.get('message.set_primary_api_key'));
         }
     }
+    handlerDelete = () => {
+        let newDeletes = this.state.deletes;
+        if(newDeletes.length > 0){
+            if (confirm(trans.get('message.confirm_delete'))) {
+                this.updateState('isLoading', true);
+                fetch(URL_CHANNEL_DELETE, 'delete', {items: newDeletes})
+                    .then(result => {
+                        setTimeout(() => {
+                            this.updateState('isLoading', false);
+                            if (result.data.body.statusCode === STATUS_CODE_OK) {
+                                const newChannels = _.filter(this.state.channels, function (item) {
+                                    return newDeletes.indexOf(item.id) === -1;
+                                });
+                                newDeletes = [];
+                                this.updateState('deletes', newDeletes);
+                                this.updateState('channels', newChannels);
+                            }else{
+                                alert(result.data.body.message);
+                            }
+                        }, TIME_OUT_REQUEST);
+                    })
+                    .catch(error => {
+                        setTimeout(() => {
+                            this.updateState('isLoading', false);
+                            console.log(error);
+                        }, TIME_OUT_REQUEST);
+                    });
+            }
+        }else{
+            alert(trans.get('message.no_choose'));
+        }
+
+
+    }
+    handlerChangeDelete = (row, e) => {
+        let newDeletes = this.state.deletes;
+        if (e.target.checked) {
+            if (newDeletes.indexOf(row.original.id) === -1) {
+                newDeletes.push(row.original.id);
+                this.updateState('deletes', newDeletes);
+            }
+        } else {
+            let index = newDeletes.indexOf(row.original.id);
+            if (index > -1) {
+                newDeletes.splice(index, 1);
+                this.updateState('deletes', newDeletes);
+            }
+        }
+    }
+
     render() {
+        const columns = [
+            {
+                Header: state => (
+                    <Button variant="outline-primary" onClick={this.handlerDelete} size="sm"><Icon
+                        name="fe fe-trash-2"/></Button>
+                ),
+                sortable: false,
+                filterable: false,
+                maxWidth: 55,
+                className: 'd-flex justify-content-center',
+                Cell: row => (
+                    <label className="custom-control custom-checkbox custom-control-inline m-0">
+                        <input type="checkbox"
+                               className="custom-control-input"
+                               name="delete"
+                               checked={this.state.deletes.indexOf(row.original.id) > -1}
+                               defaultChecked={this.state.deletes.indexOf(row.original.id) > -1}
+                               onChange={(e) => this.handlerChangeDelete(row, e)}/>
+                        <span className="custom-control-label"/>
+                    </label>
+                )
+            },
+            {
+                Header: trans.get('keyword.name_channel'),
+                id: "title",
+                accessor: d => d.title,
+                filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, {keys: ["title"]}),
+                filterAll: true
+
+            },
+            {
+                Header: trans.get('keyword.view'),
+                accessor: 'view',
+                filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, {keys: ["view"]}),
+                filterAll: true
+            },
+            {
+                Header: trans.get('keyword.subscriber'),
+                accessor: 'subscriber',
+                filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, {keys: ["subscriber"]}),
+                filterAll: true
+            },
+            {
+                Header: trans.get('keyword.status'),
+                accessor: 'status',
+                id: "status",
+                Cell: ({value}) => (value === 0 ? trans.get('keyword.normal') : trans.get('keyword.turn_off')),
+                filterMethod: (filter, row) => {
+                    if (filter.value === "all") {
+                        return true;
+                    }
+                    if (filter.value === "false") {
+                        return row.status === 0;
+                    }
+                    return row.status === 1;
+                },
+                Filter: ({filter, onChange}) =>
+                    <Form.Control as="select"
+                                  onChange={event => onChange(event.target.value)}
+                                  value={filter ? filter.value : "all"}
+                    >
+                        <option value="all">{trans.get('keyword.show_all')}</option>
+                        <option value="false">{trans.get('keyword.normal')}</option>
+                        <option value="true">{trans.get('keyword.turn_off')}</option>
+                    </Form.Control>
+            },
+        ];
         return (
             <Container>
                 <div className="page-header">
@@ -92,198 +297,18 @@ class PageChannelReact extends Component {
                     </div>
                 </div>
                 <Row className="row-cards">
-                    {/*<Col lg="4">*/}
-                    {/*    <Card>*/}
-                    {/*        <Card.Body>*/}
-                    {/*            <Form.Group>*/}
-                    {/*                <Form.Label>{trans.get('keyword.name_channel')}</Form.Label>*/}
-                    {/*                <Form.Control type="text"*/}
-                    {/*                              placeholder={trans.get('keyword.enter') + ' ' + trans.get('keyword.name_channel')}/>*/}
-                    {/*            </Form.Group>*/}
-                    {/*            <Form.Group>*/}
-                    {/*                <Form.Label>{trans.get('keyword.status')}</Form.Label>*/}
-                    {/*                <Form.Control as="select">*/}
-                    {/*                    <option value="1">1</option>*/}
-                    {/*                    <option value="2">2</option>*/}
-                    {/*                    <option value="3">3</option>*/}
-                    {/*                </Form.Control>*/}
-                    {/*            </Form.Group>*/}
-                    {/*        </Card.Body>*/}
-                    {/*        <Card.Footer>*/}
-                    {/*            <Button variant="primary">{trans.get('keyword.search')}</Button>*/}
-                    {/*        </Card.Footer>*/}
-                    {/*    </Card>*/}
-                    {/*</Col>*/}
                     <Col lg="12">
-                        <Card>
-
-                            <Table className="card-table table-vcenter">
-                                <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>{trans.get('keyword.name_channel')}</th>
-                                    <th>{trans.get('keyword.view')}</th>
-                                    <th>{trans.get('keyword.follow')}</th>
-                                    <th>{trans.get('keyword.status')}</th>
-                                    <th className="w-1"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kênh 1</td>
-                                    <td>20</td>
-                                    <td>50</td>
-                                    <td>Bình thường</td>
-                                    <td className="text-center">
-                                        <div className="item-action dropdown">
-                                            <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
-                                                <i className="fe fe-more-vertical"></i>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-edit-2"></i> {trans.get('keyword.edit')}
-                                                </a>
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-delete"></i> {trans.get('keyword.delete')}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kênh 1</td>
-                                    <td>20</td>
-                                    <td>50</td>
-                                    <td>Bình thường</td>
-                                    <td className="text-center">
-                                        <div className="item-action dropdown">
-                                            <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
-                                                <i className="fe fe-more-vertical"></i>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-edit-2"></i> {trans.get('keyword.edit')}
-                                                </a>
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-delete"></i> {trans.get('keyword.delete')}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kênh 1</td>
-                                    <td>20</td>
-                                    <td>50</td>
-                                    <td>Bình thường</td>
-                                    <td className="text-center">
-                                        <div className="item-action dropdown">
-                                            <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
-                                                <i className="fe fe-more-vertical"></i>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-edit-2"></i> {trans.get('keyword.edit')}
-                                                </a>
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-delete"></i> {trans.get('keyword.delete')}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kênh 1</td>
-                                    <td>20</td>
-                                    <td>50</td>
-                                    <td>Bình thường</td>
-                                    <td className="text-center">
-                                        <div className="item-action dropdown">
-                                            <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
-                                                <i className="fe fe-more-vertical"></i>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-edit-2"></i> {trans.get('keyword.edit')}
-                                                </a>
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-delete"></i> {trans.get('keyword.delete')}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kênh 1</td>
-                                    <td>20</td>
-                                    <td>50</td>
-                                    <td>Bình thường</td>
-                                    <td className="text-center">
-                                        <div className="item-action dropdown">
-                                            <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
-                                                <i className="fe fe-more-vertical"></i>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-edit-2"></i> {trans.get('keyword.edit')}
-                                                </a>
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-delete"></i> {trans.get('keyword.delete')}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Kênh 1</td>
-                                    <td>20</td>
-                                    <td>50</td>
-                                    <td>Bình thường</td>
-                                    <td className="text-center">
-                                        <div className="item-action dropdown">
-                                            <a href="javascript:void(0)" data-toggle="dropdown" className="icon">
-                                                <i className="fe fe-more-vertical"></i>
-                                            </a>
-                                            <div className="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-edit-2"></i> {trans.get('keyword.edit')}
-                                                </a>
-                                                <a href="javascript:void(0)" className="dropdown-item"><i
-                                                    className="dropdown-icon fe fe-delete"></i> {trans.get('keyword.delete')}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </Table>
-                            <br/>
-                            <Row className="justify-content-md-center">
-                                <Pagination>
-                                    <Pagination.First/>
-                                    <Pagination.Prev/>
-                                    <Pagination.Item>{1}</Pagination.Item>
-                                    <Pagination.Ellipsis/>
-
-                                    <Pagination.Item>{10}</Pagination.Item>
-                                    <Pagination.Item>{11}</Pagination.Item>
-                                    <Pagination.Item active>{12}</Pagination.Item>
-                                    <Pagination.Item>{13}</Pagination.Item>
-                                    <Pagination.Item disabled>{14}</Pagination.Item>
-
-                                    <Pagination.Ellipsis/>
-                                    <Pagination.Item>{20}</Pagination.Item>
-                                    <Pagination.Next/>
-                                    <Pagination.Last/>
-                                </Pagination>
-                            </Row>
-                        </Card>
+                        <CardLoaderReact isLoading={this.state.isLoading}>
+                            <ReactTable
+                                filterable
+                                PaginationComponent={Pagination}
+                                noDataText={trans.get('message.no_result')}
+                                columns={columns}
+                                data={this.state.channels}
+                                defaultPageSize={10}
+                                className=""
+                            />
+                        </CardLoaderReact>
                     </Col>
                 </Row>
             </Container>

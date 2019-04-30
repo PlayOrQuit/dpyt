@@ -2,7 +2,7 @@
     <div class="container">
         <div class="d-flex">
             <a class="header-brand" href="{{ url('/') }}">
-                <img src="{{ asset('images/youtube.png') }}" class="header-brand-img" alt="logo">
+                <img src="{{ asset('images/tabler.svg') }}" class="header-brand-img" alt="logo">
             </a>
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="dropdown d-none d-md-flex">

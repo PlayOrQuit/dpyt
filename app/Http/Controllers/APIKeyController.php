@@ -20,13 +20,16 @@ class APIKeyController extends Controller
     }
 
     /**
-     * render view
+     * Render view
      */
     public function render()
     {
         return view('admin.api_key.api-key');
     }
 
+    /**
+     * Get by user
+     */
     public function get(Request $req){
         $user_id = \Auth::user()->id;
         try
@@ -38,9 +41,11 @@ class APIKeyController extends Controller
             Log::error($e->getMessage(), $e->getTrace());
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
-
     }
 
+    /**
+     * Get by user and primary
+     */
     public function getKeyByPrimary(Request $req){
         $user_id = \Auth::user()->id;
         try
@@ -132,7 +137,7 @@ class APIKeyController extends Controller
             return $this->_resJsonSuccess(trans('message.edit_success'), $req->path(), $data_key);
         }catch (QueryException $e){
             Log::error($e->getMessage(), $e->getTrace());
-            return $this->_resJsonErrDB( trans('message.edit_failed'), $req->path());
+            return $this->_resJsonErrDB( $e->getMessage(), $req->path());
         }
     }
 
@@ -149,7 +154,9 @@ class APIKeyController extends Controller
         );
         return Validator::make($data, $rules);
     }
-
+    /**
+     * Delete
+     */
     public function delete(Request $req){
         $user_id = \Auth::user()->id;
         $validator = $this->validatorDelete($req->all());
@@ -161,7 +168,7 @@ class APIKeyController extends Controller
             DataKey::where(['user_id' => $user_id])->whereIn('api_key', $req->items)->delete();
             return $this->_resJsonSuccess(trans('message.delete_success'), $req->path(), $req->items);
         }catch (QueryException $e){
-            return $this->_resJsonErrDB( trans('message.delete_failed'), $req->path());
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
 
     }

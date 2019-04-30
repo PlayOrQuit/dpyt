@@ -2,12 +2,25 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Channel extends Model
 {
-    public function data_token()
-    {
-        return $this->hasOne('App\DataToken');
-    }
+
+    protected $hidden = [
+        'refresh_token'
+    ];
+
+    protected $dates = [
+        'iat',
+    ];
+//
+//    public function setIatAttribute($iat){
+//        Log::info($iat);
+//        $date =  Carbon::createFromTimestamp($iat/1000);
+//        Log::info($date->toDateString());
+//        return $date;
+//    }
 }

@@ -18,14 +18,17 @@ class CreateChannelsTable extends Migration
             $table->string('uid', 50);
             $table->string('title', 150);
             $table->text('thumbnail');
-            $table->integer('view')->default(0);
-            $table->integer('subscriber')->default(0);
-            $table->boolean('status')->default(true);
+            $table->string('view', 75);
+            $table->string('subscriber', 75);
+            $table->boolean('status')->default(false);
+            $table->string('access_token', 150);
+            $table->string('refresh_token', 150);
+            $table->string('token_type', 15);
+            $table->integer('expires_in');
+            $table->timestamp('iat')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('data_key_token');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('data_key_token')->references('id')->on('data_tokens')->onDelete('cascade');
         });
     }
 
