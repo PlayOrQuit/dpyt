@@ -44,6 +44,11 @@ Route::group([
         Route::get('/', 'ViewChannelController@view_list');
     });
 
+    Route::group([ 'prefix' => 'playlist'], function() {
+        Route::get('/', 'ViewMultiplePlayListController@view_index');
+    });
+
+
 
     /**
      * end api key
