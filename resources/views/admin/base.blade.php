@@ -53,11 +53,13 @@
 {{--            }--}}
 {{--        })--}}
 {{--</script>--}}
+
+<script src="{{ asset('js/app.js') }}"></script>
 {{--<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>--}}
 {{--<script>--}}
 
 {{--    function start() {--}}
-{{--         gapi.load('auth2', function() {--}}
+{{--        gapi.load('auth2', function() {--}}
 {{--            auth2 = gapi.auth2.init({--}}
 {{--                client_id: '263498759299-to3jnbgjkcee9hfhain7t9av53l4vg0n.apps.googleusercontent.com',--}}
 {{--                scope: 'https://www.googleapis.com/auth/youtube'--}}
@@ -73,6 +75,5 @@
 {{--        console.log(auth2);--}}
 {{--    }--}}
 {{--</script>--}}
-<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\DataKey;
-use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +39,19 @@ class APIKeyController extends Controller
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
 
+    }
+
+    public function getKeyByPrimary(Request $req){
+        $user_id = \Auth::user()->id;
+        try
+        {
+            $keys = DataKey::select('api_key', 'id_client', 'client_secret')->where(['user_id' => $user_id, 'primary' => true])->get();
+            return $this->_resJsonSuccess('Success', $req->path(), $keys);
+        }
+        catch (QueryException $e){
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
+        }
     }
 
     /**
@@ -104,24 +116,22 @@ class APIKeyController extends Controller
     /**
      * Edit api-key
      */
-    public function edit(Request $req){
+    public function editPrimary(Request $req){
 
         $user_id = \Auth::user()->id;
 
-        $validator = $this->validatorEdit($req->all());
+        $validator = $this->validatorEditPrimary($req->all());
 
         if ($validator->fails())
         {
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
-            $primary = $req->primary;
-            if($primary == true){
-                DataKey::where(['user_id' => $user_id, 'primary' => true])->update(['primary' => false]);
-            }
-            $data_key = DataKey::where([ 'api_key' => $req->api_key, 'user_id' => $user_id])->update(['primary' => $primary])->fresh();
+            DataKey::where(['user_id' => $user_id, 'primary' => true])->update(['primary' => false]);
+            $data_key = DataKey::where([ 'api_key' => $req->api_key, 'user_id' => $user_id])->update(['primary' => true]);
             return $this->_resJsonSuccess(trans('message.edit_success'), $req->path(), $data_key);
-        }catch (Exception $e){
+        }catch (QueryException $e){
+            Log::error($e->getMessage(), $e->getTrace());
             return $this->_resJsonErrDB( trans('message.edit_failed'), $req->path());
         }
     }
@@ -129,16 +139,12 @@ class APIKeyController extends Controller
     /**
      * Check data edit
      */
-    protected function validatorEdit($data){
+    protected function validatorEditPrimary($data){
         $rules = array(
             'api_key' => [
                 'required',
                 'string',
                 'max:100'
-            ],
-            'primary' => [
-                'required',
-                'boolean',
             ]
         );
         return Validator::make($data, $rules);

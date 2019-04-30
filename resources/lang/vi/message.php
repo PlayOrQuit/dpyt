@@ -9,5 +9,6 @@ return [
     'delete_failed' => 'Xóa thất bại!',
     'no_result' => 'Không tìm thấy dữ liệu nào',
     'no_choose' => 'Bạn chưa chọn giá trị nào!',
-    'confirm_delete' => 'Bạn có chắc muốn xóa?'
+    'confirm_delete' => 'Bạn có chắc muốn xóa?',
+    'set_primary_api_key' => 'Vui lòng chọn api-key mặc định trước khi thực hiện chức năng này!'
 ];
