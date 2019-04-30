@@ -12,7 +12,7 @@ return[
     'status' => 'Status',
     'search' => 'Search',
     'view' => 'View',
-    'follow' => 'Follow',
+    'subscriber' => 'Subscriber',
     'login' => 'Login',
     'logout' => 'Logout',
     'email' => 'Email address',
@@ -22,4 +22,7 @@ return[
     'send_reset_password' => 'Send password reset link',
     'default' => 'Default',
     'choose' => 'Choose',
+    'normal' => 'Normal',
+    'turn_off' => 'Turn off',
+    'show_all' => 'Show All'
 ];

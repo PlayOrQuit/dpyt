@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Container from 'react-bootstrap/Container';
-import {Col, Row, Form} from 'react-bootstrap';
-import ReactTable from 'react-table';
+import {
+    Container,
+    Col,
+    Row,
+    Alert,
+    Button
+} from 'react-bootstrap';
 import _ from 'lodash';
+import ReactTable from 'react-table';
 import CardLoaderReact from './CardLoader.react';
 import InputGroupReact from './InputGroup.react';
 import Pagination from './Pagination.react';
@@ -12,20 +17,15 @@ import {
     URL_API_KEY_CREATE,
     URL_API_KEY_GET,
     URL_API_KEY_DELETE,
+    URL_API_KEY_EDIT_PRIMARY,
     STATUS_CODE_OK,
     STATUS_CODE_FIELD_ERROR,
     STATUS_CODE_DB_ERROR,
-    STATUS_CODE_SERVER_ERROR
+    TIME_OUT_REQUEST
 } from '../util/constant';
 import {fetch} from '../util/util';
-import {
-    Alert,
-    Button
-} from 'react-bootstrap';
-
 import trans from '../lang/index';
 import 'react-table/react-table.css'
-
 
 class PageApiKeyReact extends Component {
     constructor(props) {
@@ -47,19 +47,25 @@ class PageApiKeyReact extends Component {
     }
 
     componentDidMount() {
+        this.getData();
+    }
+
+    getData = () => {
         this.updateState('loadMore', true);
         fetch(URL_API_KEY_GET, 'get', {})
             .then(result => {
                 setTimeout(() => {
                     this.updateState('loadMore', false);
-                    this.updateState('keys', result.data.body.data);
-                }, 2000);
+                    if (result.data.body.statusCode === STATUS_CODE_OK) {
+                        this.updateState('keys', result.data.body.data);
+                    }
+                }, TIME_OUT_REQUEST);
             })
             .catch(error => {
                 console.log(error);
                 setTimeout(() => {
                     this.updateState('loadMore', false);
-                }, 2000);
+                }, TIME_OUT_REQUEST);
             });
     }
 
@@ -110,12 +116,12 @@ class PageApiKeyReact extends Component {
         }
     }
     submitResult = (data) => {
-        if (data.statusCode == STATUS_CODE_OK) {
+        if (data.statusCode === STATUS_CODE_OK) {
             let keyNews = this.state.keys;
             keyNews.push(data.data);
             this.updateState('keys', keyNews);
             this.showAlert(data.message, 'success');
-        } else if (data.statusCode == STATUS_CODE_FIELD_ERROR) {
+        } else if (data.statusCode === STATUS_CODE_FIELD_ERROR) {
             if (data.field_errors.api_key) {
                 this.setError('api_key', data.field_errors.api_key[0]);
             } else if (data.field_errors.id_client) {
@@ -123,7 +129,7 @@ class PageApiKeyReact extends Component {
             } else if (data.field_errors.client_secret) {
                 this.setError('client_secret', data.field_errors.client_secret[0]);
             }
-        } else if (data.statusCode == STATUS_CODE_DB_ERROR) {
+        } else if (data.statusCode === STATUS_CODE_DB_ERROR) {
             this.showAlert(data.message, 'danger');
         } else {
             this.showAlert(data.message, 'danger');
@@ -147,25 +153,25 @@ class PageApiKeyReact extends Component {
                     setTimeout(() => {
                         this.updateState('isLoading', false);
                         this.submitResult(result.data.body);
-                    }, 2000);
+                    }, TIME_OUT_REQUEST);
                 })
                 .catch(error => {
                     setTimeout(() => {
                         this.updateState('isLoading', false);
                         console.log(error);
-                    }, 2000);
+                    }, TIME_OUT_REQUEST);
                 });
         }
     }
     handlerChangeDelete = (row, e) => {
-        const newDeletes = this.state.deletes;
+        let newDeletes = this.state.deletes;
         if (e.target.checked) {
-            if (newDeletes.indexOf(row.index) === -1) {
-                newDeletes.push(row.index);
+            if (newDeletes.indexOf(row.original.id) === -1) {
+                newDeletes.push(row.original.id);
                 this.updateState('deletes', newDeletes);
             }
         } else {
-            let index = newDeletes.indexOf(row.index);
+            let index = newDeletes.indexOf(row.original.id);
             if (index > -1) {
                 newDeletes.splice(index, 1);
                 this.updateState('deletes', newDeletes);
@@ -174,48 +180,70 @@ class PageApiKeyReact extends Component {
     }
 
     handlerChangePrimary = (row, e) => {
-
-        const newDeletes = this.state.deletes;
-
-        console.log(_.filter(newDeletes, ['primary', 1]));
-
-        console.log(row);
-        console.log(e);
+        const api_key = this.state.keys[row.index].api_key;
+        this.updateState('loadMore', true);
+        fetch(URL_API_KEY_EDIT_PRIMARY, 'put', {api_key: api_key})
+            .then(result => {
+                setTimeout(() => {
+                    this.updateState('loadMore', false);
+                    if (result.data.body.statusCode === STATUS_CODE_OK) {
+                        let newKeys = this.state.keys;
+                        newKeys.map((v, index) => {
+                            if (v.id === row.original.id) {
+                                v.primary = 1;
+                            } else {
+                                v.primary = 0;
+                            }
+                        });
+                        this.updateState('keys', newKeys);
+                    } else {
+                        alert(result.data.body.message);
+                    }
+                }, TIME_OUT_REQUEST);
+            })
+            .catch(error => {
+                setTimeout(() => {
+                    this.updateState('loadMore', false);
+                    console.log(error);
+                }, TIME_OUT_REQUEST);
+            });
     }
 
     submitDelete = () => {
-        if(this.state.deletes.length > 0){
-               if(confirm(trans.get('message.confirm_delete'))){
-                   let arr = [];
-                   this.state.deletes.map((v, index) => {
-                       arr.push(this.state.keys[v].api_key);
-                   });
-                   this.updateState('loadMore', true);
-                   fetch(URL_API_KEY_DELETE, 'delete', {items: this.state.deletes})
-                       .then(result => {
-                           console.log(result);
-                           setTimeout(() => {
-                               this.updateState('loadMore', false);
-                               if(result.data.body.statusCode == STATUS_CODE_OK){
-                                   const newKeys = this.state.keys;
-                                   this.state.deletes.map((v, index) => {
-                                       newKeys.splice(v, 1);
-                                   });
-                                   this.updateState('keys', newKeys);
-                                   this.updateState('deletes', []);
-                               }else{
-                                   alert(result.data.body.message);
-                               }
-                           }, 2000);
-                       })
-                       .catch(error => {
-                           setTimeout(() => {
-                               this.updateState('loadMore', false);
-                               console.log(error);
-                           }, 2000);
-                       });
-               }
-        }else{
+        if (this.state.deletes.length > 0) {
+            if (confirm(trans.get('message.confirm_delete'))) {
+                let arr = [];
+                this.state.keys.map((v, index) => {
+                    if(this.state.deletes.indexOf(v.id) > -1){
+                        arr.push(v.api_key);
+                    }
+                });
+                this.updateState('loadMore', true);
+                fetch(URL_API_KEY_DELETE, 'delete', {items: arr})
+                    .then(result => {
+                        setTimeout(() => {
+                            this.updateState('loadMore', false);
+                            if (result.data.body.statusCode === STATUS_CODE_OK) {
+                                let newDeletes = this.state.deletes;
+                                const newKeys = _.filter(this.state.keys, function(item) {
+                                    return newDeletes.indexOf(item.id) === -1;
+                                });
+                                newDeletes = [];
+                                this.updateState('deletes', newDeletes);
+                                this.updateState('keys', newKeys);
+                            } else {
+                                alert(result.data.body.message);
+                            }
+                        }, TIME_OUT_REQUEST);
+                    })
+                    .catch(error => {
+                        setTimeout(() => {
+                            this.updateState('loadMore', false);
+                            console.log(error);
+                        }, TIME_OUT_REQUEST);
+                    });
+            }
+        } else {
             alert(trans.get('message.no_choose'));
         }
     }
@@ -228,15 +256,17 @@ class PageApiKeyReact extends Component {
                 ),
                 sortable: false,
                 filterable: false,
+                maxWidth: 55,
+                className: 'd-flex justify-content-center',
                 Cell: row => (
-                    <label className="custom-control custom-checkbox custom-control-inline">
+                    <label className="custom-control custom-checkbox custom-control-inline m-0">
                         <input type="checkbox"
                                className="custom-control-input"
                                name="delete"
-                               checked={this.state.deletes.indexOf(row.index) > -1}
-                               defaultChecked={this.state.deletes.indexOf(row.index) > -1}
+                               checked={this.state.deletes.indexOf(row.original.id) > -1}
+                               defaultChecked={this.state.deletes.indexOf(row.original.id) > -1}
                                onChange={(e) => this.handlerChangeDelete(row, e)}/>
-                        <span className="custom-control-label"></span>
+                        <span className="custom-control-label"/>
                     </label>
                 )
             },
@@ -256,15 +286,18 @@ class PageApiKeyReact extends Component {
                 Header: trans.get('keyword.default'),
                 sortable: false,
                 filterable: false,
+                maxWidth: 100,
+                className: 'd-flex justify-content-center',
                 Cell: row => (
-                    <label className="custom-control custom-radio custom-control-inline">
+                    <label className="custom-control custom-radio custom-control-inline m-0">
                         <input type="radio"
                                className="custom-control-input"
                                name="primary"
                                checked={row.original.primary === 1}
                                defaultChecked={row.original.primary === 1}
+                               value={row.original.id}
                                onChange={(e) => this.handlerChangePrimary(row, e)}/>
-                        <span className="custom-control-label"></span>
+                        <span className="custom-control-label"/>
                     </label>
                 )
             },

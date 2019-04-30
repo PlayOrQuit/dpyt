@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\DataKey;
-use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,13 +20,16 @@ class APIKeyController extends Controller
     }
 
     /**
-     * render view
+     * Render view
      */
     public function render()
     {
         return view('admin.api_key.api-key');
     }
 
+    /**
+     * Get by user
+     */
     public function get(Request $req){
         $user_id = \Auth::user()->id;
         try
@@ -39,7 +41,22 @@ class APIKeyController extends Controller
             Log::error($e->getMessage(), $e->getTrace());
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
+    }
 
+    /**
+     * Get by user and primary
+     */
+    public function getKeyByPrimary(Request $req){
+        $user_id = \Auth::user()->id;
+        try
+        {
+            $keys = DataKey::select('api_key', 'id_client', 'client_secret')->where(['user_id' => $user_id, 'primary' => true])->get();
+            return $this->_resJsonSuccess('Success', $req->path(), $keys);
+        }
+        catch (QueryException $e){
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
+        }
     }
 
     /**
@@ -104,46 +121,42 @@ class APIKeyController extends Controller
     /**
      * Edit api-key
      */
-    public function edit(Request $req){
+    public function editPrimary(Request $req){
 
         $user_id = \Auth::user()->id;
 
-        $validator = $this->validatorEdit($req->all());
+        $validator = $this->validatorEditPrimary($req->all());
 
         if ($validator->fails())
         {
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
-            $primary = $req->primary;
-            if($primary == true){
-                DataKey::where(['user_id' => $user_id, 'primary' => true])->update(['primary' => false]);
-            }
-            $data_key = DataKey::where([ 'api_key' => $req->api_key, 'user_id' => $user_id])->update(['primary' => $primary])->fresh();
+            DataKey::where(['user_id' => $user_id, 'primary' => true])->update(['primary' => false]);
+            $data_key = DataKey::where([ 'api_key' => $req->api_key, 'user_id' => $user_id])->update(['primary' => true]);
             return $this->_resJsonSuccess(trans('message.edit_success'), $req->path(), $data_key);
-        }catch (Exception $e){
-            return $this->_resJsonErrDB( trans('message.edit_failed'), $req->path());
+        }catch (QueryException $e){
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->_resJsonErrDB( $e->getMessage(), $req->path());
         }
     }
 
     /**
      * Check data edit
      */
-    protected function validatorEdit($data){
+    protected function validatorEditPrimary($data){
         $rules = array(
             'api_key' => [
                 'required',
                 'string',
                 'max:100'
-            ],
-            'primary' => [
-                'required',
-                'boolean',
             ]
         );
         return Validator::make($data, $rules);
     }
-
+    /**
+     * Delete
+     */
     public function delete(Request $req){
         $user_id = \Auth::user()->id;
         $validator = $this->validatorDelete($req->all());
@@ -155,7 +168,7 @@ class APIKeyController extends Controller
             DataKey::where(['user_id' => $user_id])->whereIn('api_key', $req->items)->delete();
             return $this->_resJsonSuccess(trans('message.delete_success'), $req->path(), $req->items);
         }catch (QueryException $e){
-            return $this->_resJsonErrDB( trans('message.delete_failed'), $req->path());
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
 
     }

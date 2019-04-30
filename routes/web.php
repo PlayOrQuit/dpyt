@@ -35,14 +35,29 @@ Route::group([
     Route::group([ 'prefix' => 'api-key'], function() {
         Route::get('/', 'APIKeyController@render');
         Route::get('/get', 'APIKeyController@get')->middleware(['cors']);
+        Route::get('/getKeyByPrimary', 'APIKeyController@getKeyByPrimary')->middleware(['cors']);
         Route::post('/create', 'APIKeyController@create')->middleware(['cors']);
-        Route::put('/edit', 'APIKeyController@edit')->middleware(['cors']);
+        Route::put('/editPrimary', 'APIKeyController@editPrimary')->middleware(['cors']);
         Route::delete('/delete', 'APIKeyController@delete')->middleware(['cors']);
     });
-
+    /**
+     * Channel
+     */
     Route::group([ 'prefix' => 'channel'], function() {
-        Route::get('/', 'ViewChannelController@view_list');
+        Route::get('/', 'ChannelController@render');
+        Route::get('/callback', 'ChannelController@renderCallback');
+        Route::get('/get', 'ChannelController@get');
+        Route::post('/create', 'ChannelController@create');
+        Route::delete('/delete', 'ChannelController@delete');
     });
+    /**
+     * Region
+     */
+    Route::get('/regions', 'RegionController@get');
+    /**
+     * Language
+     */
+    Route::get('/languages', 'LanguageController@get');
 
     Route::group([ 'prefix' => 'playlist'], function() {
         Route::get('/', 'ViewMultiplePlayListController@view_index');
