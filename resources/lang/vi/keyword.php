@@ -12,7 +12,7 @@ return[
     'status' => 'Trạng thái',
     'search' => 'Tìm kiếm',
     'view' => 'Lượt xem',
-    'follow' => 'Theo dõi',
+    'subscriber' => 'Người đăng ký',
     'login' => 'Đăng nhập',
     'logout' => 'Đăng xuất',
     'email' => 'Địa chỉ email',
@@ -22,4 +22,7 @@ return[
     'send_reset_password' => 'Gửi liên kết đặt lại mật khẩu',
     'default' => 'Mặc định',
     'choose' => 'Chọn',
+    'normal' => 'Bình thường',
+    'turn_off' => 'Tắt',
+    'show_all' => 'Tất cả'
 ];

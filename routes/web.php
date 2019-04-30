@@ -46,9 +46,17 @@ Route::group([
     Route::group([ 'prefix' => 'channel'], function() {
         Route::get('/', 'ChannelController@render');
         Route::get('/callback', 'ChannelController@renderCallback');
+        Route::get('/get', 'ChannelController@get');
+        Route::post('/create', 'ChannelController@create');
+        Route::delete('/delete', 'ChannelController@delete');
     });
-
+    /**
+     * Region
+     */
     Route::get('/regions', 'RegionController@get');
+    /**
+     * Language
+     */
     Route::get('/languages', 'LanguageController@get');
 
 

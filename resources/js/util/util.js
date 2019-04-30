@@ -16,7 +16,6 @@ export const fetch = (uri, method, data) => {
 };
 
 export const fetchOther = (uri, method, data, headers) => {
-    console.log(headers);
     return axios({
         method: method,
         url: uri,
