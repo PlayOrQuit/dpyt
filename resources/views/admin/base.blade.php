@@ -26,54 +26,5 @@
     </div>
     @include('admin.footer')
 </div>
-{{--<script type="text/javascript">--}}
-{{--    let token = document.head.querySelector('meta[name="csrf-token"]');--}}
-{{--    console.log(token.content);--}}
-{{--    $.ajax(--}}
-{{--        {--}}
-{{--            cache: false,--}}
-{{--            url: '{{ action('CreateApiKeyController@create') }}',--}}
-{{--            dataType: 'json',--}}
-{{--            contentType: 'application/json; charset=utf-8',--}}
-{{--            type: 'POST',--}}
-{{--            headers: {--}}
-{{--                'X-CSRF-TOKEN': token.content,--}}
-{{--            },--}}
-{{--            data: {--}}
-{{--                'api_key': 'demo123'--}}
-{{--            },--}}
-{{--            xhrFields: {--}}
-{{--                withCredentials: true--}}
-{{--            },--}}
-{{--            success: function (res) {--}}
-{{--                console.log(res);--}}
-{{--            },--}}
-{{--            error: function (err) {--}}
-{{--                console.log(err);--}}
-{{--            }--}}
-{{--        })--}}
-{{--</script>--}}
-
-<script src="{{ asset('js/app.js') }}"></script>
-{{--<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>--}}
-{{--<script>--}}
-
-{{--    function start() {--}}
-{{--        gapi.load('auth2', function() {--}}
-{{--            auth2 = gapi.auth2.init({--}}
-{{--                client_id: '263498759299-to3jnbgjkcee9hfhain7t9av53l4vg0n.apps.googleusercontent.com',--}}
-{{--                scope: 'https://www.googleapis.com/auth/youtube'--}}
-{{--            });--}}
-{{--        });--}}
-{{--    }--}}
-{{--    $('#signinButton').click(function() {--}}
-{{--        // signInCallback defined in step 6.--}}
-{{--        auth2.grantOfflineAccess().then(signInCallback);--}}
-{{--    });--}}
-{{--    function signInCallback(authResult) {--}}
-{{--        console.log(authResult);--}}
-{{--        console.log(auth2);--}}
-{{--    }--}}
-{{--</script>--}}
 </body>
 </html>
