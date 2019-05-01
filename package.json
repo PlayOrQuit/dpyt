@@ -30,13 +30,14 @@
         "popper.js": "^1.12",
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
+        "react-dual-listbox": "1.4.2",
+        "react-select": "^2.4.3",
+        "react-tag-input": "6.4.0",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
         "style-loader": "^0.23.1",
-        "tabler-react": "^1.29.0",
-        "react-tag-input": "6.4.0",
-        "react-dual-listbox": "1.4.2"
+        "tabler-react": "^1.29.0"
     },
     "dependencies": {
         "lang.js": "^1.1.14",

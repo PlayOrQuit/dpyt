@@ -9,4 +9,5 @@ return [
     'menu_sub_add_video_to_playlist' => 'Thêm video vào playlist',
     'menu_sub_videos'=> 'Quản lý video',
     'menu_api_key' => 'Quản lý API-Key',
+    'card_title_channel' => 'Chọn kênh',
 ];

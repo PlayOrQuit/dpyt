@@ -21,8 +21,7 @@ import {
     URL_CHANNEL_CREATE,
     URL_CHANNEL_DELETE,
     URL_YOUTUBE_CHANNEL_LIST,
-    STATUS_CODE_OK,
-    TIME_OUT_REQUEST
+    STATUS_CODE_OK
 } from '../util/constant';
 import Icon from "./Icon.react";
 import 'react-table/react-table.css'
@@ -74,18 +73,14 @@ class PageChannelReact extends Component {
         this.updateState('isLoading', true);
         fetch(URL_CHANNEL_GET, 'get', {})
             .then(result => {
-                setTimeout(() => {
-                    this.updateState('isLoading', false);
-                    if (result.data.body.statusCode === STATUS_CODE_OK) {
-                        this.updateState('channels', result.data.body.data);
-                    }
-                }, TIME_OUT_REQUEST);
+                this.updateState('isLoading', false);
+                if (result.data.body.statusCode === STATUS_CODE_OK) {
+                    this.updateState('channels', result.data.body.data);
+                }
             })
             .catch(error => {
-                setTimeout(() => {
-                    this.updateState('isLoading', false);
-                    console.log(error);
-                }, TIME_OUT_REQUEST);
+                this.updateState('isLoading', false);
+                console.log(error);
             });
     }
     getChannels = (accessToken) => {
@@ -168,25 +163,21 @@ class PageChannelReact extends Component {
                 this.updateState('isLoading', true);
                 fetch(URL_CHANNEL_DELETE, 'delete', {items: newDeletes})
                     .then(result => {
-                        setTimeout(() => {
-                            this.updateState('isLoading', false);
-                            if (result.data.body.statusCode === STATUS_CODE_OK) {
-                                const newChannels = _.filter(this.state.channels, function (item) {
-                                    return newDeletes.indexOf(item.id) === -1;
-                                });
-                                newDeletes = [];
-                                this.updateState('deletes', newDeletes);
-                                this.updateState('channels', newChannels);
-                            }else{
-                                alert(result.data.body.message);
-                            }
-                        }, TIME_OUT_REQUEST);
+                        this.updateState('isLoading', false);
+                        if (result.data.body.statusCode === STATUS_CODE_OK) {
+                            const newChannels = _.filter(this.state.channels, function (item) {
+                                return newDeletes.indexOf(item.id) === -1;
+                            });
+                            newDeletes = [];
+                            this.updateState('deletes', newDeletes);
+                            this.updateState('channels', newChannels);
+                        }else{
+                            alert(result.data.body.message);
+                        }
                     })
                     .catch(error => {
-                        setTimeout(() => {
-                            this.updateState('isLoading', false);
-                            console.log(error);
-                        }, TIME_OUT_REQUEST);
+                        this.updateState('isLoading', false);
+                        console.log(error);
                     });
             }
         }else{

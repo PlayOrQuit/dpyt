@@ -11,6 +11,7 @@
     <base id="baseUrl" href="{{ url('/') }}">
     <link href="{{ asset('images/youtube.png') }}" rel="icon" type="image/x-icon"/>
     <link rel="stylesheet" href="css/app.css">
+    <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body>
 <noscript>
@@ -27,5 +28,4 @@
     @include('admin.footer')
 </div>
 </body>
-<script src="{{ asset('js/app.js') }}"></script>
 </html>

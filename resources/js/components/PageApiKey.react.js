@@ -20,8 +20,7 @@ import {
     URL_API_KEY_EDIT_PRIMARY,
     STATUS_CODE_OK,
     STATUS_CODE_FIELD_ERROR,
-    STATUS_CODE_DB_ERROR,
-    TIME_OUT_REQUEST
+    STATUS_CODE_DB_ERROR
 } from '../util/constant';
 import {fetch} from '../util/util';
 import trans from '../lang/index';
@@ -54,18 +53,14 @@ class PageApiKeyReact extends Component {
         this.updateState('loadMore', true);
         fetch(URL_API_KEY_GET, 'get', {})
             .then(result => {
-                setTimeout(() => {
-                    this.updateState('loadMore', false);
-                    if (result.data.body.statusCode === STATUS_CODE_OK) {
-                        this.updateState('keys', result.data.body.data);
-                    }
-                }, TIME_OUT_REQUEST);
+                this.updateState('loadMore', false);
+                if (result.data.body.statusCode === STATUS_CODE_OK) {
+                    this.updateState('keys', result.data.body.data);
+                }
             })
             .catch(error => {
                 console.log(error);
-                setTimeout(() => {
-                    this.updateState('loadMore', false);
-                }, TIME_OUT_REQUEST);
+                this.updateState('loadMore', false);
             });
     }
 
@@ -90,28 +85,31 @@ class PageApiKeyReact extends Component {
             this.updateState('err_client_secret', msg);
         }
     }
-    handlerChangeApiKey = (v) => {
+    handlerChangeApiKey = (evt) => {
+        const v = evt.target.value;
+        this.updateState('api_key', v);
         if (v === '') {
             this.setError('api_key', trans.get('validation.required', {attribute: trans.get('keyword.key')}));
         } else {
-            this.updateState('api_key', v);
             this.setError('api_key', null);
         }
 
     }
-    handlerChangeIdClient = (v) => {
+    handlerChangeIdClient = (evt) => {
+        const v = evt.target.value;
+        this.updateState('id_client', v);
         if (v === '') {
             this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
         } else {
-            this.updateState('id_client', v);
             this.setError('id_client', null);
         }
     }
-    handlerChangeClientSecret = (v) => {
+    handlerChangeClientSecret = (evt) => {
+        const v = evt.target.value;
+        this.updateState('client_secret', v);
         if (v === '') {
             this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
         } else {
-            this.updateState('client_secret', v);
             this.setError('client_secret', null);
         }
     }
@@ -150,16 +148,12 @@ class PageApiKeyReact extends Component {
                 client_secret: this.state.client_secret
             })
                 .then(result => {
-                    setTimeout(() => {
-                        this.updateState('isLoading', false);
-                        this.submitResult(result.data.body);
-                    }, TIME_OUT_REQUEST);
+                    this.updateState('isLoading', false);
+                    this.submitResult(result.data.body);
                 })
                 .catch(error => {
-                    setTimeout(() => {
-                        this.updateState('isLoading', false);
-                        console.log(error);
-                    }, TIME_OUT_REQUEST);
+                    this.updateState('isLoading', false);
+                    console.log(error);
                 });
         }
     }
@@ -184,28 +178,24 @@ class PageApiKeyReact extends Component {
         this.updateState('loadMore', true);
         fetch(URL_API_KEY_EDIT_PRIMARY, 'put', {api_key: api_key})
             .then(result => {
-                setTimeout(() => {
-                    this.updateState('loadMore', false);
-                    if (result.data.body.statusCode === STATUS_CODE_OK) {
-                        let newKeys = this.state.keys;
-                        newKeys.map((v, index) => {
-                            if (v.id === row.original.id) {
-                                v.primary = 1;
-                            } else {
-                                v.primary = 0;
-                            }
-                        });
-                        this.updateState('keys', newKeys);
-                    } else {
-                        alert(result.data.body.message);
-                    }
-                }, TIME_OUT_REQUEST);
+                this.updateState('loadMore', false);
+                if (result.data.body.statusCode === STATUS_CODE_OK) {
+                    let newKeys = this.state.keys;
+                    newKeys.map((v, index) => {
+                        if (v.id === row.original.id) {
+                            v.primary = 1;
+                        } else {
+                            v.primary = 0;
+                        }
+                    });
+                    this.updateState('keys', newKeys);
+                } else {
+                    alert(result.data.body.message);
+                }
             })
             .catch(error => {
-                setTimeout(() => {
-                    this.updateState('loadMore', false);
-                    console.log(error);
-                }, TIME_OUT_REQUEST);
+                this.updateState('loadMore', false);
+                console.log(error);
             });
     }
 
@@ -221,26 +211,22 @@ class PageApiKeyReact extends Component {
                 this.updateState('loadMore', true);
                 fetch(URL_API_KEY_DELETE, 'delete', {items: arr})
                     .then(result => {
-                        setTimeout(() => {
-                            this.updateState('loadMore', false);
-                            if (result.data.body.statusCode === STATUS_CODE_OK) {
-                                let newDeletes = this.state.deletes;
-                                const newKeys = _.filter(this.state.keys, function(item) {
-                                    return newDeletes.indexOf(item.id) === -1;
-                                });
-                                newDeletes = [];
-                                this.updateState('deletes', newDeletes);
-                                this.updateState('keys', newKeys);
-                            } else {
-                                alert(result.data.body.message);
-                            }
-                        }, TIME_OUT_REQUEST);
+                        this.updateState('loadMore', false);
+                        if (result.data.body.statusCode === STATUS_CODE_OK) {
+                            let newDeletes = this.state.deletes;
+                            const newKeys = _.filter(this.state.keys, function(item) {
+                                return newDeletes.indexOf(item.id) === -1;
+                            });
+                            newDeletes = [];
+                            this.updateState('deletes', newDeletes);
+                            this.updateState('keys', newKeys);
+                        } else {
+                            alert(result.data.body.message);
+                        }
                     })
                     .catch(error => {
-                        setTimeout(() => {
-                            this.updateState('loadMore', false);
-                            console.log(error);
-                        }, TIME_OUT_REQUEST);
+                        this.updateState('loadMore', false);
+                        console.log(error);
                     });
             }
         } else {
