@@ -6,9 +6,6 @@ class InputGroupReact extends React.Component{
     constructor(props){
         super(props);
     }
-    handlerChange = (e) => {
-        this.props.onChange(e.target.value);
-    }
     static propTypes = {
         value: "",
         label: "",
@@ -17,18 +14,20 @@ class InputGroupReact extends React.Component{
         error: null
     }
     render() {
+        const {label, type, name, title, placeholder, onChange, error, value} = this.props;
         return(
             <Form.Group>
-                {this.props.label ? <Form.Label>{this.props.label}</Form.Label> : ""}
+                {label ? <Form.Label>{label}</Form.Label> : ""}
                 <Form.Control
-                    type={this.props.type}
-                    name={this.props.name}
-                    title={this.props.title}
-                    placeholder={this.props.placeholder}
-                    onChange={this.handlerChange}
-                    className={this.props.error ? "is-invalid" : ""}
+                    value={value}
+                    type={type}
+                    name={name}
+                    title={title}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    className={error ? "is-invalid" : ""}
                 />
-                {this.props.error ? <div className="invalid-feedback">{this.props.error}</div> : ""}
+                {error ? <div className="invalid-feedback">{error}</div> : ""}
 
             </Form.Group>
         );
