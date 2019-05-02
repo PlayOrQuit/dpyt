@@ -12,11 +12,13 @@ use Google_Service_YouTube_Playlist;
 use Google_Service_YouTube_PlaylistSnippet;
 use Google_Service_YouTube_PlaylistStatus;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class YoutubeService
 {
     private $client;
     private $youtube;
+    private $channel;
 
     public function __construct()
     {
@@ -24,15 +26,39 @@ class YoutubeService
         $this->youtube = new Google_Service_YouTube($this->client);
     }
 
-    public function setAccessToken($accessToken){
+    /**
+     * @param $channel
+     */
+    public function setChannel($channel){
+        if($channel == null)
+            throw new InvalidArgumentException("Invalid Channel");
+        $this->channel = $channel;
+        $this->setAccessToken($this->channel->access_token);
+    }
+
+    /**
+     * @param $accessToken
+     */
+    private function setAccessToken($accessToken){
+        if($accessToken == null)
+            throw new InvalidArgumentException("Invalid Access Token");
         $this->client->setAccessToken($accessToken);
     }
 
+    /**
+     * @throws AuthenticationException
+     */
     private function checkAuth(){
         if($this->client->getAccessToken() == null){
-            throw new AuthenticationException("Not Authentication Google Exception");
+            throw new AuthenticationException("Not Found Access Token");
+        }else if($this->client->isAccessTokenExpired()){
+            if($this->channel->refresh_token == null)
+                throw new AuthenticationException("Not Found Refresh Token");
+            $creds = $this->client->refreshToken($this->channel->refresh_token);
         }
     }
+
+
 
     /**
      * @param $title
