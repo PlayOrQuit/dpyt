@@ -3,8 +3,8 @@
 return [
     'menu_sub_add_multiple_playlist' => 'Thêm nhiều playlist',
     'select_channel' => 'Chọn kênh',
-    'select_channel_tooltip' => 'Chọn kênh để tạo playlist cho kênh được chọn số playlist sẽ được chia đều cho tất cả các kênh',
     'back_to_add_channel' => 'Thêm kênh',
+    'title_input_keyword' => 'Tìm từ khóa',
     'input_keyword'=>'Nhập từ khóa',
     'language' => "Ngôn ngữ",
     'country' => "Quốc gia",
@@ -31,7 +31,8 @@ return [
     'enable_filter_video_view' => 'Lọc theo số lượng view',
     'enable_filter_video_like' => 'Lọc theo lượng like',
     'enable_filter_video_disklike' => 'Lọc theo lượng dislike',
-    'filter_equal_higher' => "Lớn hơn hoặc bằng",
-    'filter_equal_lower' => "Nhỏ hơn hoặc bằng",
-    'create_playlist_btn' => "Tạo PlayList"
+    'filter_equal_higher' => "<=",
+    'filter_equal_lower' => ">=",
+    'create_playlist_btn' => "Tạo PlayList",
+    "enable_filter_video_duration_placeholder" => 'Độ dài video theo giây'
 ];

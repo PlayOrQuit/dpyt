@@ -22,7 +22,7 @@ class LanguageController extends Controller
      */
     public function get(Request $req){
         try{
-            $languages = Language::select('id', 'name', 'hl')->get();
+            $languages = Language::select('id', 'name', 'hl')->orderBy('name', 'asc')->get();
             return $this->_resJsonSuccess('Success', $req->path(), $languages);
         }catch (QueryException $e){
             Log::error($e->getMessage(), $e->getTrace());
