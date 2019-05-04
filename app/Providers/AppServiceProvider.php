@@ -14,7 +14,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            'App\Data\Repository\DataKeyRepository',
+            'App\Data\Repository\Impl\DataKeyRepositoryImpl'
+        );
+        $this->app->bind(
+            'App\Data\Repository\ChannelRepository',
+            'App\Data\Repository\Impl\ChannelRepositoryImpl'
+        );
+        $this->app->bind(
+            'App\Data\Repository\PlaylistRepository',
+            'App\Data\Repository\Impl\PlaylistRepositoryImpl'
+        );
     }
 
     /**

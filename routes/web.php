@@ -46,9 +46,10 @@ Route::group([
     Route::group([ 'prefix' => 'channel'], function() {
         Route::get('/', 'ChannelController@render');
         Route::get('/callback', 'ChannelController@renderCallback');
-        Route::get('/get', 'ChannelController@get')->middleware(['cors']);;
-        Route::post('/create', 'ChannelController@create')->middleware(['cors']);;
-        Route::delete('/delete', 'ChannelController@delete')->middleware(['cors']);;
+        Route::get('/get', 'ChannelController@get')->middleware(['cors']);
+        Route::post('/create', 'ChannelController@create')->middleware(['cors']);
+        Route::delete('/delete', 'ChannelController@delete')->middleware(['cors']);
+        Route::get('/getByStatus', 'ChannelController@getByStatus')->middleware(['cors']);;
     });
     /**
      * Region
@@ -60,12 +61,19 @@ Route::group([
     Route::get('/languages', 'LanguageController@get')->middleware(['cors']);;
 
     Route::group([ 'prefix' => 'playlist'], function() {
-        Route::get('/', 'ViewMultiplePlayListController@view_index');
 
+        Route::group([ 'prefix' => 'multiple'], function() {
+            Route::get('/', 'MultiplePlayListController@view_index');
+            Route::post('/create', 'MultiplePlayListController@create')->middleware(['cors']);
+        });
 
         Route::group([ 'prefix' => 'single'], function() {
             Route::get('/', 'SinglePlaylistController@render');
         });
+    });
+
+    Route::group([ 'prefix' => 'search'], function() {
+        Route::get('/tags', 'SearchController@getTags');
     });
 
 

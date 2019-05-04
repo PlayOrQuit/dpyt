@@ -24,4 +24,8 @@ trait ResponseJsonClient
     protected function _resJsonSuccess($msg, $path, $data){
         return response()->json(Utils::builder_success($msg, $path, $data));
     }
+
+    protected function _resJsonKeyNotFound($msg, $path){
+        return response()->json(Utils::builder_error(WebKeys::STATUS_API_KEY_NOT_FOUND, $msg, $path, null));
+    }
 }

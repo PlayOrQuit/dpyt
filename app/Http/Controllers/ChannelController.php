@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Data\Repository\ChannelRepository;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\QueryException;
@@ -12,93 +13,104 @@ use Illuminate\Support\Facades\Validator;
 
 class ChannelController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     */
-    public function __construct()
+
+    protected $channelRepository;
+
+
+    public function __construct(ChannelRepository $channelRepository)
     {
         $this->middleware('auth');
+        $this->channelRepository = $channelRepository;
     }
 
-    /**
-     * Render view
-     */
+
     public function render()
     {
         return view('admin.channel.channel');
     }
 
-    /**
-     * Render callback view
-     */
+
     public function renderCallback()
     {
         return view('admin.channel.callback');
     }
 
-    /**
-     * Get channels
-     */
-    public function get(Request $req){
+    public function get(Request $req)
+    {
         $user_id = \Auth::user()->id;
-        try
-        {
-            $channels = Channel::select('id', 'title', 'thumbnail', 'view', 'subscriber', 'status')->where(['user_id' => $user_id])->get();
+        try {
+            $channels = $this->channelRepository->findByUser($user_id, array('id', 'title', 'thumbnail', 'view', 'subscriber', 'status'));
+
             return $this->_resJsonSuccess('Success', $req->path(), $channels);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
-        catch (QueryException $e){
+    }
+
+    public function getByStatus(Request $req)
+    {
+        $user_id = \Auth::user()->id;
+        try {
+            $channels = $this->channelRepository->findByUserStatus($user_id,0, array('id', 'title', 'thumbnail', 'view', 'subscriber'));
+
+            return $this->_resJsonSuccess('Success', $req->path(), $channels);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+
+            return $this->_resJsonErrDB($e->getMessage(), $req->path());
+        }
+    }
+
+    public function create(Request $req)
+    {
+        $user_id = \Auth::user()->id;
+        $data = $req->all();
+        $validator = $this->validatorCreate($data);
+        if ($validator->fails()) {
+            return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
+        }
+        try {
+            $channel = Channel::where(['uid' => $data["uid"], 'user_id' => $user_id])->first();
+            if ($channel) {
+                $params = array(
+                    "title" => $data["title"],
+                    "thumbnail" => $data["thumbnail"],
+                    "view" => $data["view"],
+                    "subscriber" => $data["subscriber"],
+                    "access_token" => $data["access_token"],
+                    "refresh_token" => $data["refresh_token"],
+                    "token_type" => $data["token_type"],
+                    "expires_in" => $data["expires_in"],
+                    "iat" => $data["iat"],
+                );
+                $result = $this->channelRepository->update($channel->id, $user_id, $params);
+            } else {
+                $params = array(
+                    "uid" => $data["uid"],
+                    "title" => $data["title"],
+                    "thumbnail" => $data["thumbnail"],
+                    "view" => $data["view"],
+                    "subscriber" => $data["subscriber"],
+                    "access_token" => $data["access_token"],
+                    "refresh_token" => $data["refresh_token"],
+                    "token_type" => $data["token_type"],
+                    "expires_in" => $data["expires_in"],
+                    "iat" => $data["iat"],
+                );
+                $result = $this->channelRepository->save($user_id, $params);
+            }
+
+            return $this->_resJsonSuccess(trans('message.create_success'), $req->path(), $result);
+        } catch (\Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
     }
 
-    public function create(Request $req){
-        $user_id = \Auth::user()->id;
-        $data = $req->all();
-        $validator = $this->validatorCreate($data);
-        if ($validator->fails())
-        {
-            return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
-        }
-        try{
-            $channel = Channel::where(['uid' => $data["uid"], 'user_id' => $user_id])->first();
-            if($channel){
-                $channel->title = $data["title"];
-                $channel->thumbnail = $data["thumbnail"];
-                $channel->view = $data["view"];
-                $channel->subscriber = $data["subscriber"];
-                $channel->access_token = $data["access_token"];
-                $channel->refresh_token = $data["refresh_token"];
-                $channel->token_type = $data["token_type"];
-                $channel->expires_in = $data["expires_in"];
-                $date =  Carbon::createFromTimestamp($data["iat"] / 1000);
-                $channel->iat = $date;
-            }else{
-                $channel = new Channel;
-                $channel->uid = $data["uid"];
-                $channel->title = $data["title"];
-                $channel->thumbnail = $data["thumbnail"];
-                $channel->view = $data["view"];
-                $channel->subscriber = $data["subscriber"];
-                $channel->access_token = $data["access_token"];
-                $channel->refresh_token = $data["refresh_token"];
-                $channel->token_type = $data["token_type"];
-                $channel->expires_in = $data["expires_in"];
-                $date =  Carbon::createFromTimestamp($data["iat"] / 1000);
-                $channel->iat = $date;
-                $channel->user_id = $user_id;
-            }
-            $channel->save();
-            $channel->refresh();
-            return $this->_resJsonSuccess(trans('message.create_success'), $req->path(), $channel->jsonSerialize());
-
-        }catch (\Exception $e){
-            Log::error($e->getMessage(), $e->getTrace());
-            return $this->_resJsonErrDB( $e->getMessage(), $req->path());
-        }
-    }
-
-    private function validatorCreate($data){
+    private function validatorCreate($data)
+    {
         $rules = array(
             'uid' => [
                 'required',
@@ -151,22 +163,24 @@ class ChannelController extends Controller
         return Validator::make($data, $rules);
     }
 
-    public function delete(Request $req){
+    public function delete(Request $req)
+    {
         $user_id = \Auth::user()->id;
         $validator = $this->validatorDelete($req->all());
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
-        try{
-            Channel::where(['user_id' => $user_id])->whereIn('id', $req->items)->delete();
-            return $this->_resJsonSuccess(trans('message.delete_success'), $req->path(), $req->items);
-        }catch (QueryException $e){
+        try {
+            $result = $this->channelRepository->deleteList($req->items, $user_id);
+
+            return $this->_resJsonSuccess(trans('message.delete_success'), $req->path(), $result);
+        } catch (QueryException $e) {
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
     }
 
-    private function validatorDelete($data){
+    private function validatorDelete($data)
+    {
         $rules = array(
             'items' => [
                 'required',
@@ -174,7 +188,7 @@ class ChannelController extends Controller
                 'min:1'
             ]
         );
+
         return Validator::make($data, $rules);
     }
-
 }

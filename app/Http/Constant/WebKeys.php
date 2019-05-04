@@ -16,5 +16,6 @@ class WebKeys
     const STATUS_FIELD_ERROR = '02';
     const STATUS_DB = '03';
     const STATUS_ERROR = '04';
+    const STATUS_API_KEY_NOT_FOUND = '05';
 
 }
