@@ -95,19 +95,22 @@ class PageChannelReact extends Component {
     }
     resultAddChannel = (result) => {
         if (result.statusCode === STATUS_CODE_OK) {
-            let newChannels = this.state.channels;
-            let exits = false;
-            newChannels.map((v, index) => {
-               if(result.data.id === v.id){
-                   v.title = result.data.title;
-                   v.status = result.data.status;
-                   v.view = result.data.view;
-                   v.subscriber = result.data.subscriber;
-                   exits = true;
-               }
-            });
-            if(exits === false){
-                newChannels.push(result.data);
+            // let newChannels = this.state.channels;
+            // let exits = false;
+            // newChannels.map((v, index) => {
+            //    if(result.data.id === v.id){
+            //        v.title = result.data.title;
+            //        v.status = result.data.status;
+            //        v.view = result.data.view;
+            //        v.subscriber = result.data.subscriber;
+            //        exits = true;
+            //    }
+            // });
+            // if(exits === false){
+            //     newChannels.push(result.data);
+            // }
+            if(result.data == 1){
+                this.getData();
             }
             this.updateState('channels', newChannels);
         }
