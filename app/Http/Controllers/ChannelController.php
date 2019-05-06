@@ -83,7 +83,7 @@ class ChannelController extends Controller
                     "refresh_token" => $data["refresh_token"],
                     "token_type" => $data["token_type"],
                     "expires_in" => $data["expires_in"],
-                    "iat" => $data["iat"],
+                    "iat" => Carbon::createFromTimestamp($data["iat"] / 1000),
                 );
                 $result = $this->channelRepository->update($channel->id, $user_id, $params);
             } else {

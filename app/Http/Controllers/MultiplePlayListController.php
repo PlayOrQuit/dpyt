@@ -83,7 +83,7 @@ class MultiplePlayListController extends Controller
         }catch (AuthenticationException $e){
             Log::error($e->getMessage(), $e->getTrace());
 
-            return $this->_resJsonKeyNotFound($e->getMessage(), $req->path());
+            return $this->_resJsonYoutubeError($e->getMessage(), $req->path());
 
         }catch (Google_Exception | Google_Service_Exception $e){
             Log::error($e->getMessage(), $e->getTrace());

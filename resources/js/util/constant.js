@@ -8,6 +8,7 @@ export const URL_CHANNEL_CALLBACK = BASE_URL + 'admin/channel/callback';
 export const URL_CHANNEL_GET = BASE_URL + 'admin/channel/get';
 export const URL_CHANNEL_CREATE = BASE_URL + 'admin/channel/create';
 export const URL_CHANNEL_DELETE = BASE_URL + 'admin/channel/delete';
+export const URL_PLAYLIST_ITEM_CREATE = BASE_URL + 'admin/playlist/item/create';
 export const STATUS_CODE_OK = '01';
 export const STATUS_CODE_FIELD_ERROR = '02';
 export const STATUS_CODE_DB_ERROR = '03';

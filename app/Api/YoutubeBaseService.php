@@ -17,9 +17,9 @@ class YoutubeBaseService{
         $this->youtube = new Google_Service_YouTube($this->client);
     }
 
-    public function setChannel($channel){
-        if($channel == null)
-            throw new InvalidArgumentException("Channel must not be null!");
-        $this->client->setChannel($channel);
+    public function setDeveloperToken($token){
+        if($token == null)
+            throw new InvalidArgumentException("Token must not be null!");
+        $this->client->setDeveloperToken($token);
     }
 }

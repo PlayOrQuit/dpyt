@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Data\Repository\PlaylistRepository',
             'App\Data\Repository\Impl\PlaylistRepositoryImpl'
         );
+        $this->app->bind(
+            'App\Data\Repository\PlaylistItemRepository',
+            'App\Data\Repository\Impl\PlaylistItemRepositoryImpl'
+        );
     }
 
     /**

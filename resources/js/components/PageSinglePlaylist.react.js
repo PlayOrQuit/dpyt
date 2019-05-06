@@ -4,12 +4,15 @@ import {
     Container,
     Row,
     Col,
-    Card
+    Card,
+    Button
 } from 'react-bootstrap';
 import SelectGroupReact from './SelectGroup.react';
 import TagsGroupReact from './TagsGroup.react';
 import InputGroupReact from './InputGroup.react';
 import trans from '../lang';
+import {fetch} from '../util/util';
+import {URL_PLAYLIST_ITEM_CREATE} from '../util/constant';
 const options =  [
     {
         value: 1,
@@ -37,6 +40,14 @@ class PageSinglePlaylist extends React.Component{
     handleChange = (newTags) =>{
         this.setState({ tags: newTags})
     }
+
+    handlerAdd = () => {
+        fetch(URL_PLAYLIST_ITEM_CREATE, 'post', {
+            videoId: '0b5WvCAdWO0',
+            playlistId: 1
+        }).then(result => console.log(result))
+            .catch(err => console.log(err));
+    }
     render() {
         const {tags} = this.state;
         return(
@@ -53,6 +64,7 @@ class PageSinglePlaylist extends React.Component{
                             {/*    <Card.Title>{trans.get('template.card_title_channel') }</Card.Title>*/}
                             {/*</Card.Header>*/}
                             <Card.Body>
+                                <Button variant='primary' onClick={this.handlerAdd}>Add</Button>
                                 <SelectGroupReact
                                     label="Chọn kệnh"
                                     name="channel"

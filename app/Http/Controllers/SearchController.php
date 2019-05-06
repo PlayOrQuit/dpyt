@@ -34,9 +34,9 @@ class SearchController extends Controller
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
-            $dataKeys = $this->dataKeyRepository->findByUserPrimary($user_id, true, array('api_key'));
-            if(count($dataKeys) > 0){
-                $youtubeSearch = new YoutubeSearch($dataKeys[0]->api_key);
+            $dataKey = $this->dataKeyRepository->findByUserPrimary($user_id, true, array('api_key'));
+            if($dataKey){
+                $youtubeSearch = new YoutubeSearch($dataKey->api_key);
                 $searchResponse = $youtubeSearch->searchKeyWord($q, 10, $regionCode, $relevanceLanguage);
                 $arr = array();
                 foreach ($searchResponse['items'] as $searchResult){
@@ -53,7 +53,7 @@ class SearchController extends Controller
                 }
                 return $this->_resJsonSuccess('Success', $req->path(), $tags);
             }else{
-                return $this->_resJsonKeyNotFound('Not Found API Key', $req->path());
+                return $this->_resJsonYoutubeError('Not Found API Key', $req->path());
             }
 
         }catch (QueryException $e){
