@@ -61,11 +61,12 @@ class PlaylistItemController extends Controller
                         $youtubePlaylistService->setDeveloperToken(array(
                             'access_token' => $channel['access_token'],
                             'refresh_token' => $channel['refresh_token'],
-                            'created' => $channel['iat']->getTimestamp(),
+                            'created' => $channel['iat']->getTimestamp() - $channel['expires_in'],
                             'expires_in' => $channel['expires_in'],
                             'client_id' => $dataKey['id_client'],
                             'client_secret' => $dataKey['client_secret']
                         ));
+                        $youtubePlaylistService->setChannel($channel);
 
                         $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlist['uid'], $params['videoId'], $playlist['video_count']);
                         $resultCode = $this->playlistItemRepository->save($userId, array(

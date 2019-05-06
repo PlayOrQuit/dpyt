@@ -43,7 +43,7 @@ class PageSinglePlaylist extends React.Component{
 
     handlerAdd = () => {
         fetch(URL_PLAYLIST_ITEM_CREATE, 'post', {
-            videoId: '0b5WvCAdWO0',
+            videoId: 'dDU-dQj1fN8',
             playlistId: 1
         }).then(result => console.log(result))
             .catch(err => console.log(err));
