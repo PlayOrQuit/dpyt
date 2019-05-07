@@ -26,11 +26,11 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @throws Google_Exception
      * @return Google_Service_YouTube_Playlist
      */
-    public function createPlayList($title, $description = null, $tags = null){
+    public function createPlayList($title, $hl, $description = null, $tags = null){
         $this->client->checkAuth();
         try{
             $youTubePlaylist = new Google_Service_YouTube_Playlist();
-            $youTubePlaylist->setSnippet($this->createPlaylistSnippet($title, $description, $tags));
+            $youTubePlaylist->setSnippet($this->createPlaylistSnippet($title, $hl, $description, $tags, ));
             $youTubePlaylist->setStatus($this->createPlaylistStatus());
             $playlistResponse = $this->youtube->playlists->insert('snippet,status', $youTubePlaylist);
             return $playlistResponse;
@@ -119,9 +119,10 @@ class YoutubePlaylistService extends YoutubeBaseService
     }
 
 
-    private function createPlaylistSnippet($title, $description, $tags){
+    private function createPlaylistSnippet($title, $hl, $description, $tags){
         $playlistSnippet = new Google_Service_YouTube_PlaylistSnippet();
         $playlistSnippet->setTitle($title);
+        $playlistSnippet->setDefaultLanguage($hl);
         if(is_string($description))
             $playlistSnippet->setDescription($description);
         if(is_array($tags))

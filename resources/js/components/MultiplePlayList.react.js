@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
@@ -13,7 +12,9 @@ import {
     STATUS_CODE_OK,
     URL_API_MULTIPLE_PLAY_LIST_LANGUAGES,
     URL_API_MULTIPLE_PLAY_LIST_REGIONS,
-    URL_CHANNEL_GET
+    URL_CHANNEL_GET,
+    URL_API_MULTIPLE_PLAY_LIST_KEYWORD,
+    URL_API_MULTIPLE_PLAY_LIST_CREATE
 } from '../util/constant';
 import { fetch } from '../util/util';
 import LabelToolTip from './LabelToolTip.react';
@@ -28,6 +29,7 @@ const KeyCodes = {
 };
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
+
 class MultiplePlayList extends Component {
     constructor(props) {
         super(props);
@@ -40,6 +42,7 @@ class MultiplePlayList extends Component {
             listRegion: [],
             valueRegion: "VN",
             tags: [],
+            optionsSelectList: [],
             selectedListKeyWord: [],
             itemListChannel: [],
             itemListChannelSelected: [],
@@ -47,7 +50,6 @@ class MultiplePlayList extends Component {
             titleGroup: "",
             titleGenerateTemplate: "@title_group | @main_keyword | @sub_keyword",
             titlePlayList: [],
-            optionsSelectList: [],
             descriptionPlayList: "",
             enableFilterVideo: false,
             enableFilterVideoTime: false,
@@ -61,6 +63,7 @@ class MultiplePlayList extends Component {
             valueFilterVideoView: "",
             valueFilterVideoLike: "",
             valueFilterVideoDislike: "",
+            valueKeyWord: ""
         }
 
         this.handleDelete = this.handleDelete.bind(this);
@@ -123,6 +126,41 @@ class MultiplePlayList extends Component {
             });
     }
 
+    getDataKeyWord = () => {
+        if (this.state.tags.length == 0) return;
+        let q = "";
+        for (const item of this.state.tags) {
+            q += item.id + "|";
+        }
+        q = q.slice(0, -1);
+        const region = this.state.valueRegion;
+        const language = this.state.valueLanguage;
+        fetch(URL_API_MULTIPLE_PLAY_LIST_KEYWORD + "?q=" + q + "&regionCode=" + region + "&relevanceLanguage=" + language,
+            'get')
+            .then(result => {
+                console.log(result)
+                if (result.data.body.statusCode === STATUS_CODE_OK) {
+                    const data = result.data.body.data;
+                    let temp = [];
+                    data.forEach((item) => {
+                        let obj = new Object();
+                        obj.value = item
+                        obj.label = item
+                        temp.push(obj)
+                    })
+                    console.log(temp)
+                    this.setState({
+                        optionsSelectList: temp,
+                        valueKeyWord: q
+                    })
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                this.setState({ loadingGetListChannel: false });
+            });
+    }
+
     handleDelete(i) {
         const { tags } = this.state;
         this.setState({
@@ -174,6 +212,73 @@ class MultiplePlayList extends Component {
         this.setState({ numberPlayList: numberPL });
     }
 
+    handlerCreatePlayList = () => {
+        this.setState({ loadingCreatePlayList: true });
+        const listChannel = this.state.itemListChannelSelected;
+        const listTitleChannel = this.state.titlePlayList;
+
+        if (listChannel.length == 0 || listTitleChannel.length == 0) return;
+        var playListItem = { playlist: [] };
+
+        var idx = 0;
+        for (const titleText of listTitleChannel) {
+            var item = {};
+            item.title = titleText;
+            item.hl = this.state.valueLanguage;
+            item.gl = this.state.valueRegion
+            if (idx >= listChannel.length) {
+                idx = 0;
+            }
+            item.channel_id = listChannel[idx].id;
+            item.keywords = this.state.valueKeyWord;
+
+            if (this.state.enableFilterVideo) {
+                if (this.state.valueFilterVideoTime == "" ||
+                    this.state.valueFilterVideoDislike == "" ||
+                    this.state.valueFilterVideoDuration == "" ||
+                    this.state.valueFilterVideoLike == "" ||
+                    this.state.valueFilterVideoView == "") {
+
+                    item.status_filter = this.state.enableFilterVideo;
+
+                    if (this.state.enableFilterVideoTime) {
+                        item.filter_by_date = this.state.valueFilterVideoTime;
+                        item.filter_by_date_status = this.state.valueFilterEqualTime;
+                    }
+                    if (this.state.enableFilterVideoDislike) {
+                        item.filter_by_dislike = this.state.valueFilterVideoDislike;
+                    }
+                    if (this.state.enableFilterVideoDuration) {
+                        item.filter_by_dislike = this.state.valueFilterVideoDuration;
+                    }
+                    if (this.state.enableFilterVideoLike) {
+                        item.filter_by_dislike = this.state.valueFilterVideoLike;
+                    }
+                    if (this.state.enableFilterVideoView) {
+                        item.filter_by_dislike = this.state.valueFilterVideoView;
+                    }
+                } else {
+                    item.status_filter = false;
+                }
+            }
+            playListItem.playlist.push(item);
+        }
+
+        fetch(URL_API_MULTIPLE_PLAY_LIST_CREATE, 'post', playListItem)
+            .then(result => {
+                this.setState({ loadingCreatePlayList: false });
+                if (result.data.body.statusCode === STATUS_CODE_OK) {
+                    alert("Thêm playlist thành công");
+                } else {
+                    alert("Thêm playlist thất bại");
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                this.setState({ loadingCreatePlayList: false });
+            });
+    }
+
     handlerChangeTitleGroup = (e) => {
         this.setState({ titleGroup: e.target.value })
     }
@@ -215,7 +320,8 @@ class MultiplePlayList extends Component {
                                                 onClick={(e) => this.hanlderClickChannel(i)}>
                                                 <div className="d-flex align-items-center">
                                                     <div class="col-auto">
-                                                        <span class="avatar avatar-md d-block" style={{ backgroundImage: "url(" + obj.thumbnail + ")" }}></span>
+                                                        <span class="avatar avatar-md d-block"
+                                                            style={{ backgroundImage: "url(" + obj.thumbnail + ")" }}></span>
                                                     </div>
                                                     <div className="col">
                                                         <div>
@@ -227,7 +333,8 @@ class MultiplePlayList extends Component {
                                                         </small>
                                                         {
                                                             (obj.isSelected) &&
-                                                            <i className="fe fe-check-circle float-right" style={{ color: "#467fcf" }}></i>
+                                                            <i className="fe fe-check-circle float-right"
+                                                                style={{ color: "#467fcf" }}></i>
                                                         }
                                                     </div>
                                                 </div>
@@ -301,14 +408,16 @@ class MultiplePlayList extends Component {
                                     </select>
                                 </div>
                                 <div className="form-group d-flex align-items-center justify-content-center">
-                                    <button className="btn btn-primary">{trans.get("multipleplaylist.keyword_search")}</button>
+                                    <button
+                                        onClick={this.getDataKeyWord}
+                                        className="btn btn-primary">{trans.get("multipleplaylist.keyword_search")}</button>
                                 </div>
                             </CardLoaderReact>
                         }
                     </Col>
                     <Col lg="12" className="another_height">
                         {
-                            this.state.optionsSelectList.length == 0 &&
+                            this.state.optionsSelectList.length > 0 &&
                             <CardLoaderReact>
                                 <div className="form-group w-50 d-block">
                                     <LabelToolTip
@@ -331,7 +440,8 @@ class MultiplePlayList extends Component {
                                         className="d-inline-block w-25"
                                     />
                                     {optionsSelectList &&
-                                        <label className='form-label ml-5 d-inline-block w-10'>{trans.get("multipleplaylist.keyword_find", { attribute: this.state.optionsSelectList.length })}</label>
+                                        <label
+                                            className='form-label ml-5 d-inline-block w-10'>{trans.get("multipleplaylist.keyword_find", { attribute: this.state.optionsSelectList.length })}</label>
                                     }
                                     <DualListBox
                                         options={optionsSelectList}
@@ -355,7 +465,7 @@ class MultiplePlayList extends Component {
                                         }}
                                     />
                                     {
-                                        this.state.selectedListKeyWord > 0 &&
+                                        this.state.selectedListKeyWord.length > 0 &&
                                         <label className="form-label float-right"
                                             style={selectedListKeyWord.length != 0 && selectedListKeyWord.length == this.state.numberPlayList ? { color: "green" } : {}}
                                         >
@@ -467,28 +577,35 @@ class MultiplePlayList extends Component {
                                                     <>
                                                         <div className="input-group">
                                                             <span class="input-group-prepend">
-                                                                <span class="input-group-text" style={{ padding: "5px 0" }}>
+                                                                <span class="input-group-text"
+                                                                    style={{ padding: "5px 0" }}>
                                                                     <select className="custom-input-group-prepend"
                                                                         value={this.state.valueFilterEqualTime}
                                                                         onChange={(e) => {
                                                                             this.setState({ valueFilterEqualTime: e.target.value })
                                                                         }}
                                                                     >
-                                                                        <option value="0">{trans.get("multipleplaylist.filter_equal_lower")}</option>
-                                                                        <option value="1">{trans.get("multipleplaylist.filter_equal_higher")}</option>
+                                                                        <option
+                                                                            value="0">{trans.get("multipleplaylist.filter_equal_lower")}</option>
+                                                                        <option
+                                                                            value="1">{trans.get("multipleplaylist.filter_equal_higher")}</option>
                                                                     </select>
                                                                 </span>
                                                             </span>
                                                             <input
-                                                                className="form-control d-inline-block w-auto" type="text"
-                                                                data-mask="00/00/0000" data-mask-clearifnotmatch="true" placeholder="00/00/0000" autocomplete="off" maxlength="10"
+                                                                className="form-control d-inline-block w-auto"
+                                                                type="text"
+                                                                data-mask="00/00/0000" data-mask-clearifnotmatch="true"
+                                                                placeholder="00/00/0000" autocomplete="off"
+                                                                maxlength="10"
                                                                 value={this.state.valueFilterVideoTime}
                                                                 onChange={(e) => {
                                                                     this.setState({ valueFilterVideoTime: e.target.value })
                                                                 }}
                                                             />
                                                             <span className="input-group-append">
-                                                                <span className="input-group-text"><i className="fe fe-calendar"></i></span>
+                                                                <span className="input-group-text"><i
+                                                                    className="fe fe-calendar"></i></span>
                                                             </span>
                                                         </div>
                                                     </>
@@ -510,7 +627,8 @@ class MultiplePlayList extends Component {
                                                     this.state.enableFilterVideoDuration == true &&
                                                     <div className="input-group">
                                                         <input
-                                                            className="form-control d-inline-block w-auto ml-2" type="number"
+                                                            className="form-control d-inline-block w-auto ml-2"
+                                                            type="number"
                                                             placeholder={trans.get("multipleplaylist.enable_filter_video_duration_placeholder")}
                                                             value={this.state.valueFilterVideoDuration}
                                                             onChange={(e) => {
@@ -518,7 +636,8 @@ class MultiplePlayList extends Component {
                                                             }}
                                                         />
                                                         <span className="input-group-append">
-                                                            <span className="input-group-text"><i className="fe fe-clock"></i></span>
+                                                            <span className="input-group-text"><i
+                                                                className="fe fe-clock"></i></span>
                                                         </span>
                                                     </div>
                                                 }
@@ -540,7 +659,7 @@ class MultiplePlayList extends Component {
                                                     <div className="input-group">
                                                         <input
                                                             className="form-control d-inline-block w-auto ml-2"
-                                                            type="text"
+                                                            type="number"
                                                             placeholder={trans.get("multipleplaylist.enable_filter_video_view")}
                                                             value={this.state.valueFilterVideoView}
                                                             onChange={(e) => {
@@ -548,7 +667,8 @@ class MultiplePlayList extends Component {
                                                             }}
                                                         />
                                                         <span className="input-group-append">
-                                                            <span className="input-group-text"><i className="fe fe-play-circle"></i></span>
+                                                            <span className="input-group-text"><i
+                                                                className="fe fe-play-circle"></i></span>
                                                         </span>
                                                     </div>
                                                 }
@@ -578,7 +698,8 @@ class MultiplePlayList extends Component {
                                                             }}
                                                         />
                                                         <span className="input-group-append">
-                                                            <span className="input-group-text"><i className="fe fe-thumbs-up"></i></span>
+                                                            <span className="input-group-text"><i
+                                                                className="fe fe-thumbs-up"></i></span>
                                                         </span>
                                                     </div>
                                                 }
@@ -608,7 +729,8 @@ class MultiplePlayList extends Component {
                                                             }}
                                                         />
                                                         <span className="input-group-append">
-                                                            <span className="input-group-text"><i className="fe fe-thumbs-down"></i></span>
+                                                            <span className="input-group-text"><i
+                                                                className="fe fe-thumbs-down"></i></span>
                                                         </span>
                                                     </div>
                                                 }
@@ -617,7 +739,9 @@ class MultiplePlayList extends Component {
                                     }
                                 </div>
                                 <div className="form-group">
-                                    <button className="btn btn-primary">
+                                    <button
+                                        onClick={this.handlerCreatePlayList}
+                                        className="btn btn-primary">
                                         {trans.get("multipleplaylist.create_playlist_btn")}
                                     </button>
                                 </div>
@@ -625,7 +749,7 @@ class MultiplePlayList extends Component {
                         }
                     </Col>
                 </Row>
-            </Container >
+            </Container>
         );
     }
 }
