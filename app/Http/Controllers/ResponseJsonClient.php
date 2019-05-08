@@ -25,7 +25,7 @@ trait ResponseJsonClient
         return response()->json(Utils::builder_success($msg, $path, $data));
     }
 
-    protected function _resJsonKeyNotFound($msg, $path){
-        return response()->json(Utils::builder_error(WebKeys::STATUS_API_KEY_NOT_FOUND, $msg, $path, null));
+    protected function _resJsonYoutubeError($msg, $path){
+        return response()->json(Utils::builder_error(WebKeys::STATUS_YOUTUBE_SERVICE_ERROR, $msg, $path, null));
     }
 }

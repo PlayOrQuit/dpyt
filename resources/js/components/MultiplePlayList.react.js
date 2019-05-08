@@ -231,6 +231,7 @@ class MultiplePlayList extends Component {
             }
             item.channel_id = listChannel[idx].id;
             item.keywords = this.state.valueKeyWord;
+            item.description  = titleText  + " " + this.state.valueKeyWord;
 
             if (this.state.enableFilterVideo) {
                 if (this.state.valueFilterVideoTime == "" ||

@@ -70,6 +70,10 @@ Route::group([
         Route::group([ 'prefix' => 'single'], function() {
             Route::get('/', 'SinglePlaylistController@render');
         });
+
+        Route::group([ 'prefix' => 'item'], function() {
+            Route::post('/create', 'PlaylistItemController@create')->middleware(['cors']);
+        });
     });
 
     Route::group([ 'prefix' => 'search'], function() {

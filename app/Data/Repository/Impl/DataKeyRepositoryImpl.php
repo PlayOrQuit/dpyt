@@ -51,7 +51,7 @@ class DataKeyRepositoryImpl implements DataKeyRepository
 
     public function findByUserPrimary($userId, $primary, $columns = array('id', 'api_key', 'id_client', 'client_secret', 'primary'))
     {
-        return DataKey::select($columns)->where(['user_id' => $userId, 'primary' => $primary])->get();
+        return DataKey::select($columns)->where(['user_id' => $userId, 'primary' => $primary])->first();
     }
 
 }
