@@ -2,7 +2,7 @@ import React from 'react';
 import {Form} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-class InputGroupReact extends React.Component{
+class TextareaGroup extends React.Component{
     constructor(props){
         super(props);
     }
@@ -11,16 +11,18 @@ class InputGroupReact extends React.Component{
         label: "",
         placeholder: "",
         title: "",
-        error: null
+        error: null,
+        rows: 3
     }
     render() {
-        const {label, type, name, title, placeholder, onChange, error, value} = this.props;
+        const {label, rows, name, title, placeholder, onChange, error, value} = this.props;
         return(
             <Form.Group>
                 {label ? <Form.Label>{label}</Form.Label> : ""}
                 <Form.Control
                     value={value}
-                    type={type}
+                    as="textarea"
+                    rows={rows}
                     name={name}
                     title={title}
                     placeholder={placeholder}
@@ -33,7 +35,7 @@ class InputGroupReact extends React.Component{
     }
 }
 
-InputGroupReact.propTypes = {
+TextareaGroup.propTypes = {
     value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
@@ -43,9 +45,9 @@ InputGroupReact.propTypes = {
     placeholder: PropTypes.string,
     title: PropTypes.string,
     name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    rows: PropTypes.number,
     error: PropTypes.string,
     onChange: PropTypes.func.isRequired
 };
 
-export default InputGroupReact;
+export default TextareaGroup;

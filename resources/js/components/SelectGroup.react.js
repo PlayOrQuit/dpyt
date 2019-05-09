@@ -14,7 +14,7 @@ class SelectGroupReact extends React.Component{
         super(props);
     }
     static propTypes = {
-        value: "",
+        value: null,
         label: "",
         title: "",
         placeholder: "",
@@ -24,7 +24,6 @@ class SelectGroupReact extends React.Component{
     }
     render() {
         const {label, image, name, error, value, options, onChange} = this.props;
-        console.log(options);
         return(
             <Form.Group>
                 {label ? <Form.Label>{label}</Form.Label> : ""}
@@ -35,17 +34,21 @@ class SelectGroupReact extends React.Component{
                     onChange={onChange}
                     components={image ? { Option: IconOption } : null}
                 />
-                {error ? <div className="invalid-feedback">{error}</div> : ""}
+                {error ? <div className="invalid-feedback" style={{display: 'block'}}>{error}</div> : ""}
             </Form.Group>
         );
     }
 }
 SelectGroupReact.propTypes = {
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.bool
-    ]),
+    value:  PropTypes.shape({
+        value: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.bool
+        ]).isRequired,
+        label: PropTypes.string.isRequired,
+        path: PropTypes.string
+    }),
     label: PropTypes.string,
     title: PropTypes.string,
     image: PropTypes.bool,

@@ -8,6 +8,7 @@ return[
     'key'   => 'Key',
     'id_client' => 'ID client',
     'client_secret' => 'Client secret',
+    'channel' => 'Kênh',
     'name_channel' => 'Tên kênh',
     'status' => 'Trạng thái',
     'search' => 'Tìm kiếm',

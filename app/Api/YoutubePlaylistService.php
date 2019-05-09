@@ -26,6 +26,7 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @return Google_Service_YouTube_Playlist
      */
     public function createPlayList($title, $description = null, $tags = null){
+        $this->beforeService();
         try{
             $youTubePlaylist = new Google_Service_YouTube_Playlist();
             $youTubePlaylist->setSnippet($this->createPlaylistSnippet($title, $description, $tags));
@@ -38,8 +39,6 @@ class YoutubePlaylistService extends YoutubeBaseService
         }catch (Google_Exception $e){
             Log::error($e->getMessage(), $e->getTrace());
             throw $e;
-        }finally{
-            $this->afterService();
         }
     }
     /**
@@ -52,6 +51,7 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @return Google_Service_YouTube_PlaylistItem
      */
     public function createPlaylistItem($playlistId, $videoId, $position = null, $title = null){
+        $this->beforeService();
         try{
             $resourceId = $this->createResourceId(array( 'videoId' => $videoId));
             $playlistItemSnippet = $this->createPlaylistItemSnippet($playlistId, $resourceId, $position, $title);
@@ -64,8 +64,6 @@ class YoutubePlaylistService extends YoutubeBaseService
         }catch (Google_Exception $e){
             Log::error($e->getMessage(), $e->getTrace());
             throw $e;
-        }finally{
-            $this->afterService();
         }
     }
 
@@ -80,6 +78,7 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @return Google_Service_YouTube_PlaylistItem
      */
     public function updatePlaylistItem($id, $playlistId, $videoId, $position = null, $title = null){
+        $this->beforeService();
         try{
             $resourceId = $this->createResourceId(array( 'videoId' => $videoId));
             $playlistItemSnippet = $this->createPlaylistItemSnippet($playlistId, $resourceId, $position, $title);
@@ -93,8 +92,6 @@ class YoutubePlaylistService extends YoutubeBaseService
         }catch (Google_Exception $e){
             Log::error($e->getMessage(), $e->getTrace());
             throw $e;
-        }finally{
-            $this->afterService();
         }
     }
     /**
@@ -103,6 +100,7 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @throws Google_Exception
      */
     public function deletePlaylistItem($id){
+        $this->beforeService();
         try{
             $playlistItem = new Google_Service_YouTube_PlaylistItem();
             $playlistItem->setId($id);
@@ -113,8 +111,6 @@ class YoutubePlaylistService extends YoutubeBaseService
         }catch (Google_Exception $e){
             Log::error($e->getMessage(), $e->getTrace());
             throw $e;
-        }finally{
-            $this->afterService();
         }
     }
 
@@ -122,6 +118,7 @@ class YoutubePlaylistService extends YoutubeBaseService
     private function createPlaylistSnippet($title, $description, $tags){
         $playlistSnippet = new Google_Service_YouTube_PlaylistSnippet();
         $playlistSnippet->setTitle($title);
+
         if(is_string($description))
             $playlistSnippet->setDescription($description);
         if(is_array($tags))

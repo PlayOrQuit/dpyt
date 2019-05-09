@@ -10,5 +10,11 @@ return [
     'no_result' => 'Không tìm thấy dữ liệu nào',
     'no_choose' => 'Bạn chưa chọn giá trị nào!',
     'confirm_delete' => 'Bạn có chắc muốn xóa?',
-    'set_primary_api_key' => 'Vui lòng chọn api-key mặc định trước khi thực hiện chức năng này!'
+    'set_primary_api_key' => 'Vui lòng chọn api-key mặc định trước khi thực hiện chức năng này!',
+    'label_channel' => 'Chọn kênh',
+    'label_keyword_playlist' => 'Từ khóa playlist',
+    'label_title_playlist' => 'Tiêu đề playlist',
+    'label_description_playlist' => 'Mô tả playlist',
+    'title_form_single_playlist' => 'Thông tin playlist',
+    'not_condition_filter_video' => 'Bạn chưa chọn điều kiện lọc video'
 ];

@@ -49,7 +49,7 @@ class TagsGroupReact extends React.Component{
                     handleDrag={this.handleDrag}
                     classNames={{
                         tagInput: '',
-                        tagInputField: error ? 'form-control is-invalid' : 'form-control',
+                        tagInputField: 'form-control',
                     }}
 
                 />

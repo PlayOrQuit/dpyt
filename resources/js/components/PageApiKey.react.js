@@ -118,7 +118,7 @@ class PageApiKeyReact extends Component {
             let keyNews = this.state.keys;
             keyNews.push(data.data);
             this.updateState('keys', keyNews);
-            this.showAlert(data.message, 'success');
+            this.showAlert(trans.get('message.create_success'), 'success');
         } else if (data.statusCode === STATUS_CODE_FIELD_ERROR) {
             if (data.field_errors.api_key) {
                 this.setError('api_key', data.field_errors.api_key[0]);

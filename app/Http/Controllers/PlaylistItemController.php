@@ -44,7 +44,7 @@ class PlaylistItemController extends Controller
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
-            $playlist = $this->playlistRepository->findById($params['playlistId'], $userId, array('id', 'uid', 'video_count', 'channel_id'));
+            $playlist = $this->playlistRepository->findById($params['playlist_id'], $userId, array('id', 'uid', 'video_count', 'channel_id'));
             if($playlist){
                 $channel = $this->channelRepository->findById($playlist['channel_id'], $userId, array(
                     'id',
@@ -68,10 +68,10 @@ class PlaylistItemController extends Controller
                         ));
                         $youtubePlaylistService->setChannel($channel);
 
-                        $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlist['uid'], $params['videoId'], $playlist['video_count']);
+                        $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlist['uid'], $params['video_uid'], $playlist['video_count']);
                         $resultCode = $this->playlistItemRepository->save($userId, array(
                             'uid' => $playlistItemResult['id'],
-                            'video_uid' => $params['videoId'],
+                            'video_uid' => $params['video_uid'],
                             'position' => $playlist['video_count'],
                             'channel_id' => $channel['id'],
                             'playlist_id' => $playlist['id']
@@ -105,13 +105,14 @@ class PlaylistItemController extends Controller
 
     private function validatorCreate($params){
         $rules = array(
-            'playlistId' => [
+            'playlist_id' => [
                 'required',
                 'integer'
             ],
-            'videoId' => [
+            'video_uid' => [
                 'required',
-                'string'
+                'string',
+                'unique:playlist_items'
             ],
         );
         return Validator::make($params, $rules);

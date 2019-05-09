@@ -6,6 +6,7 @@ namespace App\Api;
 use App\Channel;
 use App\Data\Repository\Impl\ChannelRepositoryImpl;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Google_Service_YouTube;
@@ -45,24 +46,22 @@ class YoutubeBaseService{
         $this->channel = $channel;
     }
 
-    protected function afterService(){
-        Log::debug('call After Service');
+    protected function beforeService(){
         if($this->channel){
-            Log::debug('call After Service Channel');
             $token = $this->client->getAccessToken();
-            Log::debug('before => '. $this->channel['access_token']);
-            Log::debug('after => '. $token['access_token']);
-            Log::debug('created => '. $token['created']);
-            Log::debug(json_encode($this->client->getCache()));
-            if($token && strcmp($token['access_token'], $this->channel['access_token']) !== 0){
-                Log::debug('call After Service access_token');
+            if (isset($token['refresh_token']) && $this->client->isAccessTokenExpired()) {
                 $userId = \Auth::user()->id;
-                $this->channelRepository->update($this->channel['id'], $userId, array(
-                    'access_token' => $token['access_token'],
-                    'refresh_token' => $token['refresh_token'],
-                    'expires_in' => $token['expires_in'],
-                    'iat' => Carbon::createFromTimestamp($token['created'] + $token['expires_in'])
-                ));
+                $newToken = $this->client->refreshToken($token['refresh_token']);
+                try{
+                    $this->channelRepository->update($this->channel['id'], $userId, array(
+                        'access_token' => $newToken['access_token'],
+                        'refresh_token' => $newToken['refresh_token'],
+                        'expires_in' => $newToken['expires_in'],
+                        'iat' => Carbon::createFromTimestamp( $newToken['created'] + $newToken['expires_in'])
+                    ));
+                }catch (QueryException $e){
+                    Log::error($e->getMessage(), $e->getTrace());
+                }
             }
         }
 

@@ -8,6 +8,7 @@ return[
     'key'   => 'Key',
     'id_client' => 'ID client',
     'client_secret' => 'Client secret',
+    'channel' => 'Channel',
     'name_channel' => 'Name channel',
     'status' => 'Status',
     'search' => 'Search',
@@ -24,5 +25,5 @@ return[
     'choose' => 'Choose',
     'normal' => 'Normal',
     'turn_off' => 'Turn off',
-    'show_all' => 'Show All'
+    'show_all' => 'Show All',
 ];

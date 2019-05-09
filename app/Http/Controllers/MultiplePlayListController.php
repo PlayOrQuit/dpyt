@@ -51,6 +51,7 @@ class MultiplePlayListController extends Controller
                 ));
                 if($channel){
                     $youtubePlaylistService = new YoutubePlaylistService();
+
                     $youtubePlaylistService->setChannel($channel);
                     $google_Service_YouTube_Playlist = $youtubePlaylistService->createPlayList($param->title, $param->description, $param->keywords);
                     $uid = $google_Service_YouTube_Playlist['id'];

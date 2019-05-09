@@ -40,11 +40,9 @@ class ChannelController extends Controller
         $user_id = \Auth::user()->id;
         try {
             $channels = $this->channelRepository->findByUser($user_id, array('id', 'title', 'thumbnail', 'view', 'subscriber', 'status'));
-
             return $this->_resJsonSuccess('Success', $req->path(), $channels);
         } catch (QueryException $e) {
             Log::error($e->getMessage(), $e->getTrace());
-
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
     }
@@ -53,12 +51,10 @@ class ChannelController extends Controller
     {
         $user_id = \Auth::user()->id;
         try {
-            $channels = $this->channelRepository->findByUserStatus($user_id,0, array('id', 'title', 'thumbnail', 'view', 'subscriber'));
-
+            $channels = $this->channelRepository->findByUserStatus($user_id, 0, array('id', 'title', 'thumbnail', 'view', 'subscriber'));
             return $this->_resJsonSuccess('Success', $req->path(), $channels);
         } catch (QueryException $e) {
             Log::error($e->getMessage(), $e->getTrace());
-
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }
     }
@@ -172,7 +168,6 @@ class ChannelController extends Controller
         }
         try {
             $result = $this->channelRepository->deleteList($req->items, $user_id);
-
             return $this->_resJsonSuccess(trans('message.delete_success'), $req->path(), $result);
         } catch (QueryException $e) {
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
@@ -188,7 +183,6 @@ class ChannelController extends Controller
                 'min:1'
             ]
         );
-
         return Validator::make($data, $rules);
     }
 }
