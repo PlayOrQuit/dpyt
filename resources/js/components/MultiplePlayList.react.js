@@ -63,7 +63,14 @@ class MultiplePlayList extends Component {
             valueFilterVideoView: "",
             valueFilterVideoLike: "",
             valueFilterVideoDislike: "",
-            valueKeyWord: ""
+            valueKeyWord: "",
+            message: "",
+            messageType:"",
+            valueFilterVideoTimeError: null,
+            valueFilterVideoDurationError: null,
+            valueFilterVideoViewError: null,
+            valueFilterVideoLikeError: null,
+            valueFilterVideoDislikeError: null
         }
 
         this.handleDelete = this.handleDelete.bind(this);
@@ -151,7 +158,9 @@ class MultiplePlayList extends Component {
                     console.log(temp)
                     this.setState({
                         optionsSelectList: temp,
-                        valueKeyWord: q
+                        valueKeyWord: q,
+                        selectedListKeyWord: [],
+                        titlePlayList: []
                     })
                 }
             })
@@ -186,9 +195,13 @@ class MultiplePlayList extends Component {
         this.state.itemListChannel[idx].isSelected = !this.state.itemListChannel[idx].isSelected
         this.state.itemListChannelSelected = this.state.itemListChannel.filter(q => q.isSelected == true);
 
+        if (this.state.itemListChannelSelected.length == 0) {
+            this.state.optionsSelectList = [];
+        }
         this.setState({
             itemListChannel: this.state.itemListChannel,
-            itemListChannelSelected: this.state.itemListChannelSelected
+            itemListChannelSelected: this.state.itemListChannelSelected,
+            optionsSelectList: this.state.optionsSelectList
         });
     }
 
@@ -209,10 +222,65 @@ class MultiplePlayList extends Component {
             numberPL = value;
         }
 
-        this.setState({ numberPlayList: numberPL });
+        if (value < this.state.selectedListKeyWord.length) {
+            this.state.selectedListKeyWord = [];
+            this.state.titlePlayList = [];
+        }
+
+        this.setState({
+            numberPlayList: numberPL,
+            selectedListKeyWord: this.state.selectedListKeyWord,
+            titlePlayList: this.state.titlePlayList
+        });
     }
 
     handlerCreatePlayList = () => {
+        const {
+            enableFilterVideo,
+            enableFilterVideoTime,
+            enableFilterVideoDuration,
+            enableFilterVideoView,
+            enableFilterVideoLike,
+            enableFilterVideoDislike,
+            valueFilterEqualTime,
+            valueFilterVideoTime,
+            valueFilterVideoDuration,
+            valueFilterVideoView,
+            valueFilterVideoLike,
+            valueFilterVideoDislike,
+        } = this.state;
+        if (enableFilterVideo) {
+            if (enableFilterVideoTime) {
+                if (valueFilterVideoTime === '') {
+                    this.setError('valueFilterVideoTime', trans.get('validation.required', { attribute: trans.get('multipleplaylist.enable_filter_video_time') }));
+                    return;
+                }
+            }
+            if (enableFilterVideoDuration) {
+                if (valueFilterVideoDuration === '') {
+                    this.setError('valueFilterVideoDuration', trans.get('validation.required', { attribute: trans.get('multipleplaylist.enable_filter_video_duration') }));
+                    return;
+                }
+            }
+            if (enableFilterVideoView) {
+                if (valueFilterVideoView === '') {
+                    this.setError('valueFilterVideoView', trans.get('validation.required', { attribute: trans.get('multipleplaylist.enable_filter_video_view') }));
+                    return;
+                }
+            }
+            if (enableFilterVideoLike) {
+                if (valueFilterVideoLike === '') {
+                    this.setError('valueFilterVideoLike', trans.get('validation.required', { attribute: trans.get('multipleplaylist.enable_filter_video_like') }));
+                    return;
+                }
+            }
+            if (enableFilterVideoDislike) {
+                if (valueFilterVideoDislike === '') {
+                    this.setError('valueFilterVideoDislike', trans.get('validation.required', { attribute: trans.get('multipleplaylist.enable_filter_video_disklike') }));
+                    return;
+                }
+            }
+        }
         this.setState({ loadingCreatePlayList: true });
         const listChannel = this.state.itemListChannelSelected;
         const listTitleChannel = this.state.titlePlayList;
@@ -230,8 +298,9 @@ class MultiplePlayList extends Component {
                 idx = 0;
             }
             item.channel_id = listChannel[idx].id;
+            idx++;
             item.keywords = this.state.valueKeyWord;
-            item.description  = titleText  + " " + this.state.valueKeyWord;
+            item.description = titleText + " " + this.state.valueKeyWord;
 
             if (this.state.enableFilterVideo) {
                 if (this.state.valueFilterVideoTime == "" ||
@@ -250,13 +319,13 @@ class MultiplePlayList extends Component {
                         item.filter_by_dislike = this.state.valueFilterVideoDislike;
                     }
                     if (this.state.enableFilterVideoDuration) {
-                        item.filter_by_dislike = this.state.valueFilterVideoDuration;
+                        item.filter_by_duration = this.state.valueFilterVideoDuration;
                     }
                     if (this.state.enableFilterVideoLike) {
-                        item.filter_by_dislike = this.state.valueFilterVideoLike;
+                        item.filter_by_like = this.state.valueFilterVideoLike;
                     }
                     if (this.state.enableFilterVideoView) {
-                        item.filter_by_dislike = this.state.valueFilterVideoView;
+                        item.filter_by_view = this.state.valueFilterVideoView;
                     }
                 } else {
                     item.status_filter = false;
@@ -268,10 +337,12 @@ class MultiplePlayList extends Component {
         fetch(URL_API_MULTIPLE_PLAY_LIST_CREATE, 'post', playListItem)
             .then(result => {
                 this.setState({ loadingCreatePlayList: false });
+                const data = result.data.body;
                 if (result.data.body.statusCode === STATUS_CODE_OK) {
-                    alert("Thêm playlist thành công");
-                } else {
-                    alert("Thêm playlist thất bại");
+                    this.setState({message: "Thêm Playlist thành công", messageType: "success"})
+                } 
+                else {
+                    this.setState({message: "Thêm Playlist thất bại", messageType: "error"})
                 }
             })
             .catch(error => {
@@ -298,8 +369,39 @@ class MultiplePlayList extends Component {
         this.setState({ titlePlayList: listTitle })
     }
 
+    setError(k, msg) {
+        if (k === 'channelValue') {
+            this.setState({ 'channelError': msg });
+        } else if (k === 'keywordValue') {
+            this.setState({ 'keywordError': msg });
+        } else if (k === 'titlePlaylist') {
+            this.setState({ 'titlePlaylistError': msg });
+        } else if (k === 'descriptionPlaylist') {
+            this.setState({ 'descriptionPlaylistError': msg });
+        } else if (k === 'valueFilterVideoTime') {
+            this.setState({ 'valueFilterVideoTimeError': msg });
+        } else if (k === 'valueFilterVideoDuration') {
+            this.setState({ 'valueFilterVideoDurationError': msg });
+        } else if (k === 'valueFilterVideoView') {
+            this.setState({ 'valueFilterVideoViewError': msg });
+        } else if (k === 'valueFilterVideoLike') {
+            this.setState({ 'valueFilterVideoLikeError': msg });
+        } else if (k === 'valueFilterVideoDislike') {
+            this.setState({ 'valueFilterVideoDislikeError': msg });
+        }
+    }
+
     render() {
-        const { tags, selectedListKeyWord, itemListChannel, optionsSelectList } = this.state;
+        const now = new Date();
+        const { tags,
+            selectedListKeyWord,
+            itemListChannel,
+            optionsSelectList,
+            valueFilterVideoTimeError,
+            valueFilterVideoDurationError,
+            valueFilterVideoViewError,
+            valueFilterVideoLikeError,
+            valueFilterVideoDislikeError } = this.state;
         return (
             <Container>
                 <div className="page-header">
@@ -419,7 +521,7 @@ class MultiplePlayList extends Component {
                     <Col lg="12" className="another_height">
                         {
                             this.state.optionsSelectList.length > 0 &&
-                            <CardLoaderReact>
+                            <CardLoaderReact isLoading={this.state.loadingCreatePlayList}>
                                 <div className="form-group w-50 d-block">
                                     <LabelToolTip
                                         title={trans.get("multipleplaylist.number_create_playlist")}
@@ -577,13 +679,15 @@ class MultiplePlayList extends Component {
                                                     this.state.enableFilterVideoTime == true &&
                                                     <>
                                                         <div className="input-group">
-                                                            <span class="input-group-prepend">
-                                                                <span class="input-group-text"
+                                                            <span className="input-group-prepend">
+                                                                <span className="input-group-text"
                                                                     style={{ padding: "5px 0" }}>
                                                                     <select className="custom-input-group-prepend"
                                                                         value={this.state.valueFilterEqualTime}
                                                                         onChange={(e) => {
-                                                                            this.setState({ valueFilterEqualTime: e.target.value })
+                                                                            this.setState({
+                                                                                valueFilterEqualTime: e.target.value
+                                                                            })
                                                                         }}
                                                                     >
                                                                         <option
@@ -596,18 +700,23 @@ class MultiplePlayList extends Component {
                                                             <input
                                                                 className="form-control d-inline-block w-auto"
                                                                 type="text"
-                                                                data-mask="00/00/0000" data-mask-clearifnotmatch="true"
-                                                                placeholder="00/00/0000" autocomplete="off"
-                                                                maxlength="10"
+                                                                data-mask="0000/00/00" data-mask-clearifnotmatch="true"
+                                                                placeholder={now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()} autoComplete="off"
+                                                                maxLength="10"
                                                                 value={this.state.valueFilterVideoTime}
                                                                 onChange={(e) => {
-                                                                    this.setState({ valueFilterVideoTime: e.target.value })
+                                                                    this.setState({
+                                                                        valueFilterVideoTime: e.target.value,
+                                                                        valueFilterVideoTimeError: null
+                                                                    })
                                                                 }}
                                                             />
                                                             <span className="input-group-append">
                                                                 <span className="input-group-text"><i
                                                                     className="fe fe-calendar"></i></span>
                                                             </span>
+                                                            {valueFilterVideoTimeError ? <div className="invalid-feedback"
+                                                                style={{ display: 'block' }}>{valueFilterVideoTimeError}</div> : ""}
                                                         </div>
                                                     </>
                                                 }
@@ -633,13 +742,18 @@ class MultiplePlayList extends Component {
                                                             placeholder={trans.get("multipleplaylist.enable_filter_video_duration_placeholder")}
                                                             value={this.state.valueFilterVideoDuration}
                                                             onChange={(e) => {
-                                                                this.setState({ valueFilterVideoDuration: e.target.value })
+                                                                this.setState({
+                                                                    valueFilterVideoDuration: e.target.value,
+                                                                    valueFilterVideoDurationError: null
+                                                                })
                                                             }}
                                                         />
                                                         <span className="input-group-append">
                                                             <span className="input-group-text"><i
                                                                 className="fe fe-clock"></i></span>
                                                         </span>
+                                                        {valueFilterVideoDurationError ? <div className="invalid-feedback"
+                                                            style={{ display: 'block' }}>{valueFilterVideoDurationError}</div> : ""}
                                                     </div>
                                                 }
                                             </Col>
@@ -664,13 +778,19 @@ class MultiplePlayList extends Component {
                                                             placeholder={trans.get("multipleplaylist.enable_filter_video_view")}
                                                             value={this.state.valueFilterVideoView}
                                                             onChange={(e) => {
-                                                                this.setState({ valueFilterVideoView: e.target.value })
+                                                                this.setState({
+                                                                    valueFilterVideoView: e.target.value,
+                                                                    valueFilterVideoViewError: null
+                                                                })
                                                             }}
                                                         />
                                                         <span className="input-group-append">
                                                             <span className="input-group-text"><i
                                                                 className="fe fe-play-circle"></i></span>
                                                         </span>
+                                                        {valueFilterVideoViewError ? <div className="invalid-feedback"
+                                                            style={{ display: 'block' }}>{valueFilterVideoViewError}</div> : ""}
+
                                                     </div>
                                                 }
                                             </Col>
@@ -695,13 +815,19 @@ class MultiplePlayList extends Component {
                                                             placeholder={trans.get("multipleplaylist.enable_filter_video_like")}
                                                             value={this.state.valueFilterVideoLike}
                                                             onChange={(e) => {
-                                                                this.setState({ valueFilterVideoLike: e.target.value })
+                                                                this.setState({
+                                                                    valueFilterVideoLike: e.target.value,
+                                                                    valueFilterVideoLikeError: null
+                                                                })
                                                             }}
                                                         />
                                                         <span className="input-group-append">
                                                             <span className="input-group-text"><i
                                                                 className="fe fe-thumbs-up"></i></span>
                                                         </span>
+                                                        {valueFilterVideoLikeError ? <div className="invalid-feedback"
+                                                            style={{ display: 'block' }}>{valueFilterVideoLikeError}</div> : ""}
+
                                                     </div>
                                                 }
                                             </Col>
@@ -726,13 +852,19 @@ class MultiplePlayList extends Component {
                                                             placeholder={trans.get("multipleplaylist.enable_filter_video_disklike")}
                                                             value={this.state.valueFilterVideoDislike}
                                                             onChange={(e) => {
-                                                                this.setState({ valueFilterVideoDislike: e.target.value })
+                                                                this.setState({
+                                                                    valueFilterVideoDislike: e.target.value,
+                                                                    valueFilterVideoDislikeError: null
+                                                                })
                                                             }}
                                                         />
                                                         <span className="input-group-append">
                                                             <span className="input-group-text"><i
                                                                 className="fe fe-thumbs-down"></i></span>
                                                         </span>
+                                                        {valueFilterVideoDislikeError ? <div className="invalid-feedback"
+                                                            style={{ display: 'block' }}>{valueFilterVideoDislikeError}</div> : ""}
+
                                                     </div>
                                                 }
                                             </Col>
@@ -745,6 +877,9 @@ class MultiplePlayList extends Component {
                                         className="btn btn-primary">
                                         {trans.get("multipleplaylist.create_playlist_btn")}
                                     </button>
+                                    {this.state.message ?
+                                        <Alert style={{marginTop: "10px"}} onClose={(e) => { this.setState({ message: "" }) }} dismissible variant={this.state.messageType}>
+                                            <p>{this.state.message}</p></Alert> : ''}
                                 </div>
                             </CardLoaderReact>
                         }

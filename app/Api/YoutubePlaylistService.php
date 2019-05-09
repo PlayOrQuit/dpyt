@@ -12,6 +12,7 @@ use Google_Service_YouTube_PlaylistStatus;
 use Google_Service_YouTube_ResourceId;
 use Google_Service_YouTube_PlaylistItemSnippet;
 use Google_Service_YouTube_PlaylistItem;
+use Google_Service_YouTube_PlaylistLocalization;
 use Illuminate\Support\Facades\Log;
 
 class YoutubePlaylistService extends YoutubeBaseService
@@ -29,7 +30,7 @@ class YoutubePlaylistService extends YoutubeBaseService
     public function createPlayList($title, $hl, $description = null, $tags = null){
         try{
             $youTubePlaylist = new Google_Service_YouTube_Playlist();
-            $youTubePlaylist->setSnippet($this->createPlaylistSnippet($title, $hl, $description, $tags, ));
+            $youTubePlaylist->setSnippet($this->createPlaylistSnippet($title, $hl, $description, $tags));
             $youTubePlaylist->setStatus($this->createPlaylistStatus());
             $playlistResponse = $this->youtube->playlists->insert('snippet,status', $youTubePlaylist);
             return $playlistResponse;
@@ -120,6 +121,7 @@ class YoutubePlaylistService extends YoutubeBaseService
     }
 
     private function createPlaylistSnippet($title, $hl, $description, $tags){
+        
         $playlistSnippet = new Google_Service_YouTube_PlaylistSnippet();
         $playlistSnippet->setTitle($title);
         $playlistSnippet->setDefaultLanguage($hl);
@@ -127,6 +129,7 @@ class YoutubePlaylistService extends YoutubeBaseService
             $playlistSnippet->setDescription($description);
         if(is_array($tags))
             $playlistSnippet->setTags($tags);
+        
         return $playlistSnippet;
     }
 
