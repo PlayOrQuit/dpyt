@@ -24,7 +24,7 @@ class PlaylistTableSeeder extends Seeder
            'keywords' => 'mai vàng',
            'gl' => 'VN',
            'hl' => 'vi',
-           'video_count' => 3,
+           'video_count' => 11,
            'channel_id' => 1
        ));
     }

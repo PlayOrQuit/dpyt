@@ -14,13 +14,17 @@ import TextareaGroupReact from './TextareaGroup.react';
 import trans from '../lang';
 import {fetch} from '../util/util';
 import {
+    URL_PLAYLIST_ITEM_CREATE,
     URL_PLAYLIST_CREATE,
-    URL_CHANNEL_GET_BY_STATUS, STATUS_CODE_OK, STATUS_CODE_FIELD_ERROR, STATUS_CODE_DB_ERROR
+    URL_CHANNEL_GET_BY_STATUS,
+    STATUS_CODE_OK,
+    STATUS_CODE_FIELD_ERROR,
+    STATUS_CODE_DB_ERROR
 } from '../util/constant';
 import CardLoaderReact from "./CardLoader.react";
 
-class PageSinglePlaylist extends React.Component{
-    constructor(props){
+class PageSinglePlaylist extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
             idLoading: false,
@@ -54,10 +58,21 @@ class PageSinglePlaylist extends React.Component{
             valueFilterVideoDislikeError: null
         }
     }
+
     componentWillMount() {
         this.fetchDataChannel();
     }
-    setError(k, msg){
+
+    componentDidMount() {
+        // fetch(URL_PLAYLIST_ITEM_CREATE, 'post', {
+        //     playlist_id: 1,
+        //     video_uid: 'JOiHdtlMkOs'
+        // })
+        //     .then(result => console.log(result))
+        //     .catch(error => console.log(error))
+    }
+
+    setError(k, msg) {
         if (k === 'channelValue') {
             this.setState({'channelError': msg});
         } else if (k === 'keywordValue') {
@@ -66,19 +81,20 @@ class PageSinglePlaylist extends React.Component{
             this.setState({'titlePlaylistError': msg});
         } else if (k === 'descriptionPlaylist') {
             this.setState({'descriptionPlaylistError': msg});
-        }else if(k === 'valueFilterVideoTime'){
+        } else if (k === 'valueFilterVideoTime') {
             this.setState({'valueFilterVideoTimeError': msg});
-        }else if(k === 'valueFilterVideoDuration'){
+        } else if (k === 'valueFilterVideoDuration') {
             this.setState({'valueFilterVideoDurationError': msg});
-        }else if(k === 'valueFilterVideoView'){
+        } else if (k === 'valueFilterVideoView') {
             this.setState({'valueFilterVideoViewError': msg});
-        }else if(k === 'valueFilterVideoLike'){
+        } else if (k === 'valueFilterVideoLike') {
             this.setState({'valueFilterVideoLikeError': msg});
-        }else if(k === 'valueFilterVideoDislike'){
+        } else if (k === 'valueFilterVideoDislike') {
             this.setState({'valueFilterVideoDislikeError': msg});
         }
     }
-    fetchDataChannel(){
+
+    fetchDataChannel() {
         fetch(URL_CHANNEL_GET_BY_STATUS, 'get', {})
             .then(result => {
                 if (result.data.body.statusCode === STATUS_CODE_OK) {
@@ -96,16 +112,17 @@ class PageSinglePlaylist extends React.Component{
             })
             .catch(error => console.log(error));
     }
+
     showAlert = (message, type) => {
-        this.setState({message:  message, messageType: type});
+        this.setState({message: message, messageType: type});
     }
     hideAlert = () => {
         this.showAlert(null, 'info');
     }
-    handlerChangeKeyword = (newTags) =>{
-        if(newTags.length <= 0){
+    handlerChangeKeyword = (newTags) => {
+        if (newTags.length <= 0) {
             this.setError('keywordValue', trans.get('validation.required', {attribute: trans.get('message.label_keyword_playlist')}));
-        }else{
+        } else {
             this.setState({
                 keywordError: null,
                 keywordValue: newTags
@@ -114,20 +131,20 @@ class PageSinglePlaylist extends React.Component{
     }
 
     handlerChangeChannel = (item) => {
-        if(item){
+        if (item) {
             this.setState({
                 channelError: null,
                 channelValue: item
             });
-        }else{
+        } else {
             this.setError('channelValue', trans.get('validation.required', {attribute: trans.get('message.label_channel')}));
         }
     }
 
     handlerChangeTitle = (e) => {
-        if(e.target.value === ''){
+        if (e.target.value === '') {
             this.setError('titlePlaylist', trans.get('validation.required', {attribute: trans.get('message.label_title_playlist')}));
-        }else{
+        } else {
             this.setState({
                 titlePlaylistError: null,
                 titlePlaylist: e.target.value
@@ -137,17 +154,17 @@ class PageSinglePlaylist extends React.Component{
     }
 
     handlerChangeDescription = (e) => {
-        if(e.target.value === ''){
+        if (e.target.value === '') {
             this.setError('descriptionPlaylist', trans.get('validation.required', {attribute: trans.get('message.label_description_playlist')}));
-        }else{
+        } else {
             this.setState({
                 descriptionPlaylistError: null,
                 descriptionPlaylist: e.target.value
             })
         }
     }
-    submitDataResult(data){
-        console.log(data);
+
+    submitDataResult(data) {
         if (data.statusCode === STATUS_CODE_OK) {
             this.showAlert(trans.get('message.create_success'), 'success');
         } else if (data.statusCode === STATUS_CODE_FIELD_ERROR) {
@@ -157,17 +174,17 @@ class PageSinglePlaylist extends React.Component{
                 this.setError('keywordValue', data.field_errors.keywords[0]);
             } else if (data.field_errors.title) {
                 this.setError('titlePlaylist', data.field_errors.title[0]);
-            }else if (data.field_errors.description) {
+            } else if (data.field_errors.description) {
                 this.setError('descriptionPlaylist', data.field_errors.description[0]);
-            }else if (data.field_errors.filter_by_date) {
+            } else if (data.field_errors.filter_by_date) {
                 this.setError('valueFilterVideoTime', data.field_errors.filter_by_date[0]);
-            }else if (data.field_errors.filter_by_duration) {
+            } else if (data.field_errors.filter_by_duration) {
                 this.setError('valueFilterVideoDuration', data.field_errors.filter_by_duration[0]);
-            }else if (data.field_errors.filter_by_view) {
+            } else if (data.field_errors.filter_by_view) {
                 this.setError('valueFilterVideoView', data.field_errors.filter_by_view[0]);
-            }else if (data.field_errors.filter_by_like) {
+            } else if (data.field_errors.filter_by_like) {
                 this.setError('valueFilterVideoLike', data.field_errors.filter_by_like[0]);
-            }else if (data.field_errors.filter_by_dislike) {
+            } else if (data.field_errors.filter_by_dislike) {
                 this.setError('valueFilterVideoDislike', data.field_errors.filter_by_dislike[0]);
             }
         } else if (data.statusCode === STATUS_CODE_DB_ERROR) {
@@ -176,6 +193,7 @@ class PageSinglePlaylist extends React.Component{
             this.showAlert(trans.get('message.create_failed'), 'danger');
         }
     }
+
     submitData = () => {
         const {
             channelValue,
@@ -197,51 +215,51 @@ class PageSinglePlaylist extends React.Component{
 
         } = this.state;
         let isReq = true;
-        if(channelValue == null){
+        if (channelValue == null) {
             isReq = false;
             this.setError('channelValue', trans.get('validation.required', {attribute: trans.get('message.label_channel')}));
         }
-        if(keywordValue.length === 0){
+        if (keywordValue.length === 0) {
             isReq = false;
             this.setError('keywordValue', trans.get('validation.required', {attribute: trans.get('message.label_keyword_playlist')}));
         }
-        if(titlePlaylist === '') {
+        if (titlePlaylist === '') {
             isReq = false;
             this.setError('titlePlaylist', trans.get('validation.required', {attribute: trans.get('message.label_title_playlist')}));
         }
-        if(enableFilterVideo){
-            if(enableFilterVideoTime){
-                if(valueFilterVideoTime === ''){
+        if (enableFilterVideo) {
+            if (enableFilterVideoTime) {
+                if (valueFilterVideoTime === '') {
                     isReq = false;
                     this.setError('valueFilterVideoTime', trans.get('validation.required', {attribute: trans.get('multipleplaylist.enable_filter_video_time')}));
                 }
             }
-            if(enableFilterVideoDuration){
-                if(valueFilterVideoDuration === ''){
+            if (enableFilterVideoDuration) {
+                if (valueFilterVideoDuration === '') {
                     isReq = false;
                     this.setError('valueFilterVideoDuration', trans.get('validation.required', {attribute: trans.get('multipleplaylist.enable_filter_video_duration')}));
                 }
             }
-            if (enableFilterVideoView){
-                if(valueFilterVideoView === ''){
+            if (enableFilterVideoView) {
+                if (valueFilterVideoView === '') {
                     isReq = false;
                     this.setError('valueFilterVideoView', trans.get('validation.required', {attribute: trans.get('multipleplaylist.enable_filter_video_view')}));
                 }
             }
-            if (enableFilterVideoLike){
-                if(valueFilterVideoLike === ''){
+            if (enableFilterVideoLike) {
+                if (valueFilterVideoLike === '') {
                     isReq = false;
                     this.setError('valueFilterVideoLike', trans.get('validation.required', {attribute: trans.get('multipleplaylist.enable_filter_video_like')}));
                 }
             }
-            if (enableFilterVideoDislike){
-                if(valueFilterVideoDislike === ''){
+            if (enableFilterVideoDislike) {
+                if (valueFilterVideoDislike === '') {
                     isReq = false;
                     this.setError('valueFilterVideoDislike', trans.get('validation.required', {attribute: trans.get('multipleplaylist.enable_filter_video_disklike')}));
                 }
             }
         }
-        if(isReq){
+        if (isReq) {
             let newKeywords = [];
             keywordValue.map(val => {
                 newKeywords.push(val.text);
@@ -253,29 +271,27 @@ class PageSinglePlaylist extends React.Component{
                 title: titlePlaylist,
                 status_filter: enableFilterVideo
             }
-            if(descriptionPlaylist !== ''){
+            if (descriptionPlaylist !== '') {
                 dataReq.description = descriptionPlaylist;
             }
-            if(valueFilterVideoTime !== ''){
+            if (valueFilterVideoTime !== '') {
                 dataReq.filter_by_date = valueFilterVideoTime;
             }
-            if(valueFilterEqualTime !== ''){
+            if (valueFilterEqualTime !== '') {
                 dataReq.filter_by_date_status = valueFilterEqualTime === '1';
             }
-            if(valueFilterVideoDuration !== ''){
+            if (valueFilterVideoDuration !== '') {
                 dataReq.filter_by_duration = valueFilterVideoDuration;
             }
-            if(valueFilterVideoView !== ''){
+            if (valueFilterVideoView !== '') {
                 dataReq.filter_by_view = valueFilterVideoView;
             }
-            if(valueFilterVideoLike !== ''){
+            if (valueFilterVideoLike !== '') {
                 dataReq.filter_by_like = valueFilterVideoLike;
             }
-            if(valueFilterVideoDislike !== ''){
+            if (valueFilterVideoDislike !== '') {
                 dataReq.filter_by_dislike = valueFilterVideoDislike;
             }
-
-
 
             fetch(URL_PLAYLIST_CREATE, 'post', dataReq)
                 .then(result => {
@@ -308,7 +324,7 @@ class PageSinglePlaylist extends React.Component{
             valueFilterVideoDislikeError
         } = this.state;
         const now = new Date();
-        return(
+        return (
             <Container>
                 <div className="page-header">
                     <div className="page-title">
@@ -410,7 +426,8 @@ class PageSinglePlaylist extends React.Component{
                                                             className="form-control d-inline-block w-auto"
                                                             type="text"
                                                             data-mask="0000/00/00" data-mask-clearifnotmatch="true"
-                                                            placeholder={now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()} autoComplete="off"
+                                                            placeholder={now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()}
+                                                            autoComplete="off"
                                                             maxLength="10"
                                                             value={this.state.valueFilterVideoTime}
                                                             onChange={(e) => {

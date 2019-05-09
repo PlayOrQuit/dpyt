@@ -4,6 +4,8 @@
 namespace App\Data\Repository;
 
 
+use App\PlaylistItem;
+
 interface PlaylistItemRepository
 {
     /**
@@ -27,4 +29,28 @@ interface PlaylistItemRepository
      * @return boolean
      */
     public function delete($id, $userId);
+
+    /**
+     * @param $userId
+     * @param $playlistId
+     * @param $videoId
+     * @param array $columns
+     * @return PlaylistItem
+     */
+    public function find($userId, $playlistId, $videoId, $columns = array(
+        'id',
+        'uid',
+        'video_uid',
+        'title',
+        'description',
+        'status',
+        'position',
+        'view_count',
+        'like_count',
+        'dislike_count',
+        'favorite_count',
+        'comment_count',
+        'channel_id',
+        'playlist_id',
+        ));
 }

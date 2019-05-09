@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\YoutubePlaylistService;
+use App\Api\YoutubeSearch;
 use App\Data\Repository\ChannelRepository;
 use App\Data\Repository\DataKeyRepository;
 use App\Data\Repository\PlaylistItemRepository;
@@ -44,6 +45,10 @@ class PlaylistItemController extends Controller
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
+            $playlistItem = $this->playlistItemRepository->find($userId, $params['playlist_id'], $params['video_uid'], array('id'));
+            if($playlistItem != null){
+                return $this->_resJsonSuccess(trans('message.create_success'), $req->path(), null);
+            }
             $playlist = $this->playlistRepository->findById($params['playlist_id'], $userId, array('id', 'uid', 'video_count', 'channel_id'));
             if($playlist){
                 $channel = $this->channelRepository->findById($playlist['channel_id'], $userId, array(
@@ -57,30 +62,50 @@ class PlaylistItemController extends Controller
                 if($channel){
                     $dataKey = $this->dataKeyRepository->findByUserPrimary($userId, true, array('api_key', 'id_client', 'client_secret'));
                     if($dataKey){
-                        $youtubePlaylistService = new YoutubePlaylistService();
-                        $youtubePlaylistService->setDeveloperToken(array(
-                            'access_token' => $channel['access_token'],
-                            'refresh_token' => $channel['refresh_token'],
-                            'created' => $channel['iat']->getTimestamp() - $channel['expires_in'],
-                            'expires_in' => $channel['expires_in'],
-                            'client_id' => $dataKey['id_client'],
-                            'client_secret' => $dataKey['client_secret']
-                        ));
-                        $youtubePlaylistService->setChannel($channel);
+                        $youtubeSearch = new YoutubeSearch($dataKey->api_key);
+                        $searchVideoResponse = $youtubeSearch->searchVideoById($params['video_uid']);
+                        if(count($searchVideoResponse['items']) > 0){
+                            $firstVideo = $searchVideoResponse['items'][0];
+                            $title = $firstVideo['snippet']['title'];
+                            $description = $firstVideo['snippet']['description'];
+                            $viewCount = $firstVideo['statistics']['viewCount'];
+                            $likeCount = $firstVideo['statistics']['likeCount'];
+                            $dislikeCount = $firstVideo['statistics']['dislikeCount'];
+                            $favoriteCount = $firstVideo['statistics']['favoriteCount'];
+                            $commentCount = $firstVideo['statistics']['commentCount'];
 
-                        $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlist['uid'], $params['video_uid'], $playlist['video_count']);
-                        $resultCode = $this->playlistItemRepository->save($userId, array(
-                            'uid' => $playlistItemResult['id'],
-                            'video_uid' => $params['video_uid'],
-                            'position' => $playlist['video_count'],
-                            'channel_id' => $channel['id'],
-                            'playlist_id' => $playlist['id']
-                        ));
-                        if($resultCode == true | $resultCode == 1){
-                            $this->playlistRepository->update($playlist['id'], $userId, array(
-                                'video_count' => $playlist['video_count'] + 1
+                            $youtubePlaylistService = new YoutubePlaylistService();
+                            $youtubePlaylistService->setDeveloperToken(array(
+                                'access_token' => $channel['access_token'],
+                                'refresh_token' => $channel['refresh_token'],
+                                'created' => $channel['iat']->getTimestamp() - $channel['expires_in'],
+                                'expires_in' => $channel['expires_in'],
+                                'client_id' => $dataKey['id_client'],
+                                'client_secret' => $dataKey['client_secret']
                             ));
-                            return $this->_resJsonSuccess('Insert PlaylistItem success', $req->path(), null);
+                            $youtubePlaylistService->setChannel($channel);
+
+                            $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlist['uid'], $params['video_uid'], $playlist['video_count'], $title, $description);
+                            $resultCode = $this->playlistItemRepository->save($userId, array(
+                                'uid' => $playlistItemResult['id'],
+                                'video_uid' => $params['video_uid'],
+                                'position' => $playlist['video_count'],
+                                'channel_id' => $channel['id'],
+                                'playlist_id' => $playlist['id'],
+                                'title' => $title,
+                                'description' => $description,
+                                'view_count' => $viewCount,
+                                'like_count' => $likeCount,
+                                'dislike_count' => $dislikeCount,
+                                'favorite_count' => $favoriteCount,
+                                'comment_count' => $commentCount
+                            ));
+                            if($resultCode == true | $resultCode == 1){
+                                $this->playlistRepository->update($playlist['id'], $userId, array(
+                                    'video_count' => $playlist['video_count'] + 1
+                                ));
+                                return $this->_resJsonSuccess(trans('message.create_success'), $req->path(), null);
+                            }
                         }
                     }
 
@@ -111,8 +136,7 @@ class PlaylistItemController extends Controller
             ],
             'video_uid' => [
                 'required',
-                'string',
-                'unique:playlist_items'
+                'string'
             ],
         );
         return Validator::make($params, $rules);

@@ -26,6 +26,16 @@ class PlaylistItemRepositoryImpl implements PlaylistItemRepository
             $playlistItem->description = $params['description'];
         if(isset($params['status']) && $params['status'])
             $playlistItem->status = $params['status'];
+        if(isset($params['view_count']) && $params['view_count'])
+            $playlistItem->view_count = $params['view_count'];
+        if(isset($params['like_count']) && $params['like_count'])
+            $playlistItem->like_count = $params['like_count'];
+        if(isset($params['dislike_count']) && $params['dislike_count'])
+            $playlistItem->dislike_count = $params['dislike_count'];
+        if(isset($params['favorite_count']) && $params['favorite_count'])
+            $playlistItem->favorite_count = $params['favorite_count'];
+        if(isset($params['comment_count']) && $params['comment_count'])
+            $playlistItem->comment_count = $params['comment_count'];
         $playlistItem->position = $params['position'];
         $playlistItem->channel_id = $params['channel_id'];
         $playlistItem->playlist_id = $params['playlist_id'];
@@ -41,7 +51,7 @@ class PlaylistItemRepositoryImpl implements PlaylistItemRepository
      */
     public function update($id, $userId, $params)
     {
-        // TODO: Implement update() method.
+       return PlaylistItem::where([ 'id' => $id, 'user_id' => $userId])->update($params);
     }
 
     /**
@@ -51,6 +61,34 @@ class PlaylistItemRepositoryImpl implements PlaylistItemRepository
      */
     public function delete($id, $userId)
     {
-        // TODO: Implement delete() method.
+        return PlaylistItem::where(['user_id' => $userId, 'id' => $id])->delete();
+    }
+
+
+    /**
+     * @param $userId
+     * @param $playlistId
+     * @param $videoId
+     * @param array $columns
+     * @return PlaylistItem
+     */
+    public function find($userId, $playlistId, $videoId, $columns = array(
+        'id',
+        'uid',
+        'video_uid',
+        'title',
+        'description',
+        'status',
+        'position',
+        'view_count',
+        'like_count',
+        'dislike_count',
+        'favorite_count',
+        'comment_count',
+        'channel_id',
+        'playlist_id',
+    ))
+    {
+       return PlaylistItem::select($columns)->where(['user_id' => $userId, 'playlist_id' => $playlistId, 'video_uid' => $videoId])->first();
     }
 }

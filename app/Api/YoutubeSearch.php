@@ -53,7 +53,7 @@ class YoutubeSearch{
             $params = array(
                 'id' => $id
             );
-            return $this->youtube->videos->listVideos('snippet,contentDetails,statistics', $params);
+            return $this->youtube->videos->listVideos('snippet,statistics', $params);
         }catch (Google_Service_Exception $e){
             Log::error($e->getMessage(), $e->getTrace());
             throw $e;

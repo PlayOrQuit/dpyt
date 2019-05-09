@@ -95,24 +95,24 @@ class PageApiKeyReact extends Component {
         }
 
     }
-    handlerChangeIdClient = (evt) => {
-        const v = evt.target.value;
-        this.updateState('id_client', v);
-        if (v === '') {
-            this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
-        } else {
-            this.setError('id_client', null);
-        }
-    }
-    handlerChangeClientSecret = (evt) => {
-        const v = evt.target.value;
-        this.updateState('client_secret', v);
-        if (v === '') {
-            this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
-        } else {
-            this.setError('client_secret', null);
-        }
-    }
+    // handlerChangeIdClient = (evt) => {
+    //     const v = evt.target.value;
+    //     this.updateState('id_client', v);
+    //     if (v === '') {
+    //         this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
+    //     } else {
+    //         this.setError('id_client', null);
+    //     }
+    // }
+    // handlerChangeClientSecret = (evt) => {
+    //     const v = evt.target.value;
+    //     this.updateState('client_secret', v);
+    //     if (v === '') {
+    //         this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
+    //     } else {
+    //         this.setError('client_secret', null);
+    //     }
+    // }
     submitResult = (data) => {
         if (data.statusCode === STATUS_CODE_OK) {
             let keyNews = this.state.keys;
@@ -122,11 +122,12 @@ class PageApiKeyReact extends Component {
         } else if (data.statusCode === STATUS_CODE_FIELD_ERROR) {
             if (data.field_errors.api_key) {
                 this.setError('api_key', data.field_errors.api_key[0]);
-            } else if (data.field_errors.id_client) {
-                this.setError('id_client', data.field_errors.id_client[0]);
-            } else if (data.field_errors.client_secret) {
-                this.setError('client_secret', data.field_errors.client_secret[0]);
             }
+            // else if (data.field_errors.id_client) {
+            //     this.setError('id_client', data.field_errors.id_client[0]);
+            // } else if (data.field_errors.client_secret) {
+            //     this.setError('client_secret', data.field_errors.client_secret[0]);
+            // }
         } else if (data.statusCode === STATUS_CODE_DB_ERROR) {
             this.showAlert(data.message, 'danger');
         } else {
@@ -136,16 +137,18 @@ class PageApiKeyReact extends Component {
     submitData = () => {
         if (this.state.api_key === '') {
             this.setError('api_key', trans.get('validation.required', {attribute: trans.get('keyword.key')}));
-        } else if (this.state.id_client === '') {
-            this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
-        } else if (this.state.client_secret === '') {
-            this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
-        } else {
+        }
+        // else if (this.state.id_client === '') {
+        //     this.setError('id_client', trans.get('validation.required', {attribute: trans.get('keyword.id_client')}));
+        // } else if (this.state.client_secret === '') {
+        //     this.setError('client_secret', trans.get('validation.required', {attribute: trans.get('keyword.client_secret')}));
+        // }
+        else {
             this.updateState('isLoading', true);
             fetch(URL_API_KEY_CREATE, 'post', {
-                api_key: this.state.api_key,
-                id_client: this.state.id_client,
-                client_secret: this.state.client_secret
+                api_key: this.state.api_key
+                // id_client: this.state.id_client,
+                // client_secret: this.state.client_secret
             })
                 .then(result => {
                     this.updateState('isLoading', false);
@@ -260,14 +263,14 @@ class PageApiKeyReact extends Component {
                 Header: trans.get('keyword.key'),
                 accessor: 'api_key',
             },
-            {
-                Header: trans.get('keyword.id_client'),
-                accessor: 'id_client',
-            },
-            {
-                Header: trans.get('keyword.client_secret'),
-                accessor: 'client_secret',
-            },
+            // {
+            //     Header: trans.get('keyword.id_client'),
+            //     accessor: 'id_client',
+            // },
+            // {
+            //     Header: trans.get('keyword.client_secret'),
+            //     accessor: 'client_secret',
+            // },
             {
                 Header: trans.get('keyword.default'),
                 sortable: false,
@@ -310,24 +313,24 @@ class PageApiKeyReact extends Component {
                                 error={this.state.err_api_key}
                                 onChange={this.handlerChangeApiKey}
                             />
-                            <InputGroupReact
-                                name="id_client"
-                                type="text"
-                                label={trans.get('keyword.id_client')}
-                                placeholder={trans.get('keyword.enter') + ' ' + trans.get('keyword.id_client')}
-                                value={this.state.id_client}
-                                error={this.state.err_id_client}
-                                onChange={this.handlerChangeIdClient}
-                            />
-                            <InputGroupReact
-                                name="client_secret"
-                                type="text"
-                                label={trans.get('keyword.client_secret')}
-                                placeholder={trans.get('keyword.enter') + ' ' + trans.get('keyword.client_secret')}
-                                value={this.state.client_secret}
-                                error={this.state.err_client_secret}
-                                onChange={this.handlerChangeClientSecret}
-                            />
+                            {/*<InputGroupReact*/}
+                            {/*    name="id_client"*/}
+                            {/*    type="text"*/}
+                            {/*    label={trans.get('keyword.id_client')}*/}
+                            {/*    placeholder={trans.get('keyword.enter') + ' ' + trans.get('keyword.id_client')}*/}
+                            {/*    value={this.state.id_client}*/}
+                            {/*    error={this.state.err_id_client}*/}
+                            {/*    onChange={this.handlerChangeIdClient}*/}
+                            {/*/>*/}
+                            {/*<InputGroupReact*/}
+                            {/*    name="client_secret"*/}
+                            {/*    type="text"*/}
+                            {/*    label={trans.get('keyword.client_secret')}*/}
+                            {/*    placeholder={trans.get('keyword.enter') + ' ' + trans.get('keyword.client_secret')}*/}
+                            {/*    value={this.state.client_secret}*/}
+                            {/*    error={this.state.err_client_secret}*/}
+                            {/*    onChange={this.handlerChangeClientSecret}*/}
+                            {/*/>*/}
                             <Button variant="primary"
                                     onClick={this.submitData}
                             >{trans.get('keyword.add')}</Button>

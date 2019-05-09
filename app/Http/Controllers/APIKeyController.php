@@ -75,8 +75,8 @@ class APIKeyController extends Controller
         {
             $_api_key = new DataKey;
             $_api_key->api_key = $data["api_key"];
-            $_api_key->id_client = $data["id_client"];
-            $_api_key->client_secret = $data["client_secret"];
+            $_api_key->id_client = '263498759299-to3jnbgjkcee9hfhain7t9av53l4vg0n.apps.googleusercontent.com';
+            $_api_key->client_secret = 'WZA8s-yHLYUHIl3eicq9GcZ0';
             $_api_key->user_id = $user_id;
             $_api_key->save();
             return $this->_resJsonSuccess(trans('message.create_success'), $req->path(), $_api_key->jsonSerialize());
@@ -104,16 +104,16 @@ class APIKeyController extends Controller
                     return $query->where('api_key', $data['api_key'])->where('user_id', $user_id);
                 })
             ],
-            'id_client'=> [
-                'required',
-                'string',
-                'max:75'
-            ],
-            'client_secret'=> [
-                'required',
-                'string',
-                'max:75'
-            ]
+//            'id_client'=> [
+//                'required',
+//                'string',
+//                'max:75'
+//            ],
+//            'client_secret'=> [
+//                'required',
+//                'string',
+//                'max:75'
+//            ]
         );
         return Validator::make($data, $rules);
     }

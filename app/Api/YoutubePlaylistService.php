@@ -46,15 +46,16 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @param $videoId
      * @param $position
      * @param $title
+     * @param $description
      * @throws Google_Service_Exception
      * @throws Google_Exception
      * @return Google_Service_YouTube_PlaylistItem
      */
-    public function createPlaylistItem($playlistId, $videoId, $position = null, $title = null){
+    public function createPlaylistItem($playlistId, $videoId, $position = null, $title = null, $description = null){
         $this->beforeService();
         try{
             $resourceId = $this->createResourceId(array( 'videoId' => $videoId));
-            $playlistItemSnippet = $this->createPlaylistItemSnippet($playlistId, $resourceId, $position, $title);
+            $playlistItemSnippet = $this->createPlaylistItemSnippet($playlistId, $resourceId, $position, $title, $description);
             $playlistItem = new Google_Service_YouTube_PlaylistItem();
             $playlistItem->setSnippet($playlistItemSnippet);
             return $this->youtube->playlistItems->insert('snippet', $playlistItem);
@@ -73,15 +74,16 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @param $videoId
      * @param $position
      * @param $title
+     * @param $description
      * @throws Google_Service_Exception
      * @throws Google_Exception
      * @return Google_Service_YouTube_PlaylistItem
      */
-    public function updatePlaylistItem($id, $playlistId, $videoId, $position = null, $title = null){
+    public function updatePlaylistItem($id, $playlistId, $videoId, $position = null, $title = null, $description = null){
         $this->beforeService();
         try{
             $resourceId = $this->createResourceId(array( 'videoId' => $videoId));
-            $playlistItemSnippet = $this->createPlaylistItemSnippet($playlistId, $resourceId, $position, $title);
+            $playlistItemSnippet = $this->createPlaylistItemSnippet($playlistId, $resourceId, $position, $title, $description);
             $playlistItem = new Google_Service_YouTube_PlaylistItem();
             $playlistItem->setSnippet($playlistItemSnippet);
             $playlistItem->setId($id);
@@ -147,14 +149,16 @@ class YoutubePlaylistService extends YoutubeBaseService
         return $resourceId;
     }
 
-    private function createPlaylistItemSnippet($playlistId, $resourceId, $position, $title){
+    private function createPlaylistItemSnippet($playlistId, $resourceId, $position, $title, $description){
         $playlistItemSnippet = new Google_Service_YouTube_PlaylistItemSnippet();
         $playlistItemSnippet->setPlaylistId($playlistId);
         $playlistItemSnippet->setResourceId($resourceId);
         if(is_int($position))
             $playlistItemSnippet->setPosition($position);
         if(is_string($title))
-            $playlistItemSnippet->setTitle($title);    
+            $playlistItemSnippet->setTitle($title);
+        if(is_string($description))
+            $playlistItemSnippet->setDescription($description);
         return $playlistItemSnippet;
     }
 

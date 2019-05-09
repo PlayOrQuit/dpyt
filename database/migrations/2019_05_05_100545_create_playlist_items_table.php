@@ -20,7 +20,12 @@ class CreatePlaylistItemsTable extends Migration
             $table->text('title')->nullable();
             $table->text('description')->nullable();
             $table->string('status', 10)->nullable();
-            $table->unsignedInteger('position');
+            $table->integer('position');
+            $table->integer('view_count')->default(0);
+            $table->integer('like_count')->default(0);
+            $table->integer('dislike_count')->default(0);
+            $table->integer('favorite_count')->default(0);
+            $table->integer('comment_count')->default(0);
             $table->unsignedBigInteger('channel_id');
             $table->unsignedBigInteger('playlist_id');
             $table->unsignedBigInteger('user_id');
