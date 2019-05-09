@@ -48,10 +48,14 @@ class SearchController extends Controller
                 $tags = array();
                 foreach ($videoSearchResponse['items'] as $videoResponse){
                     if($videoResponse['snippet']['tags']){
-                        $tags = array_merge($videoResponse['snippet']['tags'], $tags);
+                        $video_tags = array_slice($videoResponse['snippet']['tags'], 0, 5, true);
+                        $tags = array_merge($video_tags, $tags);
                     }
                 }
-                return $this->_resJsonSuccess('Success', $req->path(), $tags);
+
+                $result = array_merge(array_unique($tags));
+
+                return $this->_resJsonSuccess('Success', $req->path(), $result);
             }else{
                 return $this->_resJsonYoutubeError('Not Found API Key', $req->path());
             }

@@ -11,10 +11,14 @@ export const URL_CHANNEL_CREATE = BASE_URL + 'admin/channel/create';
 export const URL_CHANNEL_DELETE = BASE_URL + 'admin/channel/delete';
 export const URL_PLAYLIST_CREATE = BASE_URL + 'admin/playlist/single/create'
 export const URL_PLAYLIST_ITEM_CREATE = BASE_URL + 'admin/playlist/item/create';
+export const URL_API_MULTIPLE_PLAY_LIST_LANGUAGES = BASE_URL  + 'admin/languages';
+export const URL_API_MULTIPLE_PLAY_LIST_REGIONS = BASE_URL  + 'admin/regions';
+export const URL_API_MULTIPLE_PLAY_LIST_KEYWORD = BASE_URL  + 'admin/search/tags';
+export const URL_API_MULTIPLE_PLAY_LIST_CREATE = BASE_URL  + 'admin/playlist/multiple/create';
 export const STATUS_CODE_OK = '01';
 export const STATUS_CODE_FIELD_ERROR = '02';
 export const STATUS_CODE_DB_ERROR = '03';
 export const STATUS_CODE_SERVER_ERROR = '04';
 
 export const URL_YOUTUBE_CHANNEL_LIST = 'https://www.googleapis.com/youtube/v3/channels';
-export const TIME_OUT_REQUEST = 500;
+

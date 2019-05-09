@@ -10,11 +10,28 @@
     color:#fff;
 }
 
-#multiple-playlist .card-body:first-child {
-    height: 18rem;
+
+.custom-input-group-prepend{
+    border: none;
+    outline-color: #fff;
+    background: #FBFBFC;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 8px;
+    width: 40px;
+    text-overflow: "";
 }
 
-#multiple-playlist #another_height .card-body{
+
+.custom-input-group-prepend::-ms-expand {
+    display: none;
+}
+
+#multiple-playlist .card-body {
+    height: 16rem;
+}
+
+#multiple-playlist .another_height .card-body{
     height: unset;
 }
     
@@ -54,9 +71,9 @@ div.ReactTags__selected a.ReactTags__remove {
     margin-left: 5px;
     cursor: pointer;
 }
-div.ReactTags__selected{
-    //max-height: 5rem;
-    //overflow-y: auto;
+#multiple-playlist div.ReactTags__selected{
+    max-height: 5rem;
+    overflow-y: auto;
 }
 
 /* Styles for suggestions */

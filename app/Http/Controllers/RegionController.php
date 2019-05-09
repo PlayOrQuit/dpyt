@@ -22,7 +22,7 @@ class RegionController extends Controller
      */
     public function get(Request $req){
         try{
-            $regions = Region::select('id', 'name', 'gl')->get();
+            $regions = Region::select('id', 'name', 'gl')->orderBy('name', 'asc')->get();
             return $this->_resJsonSuccess('Success', $req->path(), $regions);
         }catch (QueryException $e){
             Log::error($e->getMessage(), $e->getTrace());
