@@ -14,7 +14,6 @@ import TextareaGroupReact from './TextareaGroup.react';
 import trans from '../lang';
 import {fetch} from '../util/util';
 import {
-    URL_PLAYLIST_ITEM_CREATE,
     URL_PLAYLIST_CREATE,
     URL_CHANNEL_GET_BY_STATUS,
     STATUS_CODE_OK,
