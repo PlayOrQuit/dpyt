@@ -2,9 +2,4 @@
 	font-size: 1rem;
 	line-height: 1.5;
 	transition: .3s color;
-
-	&:before {
-		content: '\ea00';
-		font-family: feather, sans-serif;
-	}
 }
