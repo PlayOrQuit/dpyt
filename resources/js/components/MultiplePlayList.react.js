@@ -517,7 +517,7 @@ class MultiplePlayList extends Component {
                     <Col lg="12" className="another_height">
                         {
                             this.state.optionsSelectList.length > 0 &&
-                            <CardLoaderReact>
+                            <CardLoaderReact isLoading={this.state.loadingCreatePlayList}>
                                 <div className="form-group w-50 d-block">
                                     <LabelToolTip
                                         title={trans.get("multipleplaylist.number_create_playlist")}
