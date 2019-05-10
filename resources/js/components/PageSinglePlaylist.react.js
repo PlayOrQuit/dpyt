@@ -14,7 +14,6 @@ import TextareaGroupReact from './TextareaGroup.react';
 import trans from '../lang';
 import {fetch} from '../util/util';
 import {
-    URL_PLAYLIST_ITEM_CREATE,
     URL_PLAYLIST_CREATE,
     URL_CHANNEL_GET_BY_STATUS,
     STATUS_CODE_OK,
@@ -63,14 +62,14 @@ class PageSinglePlaylist extends React.Component {
         this.fetchDataChannel();
     }
 
-    componentDidMount() {
-        // fetch(URL_PLAYLIST_ITEM_CREATE, 'post', {
-        //     playlist_id: 1,
-        //     video_uid: 'JOiHdtlMkOs'
-        // })
-        //     .then(result => console.log(result))
-        //     .catch(error => console.log(error))
-    }
+    // componentDidMount() {
+    //     // fetch(URL_PLAYLIST_ITEM_CREATE, 'post', {
+    //     //     playlist_id: 1,
+    //     //     video_uid: 'JOiHdtlMkOs'
+    //     // })
+    //     //     .then(result => console.log(result))
+    //     //     .catch(error => console.log(error))
+    // }
 
     setError(k, msg) {
         if (k === 'channelValue') {
@@ -144,11 +143,14 @@ class PageSinglePlaylist extends React.Component {
     handlerChangeTitle = (e) => {
         if (e.target.value === '') {
             this.setError('titlePlaylist', trans.get('validation.required', {attribute: trans.get('message.label_title_playlist')}));
+            this.setState({
+                titlePlaylist: e.target.value
+            });
         } else {
             this.setState({
                 titlePlaylistError: null,
                 titlePlaylist: e.target.value
-            })
+            });
         }
 
     }
@@ -156,11 +158,14 @@ class PageSinglePlaylist extends React.Component {
     handlerChangeDescription = (e) => {
         if (e.target.value === '') {
             this.setError('descriptionPlaylist', trans.get('validation.required', {attribute: trans.get('message.label_description_playlist')}));
+            this.setState({
+                descriptionPlaylist: e.target.value
+            });
         } else {
             this.setState({
                 descriptionPlaylistError: null,
                 descriptionPlaylist: e.target.value
-            })
+            });
         }
     }
 
@@ -426,7 +431,7 @@ class PageSinglePlaylist extends React.Component {
                                                             className="form-control d-inline-block w-auto"
                                                             type="text"
                                                             data-mask="0000/00/00" data-mask-clearifnotmatch="true"
-                                                            placeholder={now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()}
+                                                            placeholder={now.getFullYear() + '-' + (now.getMonth() + 1) < 10 ? '0' : '' +(now.getMonth() + 1) + '-' + now.getDate()}
                                                             autoComplete="off"
                                                             maxLength="10"
                                                             value={this.state.valueFilterVideoTime}

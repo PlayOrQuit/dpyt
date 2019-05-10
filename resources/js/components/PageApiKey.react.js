@@ -129,7 +129,7 @@ class PageApiKeyReact extends Component {
             //     this.setError('client_secret', data.field_errors.client_secret[0]);
             // }
         } else if (data.statusCode === STATUS_CODE_DB_ERROR) {
-            this.showAlert(data.message, 'danger');
+            // this.showAlert(data.message, 'danger');
         } else {
             this.showAlert(data.message, 'danger');
         }

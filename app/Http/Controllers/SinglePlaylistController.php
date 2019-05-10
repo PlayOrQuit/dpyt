@@ -35,6 +35,7 @@ class SinglePlaylistController extends Controller
      * Render view
      */
     public function render(){
+
         return view('admin.playlist.single-playlist');
     }
 
@@ -43,6 +44,7 @@ class SinglePlaylistController extends Controller
         $params = $req->all();
         $validator = $this->validatorCreate($params);
         if ($validator->fails()) {
+
             return $this->_resJsonBad('Bad request', $req->path(), $validator->errors());
         }
         try{
@@ -72,7 +74,7 @@ class SinglePlaylistController extends Controller
                     if(isset($params['description'])){
                         $description = $params['description'];
                     }
-                    $resultYoutubePlaylist = $youtubePlaylistService->createPlayList($params['title'], $description, $params['keywords']);
+                    $resultYoutubePlaylist = $youtubePlaylistService->createPlayList($params['title'], app()->getLocale(),  $description, $params['keywords']);
 
                     $paramInsert['uid'] = $resultYoutubePlaylist['id'];
                     $paramInsert['title'] = $params['title'];
@@ -113,20 +115,24 @@ class SinglePlaylistController extends Controller
 
                     $resultCode = $this->playlistRepository->save($userId, $paramInsert);
                     if($resultCode == true | $resultCode == 1){
+
                         return $this->_resJsonSuccess('Insert Playlist success', $req->path(), null);
                     }
 
                 }
             }
+
             return $this->_resJsonBad('Bad request', $req->path(), null);
         }catch (Google_Exception | Google_Service_Exception $e){
-            Log::error($e->getMessage(), $e->getTrace());
+
             return $this->_resJsonYoutubeError($e->getMessage(), $req->path());
         }catch (QueryException $e){
             Log::error($e->getMessage(), $e->getTrace());
+
             return $this->_resJsonErrDB($e->getMessage(), $req->path());
         }catch (Exception $e){
             Log::error($e->getMessage(), $e->getTrace());
+
             return $this->_resJsonErr($e->getMessage(), $req->path());
         }
     }

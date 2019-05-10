@@ -25,5 +25,9 @@ return[
     'choose' => 'Chọn',
     'normal' => 'Bình thường',
     'turn_off' => 'Tắt',
-    'show_all' => 'Tất cả'
+    'show_all' => 'Tất cả',
+    'title' => 'Tiêu đề',
+    'quantity_video' => 'Số lượng video',
+    'processing' => 'Đang xử lý',
+    'un_process' => 'Ngừng xử lý'
 ];
