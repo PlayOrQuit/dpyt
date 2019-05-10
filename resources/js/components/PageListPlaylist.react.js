@@ -309,13 +309,16 @@ class PageListPlaylist extends React.Component{
             },
             {
                 Header: '',
-                minWidth: 120,
+                minWidth: 140,
                 sortable: false,
                 filterable: false,
                 className: 'd-flex justify-content-center',
                 Cell: row => (
                     <ButtonToolbar>
-                        <Button onClick={ e => this.handlerEdit(row.original)} variant="primary" size="sm">
+                        <Button variant="teal" size="sm">
+                            <Icon name='fe fe-layers'/>
+                        </Button >
+                        <Button onClick={ e => this.handlerEdit(row.original)} variant="primary" size="sm" className="ml-1">
                             <Icon name='fe fe-edit-2'/>
                         </Button >
                         <Button onClick={ e => this.handlerPause(row.original)} variant="warning" size="sm" className="ml-1">
