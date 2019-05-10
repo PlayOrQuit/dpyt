@@ -317,7 +317,7 @@ class PageListPlaylist extends React.Component{
                     <ButtonToolbar>
                         <Button variant="teal" size="sm">
                             <Icon name='fe fe-layers'/>
-                        </Button >
+                        </Button>
                         <Button onClick={ e => this.handlerEdit(row.original)} variant="primary" size="sm" className="ml-1">
                             <Icon name='fe fe-edit-2'/>
                         </Button >
