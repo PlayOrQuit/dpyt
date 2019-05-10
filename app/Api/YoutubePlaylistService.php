@@ -60,7 +60,7 @@ class YoutubePlaylistService extends YoutubeBaseService
      * @throws Google_Exception
      * @return Google_Service_YouTube_Playlist
      */
-    public function updatePlaylist($id, $title, $description = null, $privacyStatus = 'public', $defaultLanguage = null, $tags = null)
+    public function updatePlaylist($id, $title, $description = null, $tags = null, $privacyStatus = 'public', $defaultLanguage = null)
     {
         if(!is_string($id) | !is_string($title)){
             throw new InvalidArgumentException('Invalid id or title');

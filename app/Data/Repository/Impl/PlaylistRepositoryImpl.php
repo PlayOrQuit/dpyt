@@ -102,8 +102,10 @@ class PlaylistRepositoryImpl implements PlaylistRepository
         'id',
         'uid',
         'title',
+        'description',
         'video_count',
-        'status_video'))
+        'status_video',
+        'keywords'))
     {
        return Playlist::select($columns)->where(['user_id' => $userId])->get();
     }

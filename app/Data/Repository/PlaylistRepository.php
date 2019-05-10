@@ -55,7 +55,9 @@ interface PlaylistRepository
         'id',
         'uid',
         'title',
+        'description',
         'video_count',
-        'status_video'));
+        'status_video',
+        'keywords'));
 
 }

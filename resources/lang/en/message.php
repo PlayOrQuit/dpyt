@@ -19,4 +19,5 @@ return [
     'not_condition_filter_video' => 'You have not selected a video filtering condition',
     'confirm_pause_playlist' => 'Do you want to turn off the auto-add video feature?',
     'confirm_play_playlist' => 'Do you want to turn on the auto-add video feature?',
+    'title_edit_playlist' => 'Edit information playlist'
 ];

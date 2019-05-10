@@ -19,4 +19,5 @@ return [
     'not_condition_filter_video' => 'Bạn chưa chọn điều kiện lọc video',
     'confirm_pause_playlist' => 'Bạn có muốn tắt tính năng tự động thêm video?',
     'confirm_play_playlist' => 'Bạn có muốn bật tính năng tự động thêm video?',
+    'title_edit_playlist' => 'Sửa thông tin playlist'
 ];

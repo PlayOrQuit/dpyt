@@ -13,6 +13,7 @@ export const URL_PLAYLIST_CREATE = BASE_URL + 'admin/playlist/single/create';
 export const URL_PLAYLIST_GET = BASE_URL + 'admin/playlist/get';
 export const URL_PLAYLIST_UPDATE_VIDEO_STATUS = BASE_URL + 'admin/playlist/updateVideoStatus';
 export const URL_PLAYLIST_DELETE = BASE_URL + 'admin/playlist/delete';
+export const URL_PLAYLIST_UPDATE = BASE_URL + 'admin/playlist/updatePlaylist';
 export const URL_PLAYLIST_ITEM_CREATE = BASE_URL + 'admin/playlist/item/create';
 export const URL_API_MULTIPLE_PLAY_LIST_LANGUAGES = BASE_URL  + 'admin/languages';
 export const URL_API_MULTIPLE_PLAY_LIST_REGIONS = BASE_URL  + 'admin/regions';

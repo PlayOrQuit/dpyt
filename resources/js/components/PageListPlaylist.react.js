@@ -11,7 +11,9 @@ import {
     Form,
     Row,
     ButtonToolbar,
-    Button, Alert
+    Button,
+    Alert,
+    Modal
 } from "react-bootstrap";
 import matchSorter from 'match-sorter';
 import 'react-table/react-table.css';
@@ -19,11 +21,15 @@ import {
     STATUS_CODE_OK,
     URL_PLAYLIST_GET,
     URL_PLAYLIST_DELETE,
-    URL_PLAYLIST_UPDATE_VIDEO_STATUS
+    URL_PLAYLIST_UPDATE_VIDEO_STATUS,
+    URL_PLAYLIST_UPDATE
 } from '../util/constant';
 import {
     fetch
 } from '../util/util';
+import InputGroupReact from "./InputGroup.react";
+import TagsGroupReact from "./TagsGroup.react";
+import TextareaGroupReact from "./TextareaGroup.react";
 
 class PageListPlaylist extends React.Component{
     constructor(props){
@@ -33,6 +39,16 @@ class PageListPlaylist extends React.Component{
             messageType: 'info',
             loadMore: false,
             playlists: [],
+            showModal: false,
+            keywordValue: [],
+            keywordError: null,
+            descriptionPlaylist: '',
+            descriptionPlaylistError: null,
+            titlePlaylist: '',
+            titlePlaylistError: null,
+            idLoading: false,
+            playlistId: null,
+
         }
     }
     componentDidMount() {
@@ -48,13 +64,31 @@ class PageListPlaylist extends React.Component{
         this.showAlert(null, 'info');
     }
     handlerEdit = row => {
-        console.log('------EDIT-------');
-        console.log(row);
+        let newKeywords = [];
+        if(row.keywords.indexOf(' | ')){
+            newKeywords = row.keywords.split(' | ');
+        }else{
+            newKeywords.push(row.keywords);
+        }
+        let newObjectKeywords = [];
+        for(let i=0; i< newKeywords.length; i++){
+            newObjectKeywords.push({
+                id: newKeywords[i],
+                text: newKeywords[i]
+            });
+        }
+        this.setState({
+            showModal: true,
+            titlePlaylist: row.title,
+            keywordValue: newObjectKeywords,
+            descriptionPlaylist: row.description,
+            playlistId: row.id
+        });
+
     }
 
     handlerPause = row => {
         if(confirm(row.status_video !== 1 ? trans.get('message.confirm_play_playlist') : trans.get('message.confirm_pause_playlist'))){
-            console.log(row);
             this.setState({loadMore : true});
             fetch(URL_PLAYLIST_UPDATE_VIDEO_STATUS, 'put', {
                 playlist_id: row.id,
@@ -114,8 +148,123 @@ class PageListPlaylist extends React.Component{
                 console.log(error);
             })
     }
+
+    setError(k, msg) {
+        if (k === 'titlePlaylist') {
+            this.setState({'titlePlaylistError': msg});
+        } else if (k === 'keywordValue') {
+            this.setState({'keywordError': msg});
+        } else if (k === 'descriptionPlaylist') {
+            this.setState({'descriptionPlaylistError': msg});
+        }
+    }
+
+    handlerChangeKeyword = (newTags) => {
+        if (newTags.length <= 0) {
+            this.setError('keywordValue', trans.get('validation.required', {attribute: trans.get('message.label_keyword_playlist')}));
+        } else {
+            this.setState({
+                keywordError: null,
+                keywordValue: newTags
+            })
+        }
+    }
+
+    handlerChangeTitle = (e) => {
+        if (e.target.value === '') {
+            this.setError('titlePlaylist', trans.get('validation.required', {attribute: trans.get('message.label_title_playlist')}));
+            this.setState({
+                titlePlaylist: e.target.value
+            });
+        } else {
+            this.setState({
+                titlePlaylistError: null,
+                titlePlaylist: e.target.value
+            });
+        }
+
+    }
+
+    handlerChangeDescription = (e) => {
+        if (e.target.value === '') {
+            this.setError('descriptionPlaylist', trans.get('validation.required', {attribute: trans.get('message.label_description_playlist')}));
+            this.setState({
+                descriptionPlaylist: e.target.value
+            });
+        } else {
+            this.setState({
+                descriptionPlaylistError: null,
+                descriptionPlaylist: e.target.value
+            });
+        }
+    }
+
+    submitData = () => {
+        const {titlePlaylist, descriptionPlaylist, keywordValue, playlistId}  = this.state;
+        let isReq = true;
+        if (keywordValue.length === 0) {
+            isReq = false;
+            this.setError('keywordValue', trans.get('validation.required', {attribute: trans.get('message.label_keyword_playlist')}));
+        }
+        if (titlePlaylist === '') {
+            isReq = false;
+            this.setError('titlePlaylist', trans.get('validation.required', {attribute: trans.get('message.label_title_playlist')}));
+        }
+        if(isReq){
+            let newKeywords = [];
+            keywordValue.map(val => {
+                newKeywords.push(val.text);
+            });
+            let dataReq = {
+                keywords: newKeywords,
+                title: titlePlaylist,
+                playlist_id: playlistId
+            }
+            if (descriptionPlaylist !== '') {
+                dataReq.description = descriptionPlaylist;
+            }
+            this.setState({isLoading: true});
+            fetch(URL_PLAYLIST_UPDATE, 'put', dataReq)
+                .then(result => {
+                    this.setState({isLoading: false});
+                    if (result.data.body.statusCode === STATUS_CODE_OK) {
+                        this.setState({
+                            showModal: false,
+                            titlePlaylist: '',
+                            titlePlaylistError: null,
+                            keywordValue: [],
+                            keywordError: null,
+                            descriptionPlaylist: '',
+                            descriptionPlaylistError: null,
+                            playlistId: null
+                        });
+                        this.fetchData();
+                        this.showAlert(trans.get('message.edit_success'), 'success');
+                    }else{
+                        this.showAlert(trans.get('message.edit_failed'), 'danger');
+                    }
+                })
+                .catch(error => {
+                    this.setState({isLoading: false});
+                    console.log(error);
+                })
+        }
+    }
+
     render() {
-        const { playlists, loadMore, message, messageType } = this.state;
+        const {
+            playlists,
+            loadMore,
+            message,
+            messageType,
+            showModal,
+            keywordValue,
+            keywordError,
+            titlePlaylist,
+            titlePlaylistError,
+            descriptionPlaylist,
+            descriptionPlaylistError,
+        } = this.state;
         const columns = [
             {
                 Header: trans.get('keyword.title'),
@@ -175,6 +324,9 @@ class PageListPlaylist extends React.Component{
                         <Button onClick={ e => this.handlerDelete(row.original)} variant="danger" size="sm" className="ml-1">
                             <Icon name='fe fe-trash'/>
                         </Button>
+                        <Button onClick={ e => window.open('https://www.youtube.com/playlist?list='+row.original.uid)} variant="info" size="sm" className="ml-1">
+                            <Icon name='fe fe-link'/>
+                        </Button>
                     </ButtonToolbar>
                 )
             }
@@ -204,6 +356,59 @@ class PageListPlaylist extends React.Component{
                         </CardLoaderReact>
                     </Col>
                 </Row>
+                <Modal
+                    size="lg"
+                    show={showModal}
+                    onHide={() => this.setState({
+                        showModal: false,
+                        titlePlaylist: '',
+                        titlePlaylistError: null,
+                        keywordValue: [],
+                        keywordError: null,
+                        descriptionPlaylist: '',
+                        descriptionPlaylistError: null,
+                        playlistId: null
+                    })}
+                    aria-labelledby="example-modal-sizes-title-lg"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            { trans.get('message.title_edit_playlist') }
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <CardLoaderReact isLoading={this.state.isLoading}>
+                            <InputGroupReact
+                                name='title'
+                                label={trans.get('message.label_title_playlist')}
+                                type="text"
+                                onChange={this.handlerChangeTitle}
+                                defaultValue={titlePlaylist}
+                                value={titlePlaylist}
+                                error={titlePlaylistError}
+                            />
+                            <TagsGroupReact
+                                tags={keywordValue}
+                                label={trans.get('message.label_keyword_playlist')}
+                                onChange={this.handlerChangeKeyword}
+                                error={keywordError}
+                            />
+                            <TextareaGroupReact
+                                rows={5}
+                                name="description"
+                                title='description'
+                                label={trans.get('message.label_description_playlist')}
+                                onChange={this.handlerChangeDescription}
+                                defaultValue={descriptionPlaylist}
+                                value={descriptionPlaylist}
+                                error={descriptionPlaylistError}
+                            />
+                            <Button variant="primary"
+                                    onClick={this.submitData}
+                            >{trans.get('keyword.edit')}</Button>
+                        </CardLoaderReact>
+                    </Modal.Body>
+                </Modal>
             </Container>
         );
     }
