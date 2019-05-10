@@ -1,8 +1,4 @@
 {
-    "/js/MultiplePlayList.react.js": "/js/MultiplePlayList.react.js",
-    "/js/PageApiKey.react.js": "/js/PageApiKey.react.js",
-    "/js/PageChannel.react.js": "/js/PageChannel.react.js",
-    "/js/PageSinglePlaylist.react.js": "/js/PageSinglePlaylist.react.js",
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/js/PageListPlaylist.react.js": "/js/PageListPlaylist.react.js",
+    "/js/PageSinglePlaylist.react.js": "/js/PageSinglePlaylist.react.js"
 }

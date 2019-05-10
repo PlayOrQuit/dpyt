@@ -12,7 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix
-    .react( 'resources/js/app.js', 'public/js/')
+    .react( 'resources/js/components/PageListPlaylist.react.js', 'public/js')
+    // .react( 'resources/js/app.js', 'public/js/')
     // .react( 'resources/js/components/PageApiKey.react.js', 'public/js')
     // .react( 'resources/js/components/PageChannel.react.js', 'public/js')
     // .react( 'resources/js/components/PageSinglePlaylist.react.js', 'public/js')

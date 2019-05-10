@@ -72,7 +72,7 @@ class PlaylistRepositoryImpl implements PlaylistRepository
      */
     public function delete($id, $userId)
     {
-        // TODO: Implement delete() method.
+        return Playlist::where([ 'id' => $id, 'user_id' => $userId])->delete();
     }
 
     public function findById($id, $userId, $columns = array(
@@ -98,4 +98,13 @@ class PlaylistRepositoryImpl implements PlaylistRepository
     }
 
 
+    public function find($userId, $columns = array(
+        'id',
+        'uid',
+        'title',
+        'video_count',
+        'status_video'))
+    {
+       return Playlist::select($columns)->where(['user_id' => $userId])->get();
+    }
 }

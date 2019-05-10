@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap';
 import _ from 'lodash';
 import ReactTable from 'react-table';
-import matchSorter from 'match-sorter'
+import matchSorter from 'match-sorter';
 import CardLoaderReact from './CardLoader.react';
 import Pagination from './Pagination.react';
 import trans from '../lang/index';

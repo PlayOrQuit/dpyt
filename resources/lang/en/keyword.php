@@ -26,4 +26,8 @@ return[
     'normal' => 'Normal',
     'turn_off' => 'Turn off',
     'show_all' => 'Show All',
+    'title' => 'Title',
+    'quantity_video' => 'Quantity video',
+    'processing' => 'Processing',
+    'un_process' => 'Unprocess'
 ];

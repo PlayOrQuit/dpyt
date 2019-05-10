@@ -51,4 +51,11 @@ interface PlaylistRepository
         'filter_by_like',
         'channel_id'));
 
+    public function find($userId, $columns = array(
+        'id',
+        'uid',
+        'title',
+        'video_count',
+        'status_video'));
+
 }

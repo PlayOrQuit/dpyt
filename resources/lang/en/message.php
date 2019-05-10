@@ -16,5 +16,7 @@ return [
     'label_title_playlist' => 'Playlist title',
     'label_description_playlist' => 'Playlist description',
     'title_form_single_playlist' => 'Playlist information',
-    'not_condition_filter_video' => 'You have not selected a video filtering condition'
+    'not_condition_filter_video' => 'You have not selected a video filtering condition',
+    'confirm_pause_playlist' => 'Do you want to turn off the auto-add video feature?',
+    'confirm_play_playlist' => 'Do you want to turn on the auto-add video feature?',
 ];

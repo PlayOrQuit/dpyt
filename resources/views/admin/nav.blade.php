@@ -9,7 +9,7 @@
                             <a href="{{ action('ChannelController@render') }}" class="dropdown-item ">{{ trans('template.menu_sub_channels') }}</a>
                             <a href="{{ action('SinglePlaylistController@render') }}" class="dropdown-item ">{{ trans('template.menu_sub_add_playlist') }}</a>
                             <a href="{{ action('MultiplePlayListController@view_index') }}" class="dropdown-item ">{{ trans('template.menu_sub_add_multiple_playlist') }}</a>
-                            <a href="./pricing-cards.html" class="dropdown-item ">{{ trans('template.menu_sub_playlist') }}</a>
+                            <a href="{{ action('ListPlaylistController@render') }}" class="dropdown-item ">{{ trans('template.menu_sub_playlist') }}</a>
                             <a href="./pricing-cards.html" class="dropdown-item ">{{ trans('template.menu_sub_add_video_to_playlist') }}</a>
                             <a href="./pricing-cards.html" class="dropdown-item ">{{ trans('template.menu_sub_videos') }}</a>
                         </div>
