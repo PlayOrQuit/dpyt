@@ -77,6 +77,12 @@ Route::group([
             Route::post('/create', 'SinglePlaylistController@create')->middleware(['cors']);
         });
 
+        Route::group([ 'prefix' => 'detail'], function() {
+            Route::get('/', 'DetailPlayListController@index');
+            Route::get('/get-playlist', 'DetailPlayListController@getPlayList');
+            Route::get('/get-listvideo', 'DetailPlayListController@getListVideo');
+        });
+
         Route::group([ 'prefix' => 'item'], function() {
             Route::post('/create', 'PlaylistItemController@create')->middleware(['cors']);
         });

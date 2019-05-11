@@ -10,4 +10,5 @@ return [
     'menu_sub_videos'=> 'Quản lý video',
     'menu_api_key' => 'Quản lý API-Key',
     'card_title_channel' => 'Chọn kênh',
+    'menu_detail_playlist' => 'Chi tiết playlist'
 ];

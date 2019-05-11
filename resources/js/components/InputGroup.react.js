@@ -11,10 +11,11 @@ class InputGroupReact extends React.Component{
         label: "",
         placeholder: "",
         title: "",
-        error: null
+        error: null,
+        readOnly: false,
     }
     render() {
-        const {label, type, name, title, placeholder, onChange, error, value} = this.props;
+        const {label, type, name, title, placeholder, onChange, error, value, readOnly} = this.props;
         return(
             <Form.Group>
                 {label ? <Form.Label>{label}</Form.Label> : ""}
@@ -25,6 +26,7 @@ class InputGroupReact extends React.Component{
                     title={title}
                     placeholder={placeholder}
                     onChange={onChange}
+                    readOnly={readOnly}
                 />
                 {error ? <div className="invalid-feedback" style={{display: 'block'}}>{error}</div> : ""}
 

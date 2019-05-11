@@ -25,17 +25,19 @@ class LabelToolTip extends React.Component {
             <>
                 <label className={cN}>
                     {this.props.title}
-                    <OverlayTrigger
-                        key={this.props.id}
-                        placement='right'
-                        overlay={
-                            <Tooltip id={this.props.id}>
-                                {this.props.tooltip}
-                            </Tooltip>
-                        }
-                    >
-                        <span class="form-help ml-5" aria-describedby="tooltip-right">?</span>
-                    </OverlayTrigger>
+                    { this.props.tooltip &&
+                        <OverlayTrigger
+                            key={this.props.id}
+                            placement='right'
+                            overlay={
+                                <Tooltip id={this.props.id}>
+                                    {this.props.tooltip}
+                                </Tooltip>
+                            }
+                        >
+                            <span class="form-help ml-5" aria-describedby="tooltip-right">?</span>
+                        </OverlayTrigger>
+                    }
                 </label>
             </>
         );
