@@ -56,8 +56,39 @@ interface PlaylistRepository
         'uid',
         'title',
         'description',
+        'keywords',
+        'gl',
+        'hl',
         'video_count',
+        'status',
         'status_video',
-        'keywords'));
+        'status_filter',
+        'filter_by_date',
+        'filter_by_date_status',
+        'filter_by_duration',
+        'filter_by_view',
+        'filter_by_like',
+        'channel_id'));
+
+    public function findAll($columns = array(
+        'id',
+        'uid',
+        'title',
+        'description',
+        'keywords',
+        'gl',
+        'hl',
+        'video_count',
+        'status',
+        'status_video',
+        'status_filter',
+        'filter_by_date',
+        'filter_by_date_status',
+        'filter_by_duration',
+        'filter_by_view',
+        'filter_by_like',
+        'channel_id',
+        'user_id'
+    ));
 
 }

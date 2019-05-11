@@ -54,7 +54,15 @@ class ListPlaylistController extends Controller
         $userId = \Auth::user()->id;
         try
         {
-            $listPlaylist = $this->playlistRepository->find($userId);
+            $listPlaylist = $this->playlistRepository->find($userId, array(
+                'id',
+                'uid',
+                'title',
+                'description',
+                'video_count',
+                'status_video',
+                'keywords'
+            ));
 
             return $this->_resJsonSuccess('Success', $req->path(), $listPlaylist);
         }
@@ -91,7 +99,8 @@ class ListPlaylistController extends Controller
                     'refresh_token',
                     'token_type',
                     'expires_in',
-                    'iat'
+                    'iat',
+                    'user_id'
                 ));
                 if($channel){
                     $dataKey = $this->dataKeyRepository->findByUserPrimary($userId, true, array('api_key', 'id_client', 'client_secret'));
@@ -187,7 +196,8 @@ class ListPlaylistController extends Controller
                     'refresh_token',
                     'token_type',
                     'expires_in',
-                    'iat'
+                    'iat',
+                    'user_id'
                 ));
                 if($channel){
                     $dataKey = $this->dataKeyRepository->findByUserPrimary($userId, true, array('api_key', 'id_client', 'client_secret'));

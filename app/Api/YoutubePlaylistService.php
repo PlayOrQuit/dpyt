@@ -7,7 +7,6 @@ namespace App\Api;
 use Google_Exception;
 use Google_Service_Exception;
 use Google_Service_YouTube_Playlist;
-use Google_Service_YouTube_PlaylistLocalization;
 use Google_Service_YouTube_PlaylistSnippet;
 use Google_Service_YouTube_PlaylistStatus;
 use Google_Service_YouTube_ResourceId;

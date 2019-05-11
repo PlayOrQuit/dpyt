@@ -21,9 +21,9 @@
                     <form method="POST" class="card" action="{{ route('login') }}">
                         @csrf
                         <div class="card-body p-6">
-                            <div class="card-title">Login to your account</div>
+                            <div class="card-title">{{ trans('keyword.title_login') }}</div>
                             <div class="form-group">
-                                <label class="form-label">Email address</label>
+                                <label class="form-label">{{ trans('keyword.email') }}</label>
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback" role="alert">
@@ -32,9 +32,7 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label class="form-label">
-                                    Password
-                                </label>
+                                <label class="form-label">{{ trans('keyword.password') }}</label>
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
                                 @if ($errors->has('password'))
@@ -46,11 +44,11 @@
                             <div class="form-group">
                                 <label class="custom-control custom-checkbox">
                                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} class="custom-control-input" />
-                                    <span class="custom-control-label">Remember me</span>
+                                    <span class="custom-control-label">{{ trans('keyword.remember_me') }}</span>
                                 </label>
                             </div>
                             <div class="form-footer">
-                                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                                <button type="submit" class="btn btn-primary btn-block">{{ trans('keyword.login') }}</button>
                             </div>
                         </div>
                     </form>

@@ -6,7 +6,7 @@ namespace App\Data\Repository\Impl;
 
 use App\Channel;
 use App\Data\Repository\ChannelRepository;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class ChannelRepositoryImpl implements ChannelRepository
 {

@@ -16,6 +16,7 @@ class CreatePlaylistsTable extends Migration
         Schema::create('playlists', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uid', 150);
+            $table->string('channel_subscribe', 150)->nullable();
             $table->text('title');
             $table->text('description')->nullable();
             $table->text('keywords');

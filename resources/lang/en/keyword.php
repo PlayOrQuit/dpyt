@@ -14,6 +14,7 @@ return[
     'search' => 'Search',
     'view' => 'View',
     'subscriber' => 'Subscriber',
+    'title_login' => 'Login to your account',
     'login' => 'Login',
     'logout' => 'Logout',
     'email' => 'Email address',

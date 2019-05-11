@@ -14,6 +14,7 @@ return[
     'search' => 'Tìm kiếm',
     'view' => 'Lượt xem',
     'subscriber' => 'Người đăng ký',
+    'title_login' => 'Đăng nhập vào tài khoản của bạn',
     'login' => 'Đăng nhập',
     'logout' => 'Đăng xuất',
     'email' => 'Địa chỉ email',
@@ -29,5 +30,6 @@ return[
     'title' => 'Tiêu đề',
     'quantity_video' => 'Số lượng video',
     'processing' => 'Đang xử lý',
-    'un_process' => 'Ngừng xử lý'
+    'un_process' => 'Ngừng xử lý',
+
 ];

@@ -5,8 +5,8 @@ namespace App\Api;
 
 use App\Channel;
 use App\Data\Repository\Impl\ChannelRepositoryImpl;
-use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Google_Service_YouTube;
@@ -50,7 +50,7 @@ class YoutubeBaseService{
         if($this->channel){
             $token = $this->client->getAccessToken();
             if (isset($token['refresh_token']) && $this->client->isAccessTokenExpired()) {
-                $userId = \Auth::user()->id;
+                $userId = $this->channel['user_id'];
                 $newToken = $this->client->refreshToken($token['refresh_token']);
                 try{
                     $this->channelRepository->update($this->channel['id'], $userId, array(

@@ -121,6 +121,9 @@ class PageSinglePlaylist extends React.Component {
     handlerChangeKeyword = (newTags) => {
         if (newTags.length <= 0) {
             this.setError('keywordValue', trans.get('validation.required', {attribute: trans.get('message.label_keyword_playlist')}));
+            this.setState({
+                keywordValue: newTags
+            })
         } else {
             this.setState({
                 keywordError: null,

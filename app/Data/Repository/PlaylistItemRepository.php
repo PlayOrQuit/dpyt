@@ -53,4 +53,21 @@ interface PlaylistItemRepository
         'channel_id',
         'playlist_id',
         ));
+
+    public function findByPlaylist($userId, $playlistId, $columns = array(
+        'id',
+        'uid',
+        'video_uid',
+        'title',
+        'description',
+        'status',
+        'position',
+        'view_count',
+        'like_count',
+        'dislike_count',
+        'favorite_count',
+        'comment_count',
+        'channel_id',
+        'playlist_id',
+    ));
 }

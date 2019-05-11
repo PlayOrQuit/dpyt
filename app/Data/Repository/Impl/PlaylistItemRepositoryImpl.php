@@ -91,4 +91,24 @@ class PlaylistItemRepositoryImpl implements PlaylistItemRepository
     {
        return PlaylistItem::select($columns)->where(['user_id' => $userId, 'playlist_id' => $playlistId, 'video_uid' => $videoId])->first();
     }
+
+    public function findByPlaylist($userId, $playlistId, $columns = array(
+        'id',
+        'uid',
+        'video_uid',
+        'title',
+        'description',
+        'status',
+        'position',
+        'view_count',
+        'like_count',
+        'dislike_count',
+        'favorite_count',
+        'comment_count',
+        'channel_id',
+        'playlist_id',
+    ))
+    {
+        return PlaylistItem::select($columns)->where(['user_id' => $userId, 'playlist_id' => $playlistId])->get();
+    }
 }

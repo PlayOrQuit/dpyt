@@ -22,7 +22,8 @@ import {
     URL_PLAYLIST_GET,
     URL_PLAYLIST_DELETE,
     URL_PLAYLIST_UPDATE_VIDEO_STATUS,
-    URL_PLAYLIST_UPDATE
+    URL_PLAYLIST_UPDATE,
+    URL_PLAYLIST_DETAIL
 } from '../util/constant';
 import {
     fetch
@@ -272,7 +273,10 @@ class PageListPlaylist extends React.Component{
                 minWidth: 380,
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, {keys: ["title"]}),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                   <a href={URL_PLAYLIST_DETAIL + '?id=' + row.original.id} target='_blank'>{row.original.title}</a>
+                )
             },
             {
                 Header: trans.get('keyword.quantity_video'),
