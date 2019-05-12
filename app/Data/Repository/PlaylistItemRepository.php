@@ -57,11 +57,33 @@ interface PlaylistItemRepository
     /**
      * @param $userId
      * @param $playlistId
-     * @param $videoId
      * @param array $columns
      * @return PlaylistItem
      */
     public function getAllByChannelId($userId, $playlistId, $columns = array(
+        'id',
+        'uid',
+        'video_uid',
+        'title',
+        'description',
+        'status',
+        'position',
+        'view_count',
+        'like_count',
+        'dislike_count',
+        'favorite_count',
+        'comment_count',
+        'channel_id',
+        'playlist_id',
+    ));
+
+    /**
+     * @param $userId
+     * @param $playlistId
+     * @param array $columns
+     * @return PlaylistItem
+     */
+    public function getAllChannelUpdatePosition($userId, $playlistId, $postion, $columns = array(
         'id',
         'uid',
         'video_uid',
