@@ -98,7 +98,8 @@ class PlaylistItemController extends Controller
                                 'like_count' => $likeCount,
                                 'dislike_count' => $dislikeCount,
                                 'favorite_count' => $favoriteCount,
-                                'comment_count' => $commentCount
+                                'comment_count' => $commentCount,
+                                'status' => 'public'
                             ));
                             if($resultCode == true | $resultCode == 1){
                                 $this->playlistRepository->update($playlist['id'], $userId, array(
