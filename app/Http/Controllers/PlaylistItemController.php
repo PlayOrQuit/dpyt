@@ -57,13 +57,14 @@ class PlaylistItemController extends Controller
                     'refresh_token',
                     'token_type',
                     'expires_in',
-                    'iat'
+                    'iat',
+                    'user_id'
                 ));
                 if($channel){
                     $dataKey = $this->dataKeyRepository->findByUserPrimary($userId, true, array('api_key', 'id_client', 'client_secret'));
                     if($dataKey){
                         $youtubeSearch = new YoutubeSearch($dataKey->api_key);
-                        $searchVideoResponse = $youtubeSearch->searchVideoById($params['video_uid']);
+                        $searchVideoResponse = $youtubeSearch->searchVideoById($params['video_uid'], 'snippet, statistics');
                         if(count($searchVideoResponse['items']) > 0){
                             $firstVideo = $searchVideoResponse['items'][0];
                             $title = $firstVideo['snippet']['title'];
