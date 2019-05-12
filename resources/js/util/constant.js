@@ -26,4 +26,8 @@ export const STATUS_CODE_DB_ERROR = '03';
 export const STATUS_CODE_SERVER_ERROR = '04';
 
 export const URL_YOUTUBE_CHANNEL_LIST = 'https://www.googleapis.com/youtube/v3/channels';
+export const URL_API_PLAY_LIST_DETAIL = BASE_URL  + 'admin/playlist/detail/get-playlist';
+export const URL_API_PLAY_LIST_DETAIL_VIDEO_LIST = BASE_URL  + 'admin/playlist/detail/get-listvideo';
+export const URL_API_PLAY_LIST_DETAIL_DELETE_VIDEO = BASE_URL  + 'admin/playlist/detail/delete';
+export const URL_API_PLAY_LIST_DETAIL_UPDATE_POSITION = BASE_URL  + 'admin/playlist/detail/updateposition';
 

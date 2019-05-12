@@ -12,10 +12,11 @@ class TextareaGroup extends React.Component{
         placeholder: "",
         title: "",
         error: null,
-        rows: 3
+        rows: 3,
+        readOnly: false,
     }
     render() {
-        const {label, rows, name, title, placeholder, onChange, error, value} = this.props;
+        const {label, rows, name, title, placeholder, onChange, error, value, readOnly} = this.props;
         return(
             <Form.Group>
                 {label ? <Form.Label>{label}</Form.Label> : ""}
@@ -27,6 +28,7 @@ class TextareaGroup extends React.Component{
                     title={title}
                     placeholder={placeholder}
                     onChange={onChange}
+                    readOnly={readOnly}
                 />
                 {error ? <div className="invalid-feedback" style={{display: 'block'}}>{error}</div> : ""}
 

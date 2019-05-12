@@ -353,7 +353,7 @@ class MultiplePlayList extends Component {
                 if (result.data.body.statusCode === STATUS_CODE_OK) {
                     this.showAlert("Thêm playlist thành công", "success");
                 } else {
-                    this.showAlert("Thêm playlist thất bại", "error");
+                    this.showAlert("Thêm playlist thất bại", "danger");
                 }
             })
             .catch(error => {
