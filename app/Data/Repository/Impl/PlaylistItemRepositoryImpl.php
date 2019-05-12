@@ -115,7 +115,7 @@ class PlaylistItemRepositoryImpl implements PlaylistItemRepository
         'playlist_id',
     ))
     {
-        return PlaylistItem::select($columns)->where(['user_id' => $userId, 'playlist_id' => $playlistId])->get();
+        return PlaylistItem::select($columns)->where(['user_id' => $userId, 'playlist_id' => $playlistId])->orderBy('position','asc')->get();
     }
 
     /**

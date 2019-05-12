@@ -82,6 +82,7 @@ Route::group([
             Route::get('/get-playlist', 'DetailPlayListController@getPlayList');
             Route::get('/get-listvideo', 'DetailPlayListController@getListVideo');
             Route::delete('/delete', 'DetailPlayListController@deleteVideo');
+            Route::put('/updateposition', 'DetailPlayListController@updatePositionVideo');
         });
 
         Route::group([ 'prefix' => 'item'], function() {
