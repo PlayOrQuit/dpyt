@@ -26,18 +26,20 @@ class YoutubeSearch{
      * @param string $regionCode
      * @param string $relevanceLanguage
      * @param string $orderBy
+     * @param string $type
      * @return Google_Service_YouTube_SearchListResponse
      * @throws Google_Exception
      * @throws Google_Service_Exception
      * @throws KeyNotFoundException '
      */
-    public function searchKeyWord($q, $maxResult = 20, $regionCode = 'VN', $relevanceLanguage = 'vi', $orderBy = 'viewCount'){
+    public function searchKeyWord($q, $maxResult = 20, $regionCode = 'VN', $relevanceLanguage = 'vi', $orderBy = 'viewCount', $type = 'video'){
         $this->client->checkApiKey();
         $params['q'] = $q;
         $params['maxResults'] = $maxResult;
         $params['regionCode'] = $regionCode;
         $params['relevanceLanguage'] = $relevanceLanguage;
         $params['order'] = $orderBy;
+        $params['type'] = $type;
         return $this->search($params);
     }
 

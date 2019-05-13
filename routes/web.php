@@ -67,7 +67,7 @@ Route::group([
         Route::put('/updateVideoStatus', 'ListPlaylistController@pause')->middleware(['cors']);
         Route::put('/updatePlaylist', 'ListPlaylistController@editPlaylist')->middleware(['cors']);
         Route::delete('/delete', 'ListPlaylistController@delete')->middleware(['cors']);
-
+        Route::post('/copyPlaylist', 'CopyPlaylistController@copy')->middleware(['cors']);
         Route::group([ 'prefix' => 'multiple'], function() {
             Route::get('/', 'MultiplePlayListController@view_index');
             Route::post('/create', 'MultiplePlayListController@create')->middleware(['cors']);

@@ -198,6 +198,7 @@ class ListPlaylistController extends Controller
                     'expires_in',
                     'iat',
                     'user_id'
+
                 ));
                 if($channel){
                     $dataKey = $this->dataKeyRepository->findByUserPrimary($userId, true, array('api_key', 'id_client', 'client_secret'));

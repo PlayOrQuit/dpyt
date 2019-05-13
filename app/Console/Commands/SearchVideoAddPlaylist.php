@@ -111,10 +111,13 @@ class SearchVideoAddPlaylist extends Command
                         $searchResponse = $youtubeSearch->searchKeyWord($playlist['keywords'], 10, $playlist['gl'], $playlist['hl']);
                         $arrVideoId = array();
                         foreach ($searchResponse['items'] as $searchResult) {
-                            Log::debug($searchResult['id']['videoId']);
                             $videoId = $searchResult['id']['videoId'];
-                            array_push($arrVideoId, $videoId);
+                            if($videoId){
+                                array_push($arrVideoId, $videoId);
+                            }
+
                         }
+
                         $count = count($arrVideoId);
                         if ($count > 1) {
                             Log::debug('line 3');
@@ -155,8 +158,9 @@ class SearchVideoAddPlaylist extends Command
                                             }
                                         }
                                         if(is_integer($playlist['filter_by_duration'])){
-                                            Log::debug('filter_by_duration');
-                                            if($this->getTime($videoResponse['contentDetails']['duration']) < $playlist['filter_by_duration']){
+                                            $second = $this->getTime($videoResponse['contentDetails']['duration']);
+                                            Log::debug('second' . $second);
+                                            if($second < $playlist['filter_by_duration']){
                                                 continue;
                                             }
                                         }

@@ -23,7 +23,8 @@ import {
     URL_PLAYLIST_DELETE,
     URL_PLAYLIST_UPDATE_VIDEO_STATUS,
     URL_PLAYLIST_UPDATE,
-    URL_PLAYLIST_DETAIL
+    URL_PLAYLIST_DETAIL,
+    URL_PLAYLIST_COPY
 } from '../util/constant';
 import {
     fetch
@@ -200,6 +201,30 @@ class PageListPlaylist extends React.Component{
         }
     }
 
+    handlerCopy = (row) => {
+        const title = prompt(`${trans.get('keyword.title')} : ${row.title}`, "");
+        let dataSend = {
+            playlist_id: row.id
+        }
+        if(title !== ''){
+            dataSend.title = title;
+        }
+        this.setState({isLoading: true});
+        fetch(URL_PLAYLIST_COPY, 'post', dataSend).then(result => {
+            console.log(result);
+            this.setState({isLoading: false});
+            if (result.data.body.statusCode === STATUS_CODE_OK) {
+                this.fetchData();
+                this.showAlert(trans.get('message.create_success'), 'success');
+            }else{
+                this.showAlert(trans.get('message.create_failed'), 'danger');
+            }
+        }).catch(error => {
+            this.setState({isLoading: false});
+            console.log(error);
+        });
+    }
+
     submitData = () => {
         const {titlePlaylist, descriptionPlaylist, keywordValue, playlistId}  = this.state;
         let isReq = true;
@@ -305,6 +330,7 @@ class PageListPlaylist extends React.Component{
                     <Form.Control as="select"
                                   onChange={event => onChange(event.target.value)}
                                   value={filter ? filter.value : "all"}
+                                  style={{padding: '4px', height: 'unset'}}
                     >
                         <option value="all">{trans.get('keyword.show_all')}</option>
                         <option value="false">{trans.get('keyword.un_process')}</option>
@@ -319,7 +345,7 @@ class PageListPlaylist extends React.Component{
                 className: 'd-flex justify-content-center',
                 Cell: row => (
                     <ButtonToolbar>
-                        <Button variant="teal" size="sm">
+                        <Button onClick={ e => this.handlerCopy(row.original)} variant="teal" size="sm">
                             <Icon name='fe fe-layers'/>
                         </Button>
                         <Button onClick={ e => this.handlerEdit(row.original)} variant="primary" size="sm" className="ml-1">
