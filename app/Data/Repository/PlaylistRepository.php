@@ -4,6 +4,8 @@
 namespace App\Data\Repository;
 
 
+use App\Playlist;
+
 interface PlaylistRepository
 {
 
@@ -13,6 +15,13 @@ interface PlaylistRepository
      * @return boolean
      */
     public function save($userId, $params);
+
+    /**
+     * @param $userId
+     * @param $params
+     * @return Playlist|mixed
+     */
+    public function saveRefresh($userId, $params);
 
     /**
      * @param $id

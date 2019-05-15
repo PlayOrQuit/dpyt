@@ -133,4 +133,49 @@ class PlaylistRepositoryImpl implements PlaylistRepository
     {
         return Playlist::select($columns)->get();
     }
+
+    /**
+     * @param $userId
+     * @param $params
+     * @return Playlist|mixed
+     */
+    public function saveRefresh($userId, $params)
+    {
+        $playlist = new Playlist;
+        $playlist->uid = $params['uid'];
+        $playlist->title = $params['title'];
+        if(isset($params['description']))
+            $playlist->description = $params['description'];
+        if(isset($params['video_count']))
+            $playlist->video_count = $params['video_count'];
+        $playlist->keywords = $params['keywords'];
+        $playlist->gl = $params['gl'];
+        $playlist->hl = $params['hl'];
+        if(isset($params['status_filter'])){
+            $playlist->status_filter = $params['status_filter'];
+            if(isset($params['filter_by_date'])){
+                $playlist->filter_by_date = $params['filter_by_date'];
+                $playlist->filter_by_date_status = $params['filter_by_date_status'];
+            }
+            if(isset($params['filter_by_duration'])){
+                $playlist->filter_by_duration = $params['filter_by_duration'];
+            }
+            if(isset($params['filter_by_view'])){
+                $playlist->filter_by_view = $params['filter_by_view'];
+            }
+            if(isset($params['filter_by_like'])){
+                $playlist->filter_by_like = $params['filter_by_like'];
+            }
+            if(isset($params['filter_by_dislike'])){
+                $playlist['filter_by_dislike'] = $params['filter_by_dislike'];
+            }
+
+        }
+
+        $playlist->channel_id = $params['channel_id'];
+        $playlist->user_id = $userId;
+        $playlist->save();
+        $playlist->refresh();
+        return $playlist;
+    }
 }
