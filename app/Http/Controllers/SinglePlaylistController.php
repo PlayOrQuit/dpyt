@@ -86,6 +86,9 @@ class SinglePlaylistController extends Controller
                     $paramInsert['keywords'] = join(' | ', $params['keywords']);
                     $paramInsert['gl'] = 'VN';
                     $paramInsert['hl'] = 'vi';
+                    if(isset($params['channel_subscribe'])){
+                        $paramInsert['channel_subscribe'] = $params['channel_subscribe'];
+                    }
                     if(isset($params['status_filter']) && $params['status_filter']){
                         if(!isset($params['filter_by_date']) &&
                             !isset($params['filter_by_duration']) &&
@@ -148,6 +151,9 @@ class SinglePlaylistController extends Controller
                 'required',
                 'string',
                 'distinct'
+            ],
+            'channel_subscribe' => [
+                'string'
             ],
             'title' => [
                 'required',

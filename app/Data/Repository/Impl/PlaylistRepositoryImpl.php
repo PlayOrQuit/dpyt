@@ -27,6 +27,9 @@ class PlaylistRepositoryImpl implements PlaylistRepository
         $playlist->keywords = $params['keywords'];
         $playlist->gl = $params['gl'];
         $playlist->hl = $params['hl'];
+        if(isset($params['channel_subscribe'])){
+            $playlist->channel_subscribe = $params['channel_subscribe'];
+        }
         if(isset($params['status_filter'])){
             $playlist->status_filter = $params['status_filter'];
             if(isset($params['filter_by_date'])){
@@ -151,6 +154,9 @@ class PlaylistRepositoryImpl implements PlaylistRepository
         $playlist->keywords = $params['keywords'];
         $playlist->gl = $params['gl'];
         $playlist->hl = $params['hl'];
+        if(isset($params['channel_subscribe'])){
+            $playlist->channel_subscribe = $params['channel_subscribe'];
+        }
         if(isset($params['status_filter'])){
             $playlist->status_filter = $params['status_filter'];
             if(isset($params['filter_by_date'])){
@@ -177,5 +183,83 @@ class PlaylistRepositoryImpl implements PlaylistRepository
         $playlist->save();
         $playlist->refresh();
         return $playlist;
+    }
+
+    public function findChannelSubscribe($columns = array(
+        'id',
+        'uid',
+        'title',
+        'description',
+        'keywords',
+        'gl',
+        'hl',
+        'video_count',
+        'status',
+        'status_video',
+        'status_filter',
+        'filter_by_date',
+        'filter_by_date_status',
+        'filter_by_duration',
+        'filter_by_view',
+        'filter_by_like',
+        'channel_id',
+        'channel_subscribe',
+        'user_id'
+    ))
+    {
+        return Playlist::select($columns)
+            ->whereNotNull('channel_subscribe')
+            ->where('video_count', '<', 25)
+            ->get();
+    }
+
+    public function findSubscribeIsNull($columns = array(
+        'id',
+        'uid',
+        'title',
+        'description',
+        'keywords',
+        'gl',
+        'hl',
+        'video_count',
+        'status',
+        'status_video',
+        'status_filter',
+        'filter_by_date',
+        'filter_by_date_status',
+        'filter_by_duration',
+        'filter_by_view',
+        'filter_by_like',
+        'channel_id',
+    ))
+    {
+        return Playlist::select($columns)->whereNull('channel_subscribe')->get();
+    }
+
+    public function findPlaylistSubscribeLast($channelId, $channelSubscribe, $columns = array(
+        'id',
+        'uid',
+        'title',
+        'description',
+        'keywords',
+        'gl',
+        'hl',
+        'video_count',
+        'status',
+        'status_video',
+        'status_filter',
+        'filter_by_date',
+        'filter_by_date_status',
+        'filter_by_duration',
+        'filter_by_view',
+        'filter_by_like',
+        'channel_id',
+    ))
+    {
+        return Playlist::select($columns)
+            ->where('channel_subscribe', $channelSubscribe)
+            ->where('channel_id', $channelId)
+            ->where('video_count', '<', 25)
+            ->first();
     }
 }

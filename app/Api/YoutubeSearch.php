@@ -68,6 +68,18 @@ class YoutubeSearch{
         }
     }
 
+    public function searchVideoByChannel($channelId, $pageToken = null, $maxResult = 25, $orderBy = 'date'){
+        $this->client->checkApiKey();
+        $params['maxResults'] = $maxResult;
+        $params['order'] = $orderBy;
+        $params['type'] = 'video';
+        $params['channelId'] = $channelId;
+        if($pageToken !=  null){
+            $params['pageToken'] = $pageToken;
+        }
+        return $this->search($params);
+    }
+
     private function search($params){
         try{
             return $this->youtube->search->listSearch('id,snippet', $params);

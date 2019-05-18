@@ -16,10 +16,9 @@ class CreatePlaylistsTable extends Migration
         Schema::create('playlists', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uid', 150);
-            $table->string('channel_subscribe', 150)->nullable();
             $table->text('title');
             $table->text('description')->nullable();
-            $table->text('keywords');
+            $table->text('keywords')->nullable();
             $table->string('gl', 2);
             $table->string('hl', 10);
             $table->integer('video_count')->default(0);
@@ -32,6 +31,8 @@ class CreatePlaylistsTable extends Migration
             $table->integer('filter_by_view')->nullable();
             $table->integer('filter_by_like')->nullable();
             $table->integer('filter_by_dislike')->nullable();
+            $table->integer('search_video_count')->nullable();
+            $table->string('channel_subscribe', 150)->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('channel_id');
             $table->timestamps();

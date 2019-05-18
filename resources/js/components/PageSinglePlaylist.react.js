@@ -54,7 +54,9 @@ class PageSinglePlaylist extends React.Component {
             valueFilterVideoDurationError: null,
             valueFilterVideoViewError: null,
             valueFilterVideoLikeError: null,
-            valueFilterVideoDislikeError: null
+            valueFilterVideoDislikeError: null,
+            channelSubscribe: null,
+            channelSubscribeError: null
         }
     }
 
@@ -172,6 +174,13 @@ class PageSinglePlaylist extends React.Component {
         }
     }
 
+    handlerChangeChannelSubscribe = (e) => {
+        this.setState({
+            channelSubscribeError: null,
+            channelSubscribe: e.target.value
+        });
+    }
+
     submitDataResult(data) {
         if (data.statusCode === STATUS_CODE_OK) {
             this.showAlert(trans.get('message.create_success'), 'success');
@@ -220,6 +229,7 @@ class PageSinglePlaylist extends React.Component {
             valueFilterVideoView,
             valueFilterVideoLike,
             valueFilterVideoDislike,
+            channelSubscribe
 
         } = this.state;
         let isReq = true;
@@ -279,6 +289,9 @@ class PageSinglePlaylist extends React.Component {
                 title: titlePlaylist,
                 status_filter: enableFilterVideo
             }
+            if(channelSubscribe !== ''){
+                dataReq.channel_subscribe = channelSubscribe;
+            }
             if (descriptionPlaylist !== '') {
                 dataReq.description = descriptionPlaylist;
             }
@@ -329,7 +342,10 @@ class PageSinglePlaylist extends React.Component {
             valueFilterVideoDurationError,
             valueFilterVideoViewError,
             valueFilterVideoLikeError,
-            valueFilterVideoDislikeError
+            valueFilterVideoDislikeError,
+            channelSubscribe,
+            channelSubscribeError
+
         } = this.state;
         const now = new Date();
         return (
@@ -359,6 +375,15 @@ class PageSinglePlaylist extends React.Component {
                                 label={trans.get('message.label_keyword_playlist')}
                                 onChange={this.handlerChangeKeyword}
                                 error={keywordError}
+                            />
+                            <InputGroupReact
+                                name='channel_subscribe'
+                                label={trans.get('message.channel_subscribe')}
+                                type="text"
+                                onChange={this.handlerChangeChannelSubscribe}
+                                defaultValue={channelSubscribe}
+                                value={channelSubscribe}
+                                error={channelSubscribeError}
                             />
                             <InputGroupReact
                                 name='title'

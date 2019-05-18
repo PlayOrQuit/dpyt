@@ -28,7 +28,7 @@ class SearchVideoAddPlaylist extends Command
      *
      * @var string
      */
-    protected $description = 'Command search video add to playlist';
+    protected $description = 'Search keyword video add to playlist';
 
     protected $playlistRepository;
 
@@ -74,7 +74,7 @@ class SearchVideoAddPlaylist extends Command
     protected function runSearchVideoAddPlaylist()
     {
         try {
-            $lstPlaylist = $this->playlistRepository->findAll();
+            $lstPlaylist = $this->playlistRepository->findSubscribeIsNull();
             foreach ($lstPlaylist as $playlist) {
                 Log::debug('line 1');
                 $userId = $playlist['user_id'];
@@ -119,7 +119,11 @@ class SearchVideoAddPlaylist extends Command
                         }
 
                         $count = count($arrVideoId);
+
                         if ($count > 1) {
+                            $this->playlistRepository->update($playlist['id'], $userId, array(
+                                'search_video_count' => $count
+                            ));
                             Log::debug('line 3');
                             if ($count > 2){
                                 $videoIdStr = join(',', $arrVideoId);
@@ -185,6 +189,7 @@ class SearchVideoAddPlaylist extends Command
                                             }
                                         }
                                     }
+                                    sleep(rand (80 , 160));
                                     $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlist['uid'], $videoResponse['id'], $playlist['video_count'], $videoResponse['snippet']['title'], $videoResponse['snippet']['description']);
                                     $resultCode =  $this->playlistItemRepository->save($userId, array(
                                         'uid' => $playlistItemResult['id'],

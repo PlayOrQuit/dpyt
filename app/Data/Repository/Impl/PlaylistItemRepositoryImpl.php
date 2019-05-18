@@ -164,4 +164,9 @@ class PlaylistItemRepositoryImpl implements PlaylistItemRepository
         $limit = PlaylistItem::count();
         return PlaylistItem::select($columns)->where(['user_id' => $userId, 'playlist_id' => $playlistId])->skip($postion)->take($limit)->get();
     }
+
+    public function countByVideoId($video_uid)
+    {
+       return PlaylistItem::where('video_uid', $video_uid)->count();
+    }
 }

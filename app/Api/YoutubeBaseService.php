@@ -27,6 +27,8 @@ class YoutubeBaseService{
 
     private $channelRepository;
 
+    private $tokenOld;
+
     public function __construct()
     {
         $this->client = new YoutubeClient();
@@ -38,6 +40,7 @@ class YoutubeBaseService{
         if($token == null)
             throw new InvalidArgumentException("Token must not be null!");
         $this->client->setDeveloperToken($token);
+        $this->tokenOld = $token;
     }
 
     public function setChannel($channel){
@@ -49,16 +52,27 @@ class YoutubeBaseService{
     protected function beforeService(){
         if($this->channel){
             $token = $this->client->getAccessToken();
+            Log::debug(json_encode($token));
             if (isset($token['refresh_token']) && $this->client->isAccessTokenExpired()) {
                 $userId = $this->channel['user_id'];
                 $newToken = $this->client->refreshToken($token['refresh_token']);
                 try{
+
                     $this->channelRepository->update($this->channel['id'], $userId, array(
                         'access_token' => $newToken['access_token'],
                         'refresh_token' => $newToken['refresh_token'],
                         'expires_in' => $newToken['expires_in'],
                         'iat' => Carbon::createFromTimestamp( $newToken['created'] + $newToken['expires_in'])
                     ));
+
+                    $mergeToken = array_merge($this->tokenOld, array(
+                        'access_token' => $newToken['access_token'],
+                        'refresh_token' => $newToken['refresh_token'],
+                        'expires_in' => $newToken['expires_in'],
+                        'created' => $newToken['created']
+                    ));
+                    $this->client->getCache()->clear();
+                    $this->setDeveloperToken($mergeToken);
                 }catch (QueryException $e){
                     Log::error($e->getMessage(), $e->getTrace());
                 }

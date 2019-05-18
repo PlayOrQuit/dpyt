@@ -97,10 +97,11 @@ interface PlaylistItemRepository
     /**
      * @param $userId
      * @param $playlistId
+     * @param $position
      * @param array $columns
      * @return PlaylistItem
      */
-    public function getAllChannelUpdatePosition($userId, $playlistId, $postion, $columns = array(
+    public function getAllChannelUpdatePosition($userId, $playlistId, $position, $columns = array(
         'id',
         'uid',
         'video_uid',
@@ -116,4 +117,7 @@ interface PlaylistItemRepository
         'channel_id',
         'playlist_id',
     ));
+
+
+    public function countByVideoId($video_uid);
 }
