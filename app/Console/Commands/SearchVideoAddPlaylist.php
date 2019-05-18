@@ -203,7 +203,8 @@ class SearchVideoAddPlaylist extends Command
                                         'like_count' => $videoResponse['statistics']['likeCount'],
                                         'dislike_count' => $videoResponse['statistics']['dislikeCount'],
                                         'favorite_count' => $videoResponse['statistics']['favoriteCount'],
-                                        'comment_count' => $videoResponse['statistics']['commentCount']
+                                        'comment_count' => $videoResponse['statistics']['commentCount'],
+                                        'status' => 'public'
                                     ));
                                     Log::debug($resultCode);
                                     if($resultCode == 1){
