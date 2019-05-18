@@ -178,4 +178,15 @@ class PlaylistRepositoryImpl implements PlaylistRepository
         $playlist->refresh();
         return $playlist;
     }
+
+
+    /**
+     * @param $id
+     * @param $playlist_view
+     * @return boolean
+     */
+    public function updateView($uid, $playlist_view)
+    {
+        return Playlist::where(['uid' => $uid])->update(['view_count'=>$playlist_view]);
+    }
 }

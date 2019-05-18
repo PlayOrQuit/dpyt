@@ -15,7 +15,8 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "mariuzzo/laravel-js-localization": "^1.4",
-        "nesbot/carbon": "^2.17"
+        "nesbot/carbon": "^2.17",
+        "symfony/dom-crawler": "^4.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

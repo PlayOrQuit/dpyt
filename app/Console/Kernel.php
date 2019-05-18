@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\SearchVideoAddPlaylist',
+        'App\Console\Commands\PlaylistUpdateView'
     ];
 
     /**
@@ -30,6 +31,11 @@ class Kernel extends ConsoleKernel
         ;
     }
 
+    protected function playlist_view(Schedule $schedule){
+        $schedule->command('command:update_view_playlist')
+            ->cron('*/1 * * * *')->withoutOverlapping();
+        ;
+    }
 
 
     /**

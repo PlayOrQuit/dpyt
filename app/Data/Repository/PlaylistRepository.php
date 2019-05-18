@@ -100,4 +100,11 @@ interface PlaylistRepository
         'user_id'
     ));
 
+    /**
+     * @param $id
+     * @param $userId
+     * @param $params
+     * @return boolean
+     */
+    public function updateView($uid, $playlist_view);
 }
