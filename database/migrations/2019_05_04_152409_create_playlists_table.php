@@ -32,6 +32,7 @@ class CreatePlaylistsTable extends Migration
             $table->integer('filter_by_like')->nullable();
             $table->integer('filter_by_dislike')->nullable();
             $table->integer('search_video_count')->nullable();
+            $table->integer('view_count')->nullable();
             $table->string('channel_subscribe', 150)->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('channel_id');

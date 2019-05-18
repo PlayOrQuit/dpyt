@@ -20,5 +20,6 @@ return [
     'confirm_pause_playlist' => 'Do you want to turn off the auto-add video feature?',
     'confirm_play_playlist' => 'Do you want to turn on the auto-add video feature?',
     'title_edit_playlist' => 'Edit information playlist',
-    'channel_subscribe' => 'Subscription channel'
+    'channel_subscribe' => 'Subscription channel',
+
 ];

@@ -313,6 +313,24 @@ class PageListPlaylist extends React.Component{
                 filterAll: true
             },
             {
+                Header: trans.get('keyword.view_count'),
+                accessor: 'view_count',
+                maxWidth: 150,
+                className: 'd-flex justify-content-center',
+                filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, {keys: ["view_count"]}),
+                filterAll: true
+            },
+            {
+                Header: trans.get('keyword.search_video_count'),
+                accessor: 'search_video_count',
+                maxWidth: 150,
+                className: 'd-flex justify-content-center',
+                filterMethod: (filter, rows) =>
+                    matchSorter(rows, filter.value, {keys: ["search_video_count"]}),
+                filterAll: true
+            },
+            {
                 Header: trans.get('keyword.status'),
                 accessor: 'status_video',
                 maxWidth: 200,

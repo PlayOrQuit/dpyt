@@ -61,7 +61,9 @@ class ListPlaylistController extends Controller
                 'description',
                 'video_count',
                 'status_video',
-                'keywords'
+                'keywords',
+                'view_count',
+                'search_video_count'
             ));
 
             return $this->_resJsonSuccess('Success', $req->path(), $listPlaylist);

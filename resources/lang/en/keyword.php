@@ -30,5 +30,7 @@ return[
     'title' => 'Title',
     'quantity_video' => 'Quantity video',
     'processing' => 'Processing',
-    'un_process' => 'Unprocess'
+    'un_process' => 'Unprocess',
+    'search_video_count' => 'Find video count',
+    'view_count' => 'View count'
 ];

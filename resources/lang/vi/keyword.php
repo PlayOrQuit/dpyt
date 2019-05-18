@@ -31,5 +31,7 @@ return[
     'quantity_video' => 'Số lượng video',
     'processing' => 'Đang xử lý',
     'un_process' => 'Ngừng xử lý',
+    'search_video_count' => 'Video tìm thấy',
+    'view_count' => 'Lượt xem'
 
 ];
