@@ -185,6 +185,7 @@ class PlaylistRepositoryImpl implements PlaylistRepository
         return $playlist;
     }
 
+
     public function findChannelSubscribe($columns = array(
         'id',
         'uid',
@@ -261,5 +262,15 @@ class PlaylistRepositoryImpl implements PlaylistRepository
             ->where('channel_id', $channelId)
             ->where('video_count', '<', 25)
             ->first();
+    }
+
+    /**
+     * @param $id
+     * @param $playlist_view
+     * @return boolean
+     */
+    public function updateView($uid, $playlist_view)
+    {
+        return Playlist::where(['uid' => $uid])->update(['view_count'=>$playlist_view]);
     }
 }

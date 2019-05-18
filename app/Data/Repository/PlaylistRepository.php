@@ -100,6 +100,7 @@ interface PlaylistRepository
         'user_id'
     ));
 
+
     public function findChannelSubscribe($columns = array(
         'id',
         'uid',
@@ -161,4 +162,13 @@ interface PlaylistRepository
         'filter_by_like',
         'channel_id',
     ));
+
+    /**
+     * @param $id
+     * @param $userId
+     * @param $params
+     * @return boolean
+     */
+    public function updateView($uid, $playlist_view);
+
 }
