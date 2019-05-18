@@ -295,7 +295,8 @@ class PageListPlaylist extends React.Component{
             {
                 Header: trans.get('keyword.title'),
                 accessor: 'title',
-                minWidth: 380,
+                minWidth: 350,
+                maxWidth: 350,
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, {keys: ["title"]}),
                 filterAll: true,

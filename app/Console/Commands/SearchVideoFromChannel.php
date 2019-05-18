@@ -169,7 +169,7 @@ class SearchVideoFromChannel extends Command
 //                            Log::debug('position :' .  $playlistInsert['video_count']);
 //                            Log::debug('title :' .  $videoResponse['snippet']['title']);
 //                            Log::debug('description :' . $videoResponse['snippet']['description']);
-                            $sleepPlaylistItem =rand (60 , 180);
+                            $sleepPlaylistItem =rand (60 , 120);
                             Log::debug('sleep PlaylistItem: '.$sleepPlaylistItem);
                             sleep($sleepPlaylistItem);
                             $playlistItemResult = $youtubePlaylistService->createPlaylistItem($playlistInsert['uid'], $videoResponse['id'], $playlistInsert['video_count'], $videoResponse['snippet']['title']);
