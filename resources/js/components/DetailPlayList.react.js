@@ -109,6 +109,10 @@ class DetailPlayList extends Component {
         this.showAlert(null, 'info');
     }
 
+    formatNumber = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    }
+
     getYouTubeGetID = (url) => {
         var ID = '';
         url = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
@@ -252,54 +256,64 @@ class DetailPlayList extends Component {
                 Header: trans.get('detailplaylist.view_count'),
                 accessor: 'view_count',
                 maxWidth: 120,
+                className: 'd-flex justify-content-end',
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, { keys: ["view_count"] }),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                    this.formatNumber(row.original.view_count)
+                )
             },
             {
                 Header: trans.get('detailplaylist.like_count'),
                 accessor: 'like_count',
                 maxWidth: 120,
-                className: 'd-flex justify-content-center',
+                className: 'd-flex justify-content-end',
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, { keys: ["like_count"] }),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                    this.formatNumber(row.original.like_count)
+                )
             },
 
             {
                 Header: trans.get('detailplaylist.dislike_count'),
                 accessor: 'dislike_count',
                 maxWidth: 120,
-                className: 'd-flex justify-content-center',
+                className: 'd-flex justify-content-end',
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, { keys: ["dislike_count"] }),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                    this.formatNumber(row.original.dislike_count)
+                )
             },
-            {
-                Header: trans.get('keyword.status'),
-                accessor: 'status_video',
-                maxWidth: 200,
-                Cell: ({ value }) => (value === 0 ? trans.get('detailplaylist.status_video_normal') : trans.get('detailplaylist.status_video_normal')),
-                filterMethod: (filter, row) => {
-                    if (filter.value === "all") {
-                        return true;
-                    }
-                    if (filter.value === "false") {
-                        return row.status_video === 0;
-                    }
-                    return row.status_video === 1;
-                },
-                Filter: ({ filter, onChange }) =>
-                    <Form.Control as="select"
-                        onChange={event => onChange(event.target.value)}
-                        value={filter ? filter.value : "all"}
-                        style={{ padding: "4px", height: "unset" }}
-                    >
-                        <option value="all">{trans.get('detailplaylist.all_status_video')}</option>
-                        <option value="true">{trans.get('detailplaylist.status_video_normal')}</option>
-                        <option value="false">{trans.get('detailplaylist.status_video_block')}</option>
-                    </Form.Control>
-            },
+            // {
+            //     Header: trans.get('keyword.status'),
+            //     accessor: 'status_video',
+            //     maxWidth: 200,
+            //     Cell: ({ value }) => (value === 'public' ? trans.get('detailplaylist.status_video_normal') : trans.get('detailplaylist.status_video_block')),
+            //     filterMethod: (filter, row) => {
+            //         if (filter.value === "all") {
+            //             return true;
+            //         }
+            //         if (filter.value === "false") {
+            //             return row.status_video === 'private';
+            //         }
+            //         return row.status_video === 'public';
+            //     },
+            //     Filter: ({ filter, onChange }) =>
+            //         <Form.Control as="select"
+            //             onChange={event => onChange(event.target.value)}
+            //             value={filter ? filter.value : "all"}
+            //             style={{ padding: "4px", height: "unset" }}
+            //         >
+            //             <option value="all">{trans.get('detailplaylist.all_status_video')}</option>
+            //             <option value="true">{trans.get('detailplaylist.status_video_normal')}</option>
+            //             <option value="false">{trans.get('detailplaylist.status_video_block')}</option>
+            //         </Form.Control>
+            // },
             {
                 Header: '',
                 minWidth: 120,

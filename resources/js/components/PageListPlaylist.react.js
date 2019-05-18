@@ -277,6 +277,10 @@ class PageListPlaylist extends React.Component{
         }
     }
 
+    formatNumber = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    }
+
     render() {
         const {
             playlists,
@@ -301,35 +305,44 @@ class PageListPlaylist extends React.Component{
                     matchSorter(rows, filter.value, {keys: ["title"]}),
                 filterAll: true,
                 Cell: row => (
-                   <a href={URL_PLAYLIST_DETAIL + '?id=' + row.original.id} target='_blank'>{row.original.title}</a>
+                   <a href={URL_PLAYLIST_DETAIL + '?id=' + row.original.id}>{row.original.title}</a>
                 )
             },
             {
                 Header: trans.get('keyword.quantity_video'),
                 accessor: 'video_count',
                 maxWidth: 150,
-                className: 'd-flex justify-content-center',
+                className: 'd-flex justify-content-end',
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, {keys: ["video_count"]}),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                    this.formatNumber(row.original.video_count ? row.original.video_count : 0)
+                )
             },
             {
                 Header: trans.get('keyword.view_count'),
                 accessor: 'view_count',
                 maxWidth: 150,
-                className: 'd-flex justify-content-center',
+                className: 'd-flex justify-content-end',
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, {keys: ["view_count"]}),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                    this.formatNumber(row.original.view_count ? row.original.view_count : 0)
+                )
             },
             {
                 Header: trans.get('keyword.search_video_count'),
                 accessor: 'search_video_count',
                 maxWidth: 150,
-                className: 'd-flex justify-content-center',
+                className: 'd-flex justify-content-end',
                 filterMethod: (filter, rows) =>
                     matchSorter(rows, filter.value, {keys: ["search_video_count"]}),
-                filterAll: true
+                filterAll: true,
+                Cell: row => (
+                    this.formatNumber(row.original.search_video_count ? row.original.search_video_count : 0)
+                )
             },
             {
                 Header: trans.get('keyword.status'),
